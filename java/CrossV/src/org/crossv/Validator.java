@@ -2,7 +2,7 @@ package org.crossv;
 
 public class Validator {
 
-	public Validator(Evaluator<?>... evaluators) {
+	public Validator(Evaluator<?,?>... evaluators) {
 	}
 
 	public <E> ValidationResult validate(Class<E> objClass, E obj) {
@@ -11,7 +11,7 @@ public class Validator {
 
 	public <E> ValidationResult validate(Class<E> objClass, E obj,
 			Object context) {
-		return new ValidationResult();
+		return new ValidationResult();		
 	}
 
 }

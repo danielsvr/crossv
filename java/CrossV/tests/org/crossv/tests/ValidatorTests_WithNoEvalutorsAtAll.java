@@ -23,31 +23,29 @@ public class ValidatorTests_WithNoEvalutorsAtAll {
 	public void validate_MonkeyObjectWithNoContext_ReturnsNoEvaluationResults() {
 		Monkey monkey = TestObjectFactory.CreateMonkey();
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
-		assertThat(validation.getResults(), isEmpty());
+		assertThat("returns no evaluation results", validation.getResults(), isEmpty());
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithNoContext_ReturnsASuccessfulValidation() {
 		Monkey monkey = TestObjectFactory.CreateMonkey();
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
-		assertThat(validation.isSuccessful(), is(true));
+		assertThat("returns a successful validation", validation.isSuccessful(), is(true));
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithAnyContext_ReturnsNoEvaluationResults() {
 		Monkey monkey = TestObjectFactory.CreateMonkey();
 		Object context = TestObjectFactory.CreateAnyContext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey,
-				context);
-		assertThat(validation.getResults(), isEmpty());
+		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
+		assertThat("returns no evaluation results", validation.getResults(), isEmpty());
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithAnyContext_ReturnsASuccessfulValidation() {
 		Monkey monkey = TestObjectFactory.CreateMonkey();
 		Object context = TestObjectFactory.CreateAnyContext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey,
-				context);
-		assertThat(validation.isSuccessful(), is(true));
+		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
+		assertThat("returns a successful validation", validation.isSuccessful(), is(true));
 	}
 }

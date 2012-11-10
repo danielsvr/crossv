@@ -9,7 +9,7 @@ public class ValidationResult {
 		return true;
 	}
 
-	public Iterable<Object> getResults() {
+	public Iterable<EvaluationResult> getResults() {
 		return Collections.emptyList();
 	}
 

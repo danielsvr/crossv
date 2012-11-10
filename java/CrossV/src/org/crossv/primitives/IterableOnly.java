@@ -13,6 +13,10 @@ public class IterableOnly<E> implements Iterable<E> {
 		this.iterable = iterable;
 	}
 
+	public IterableOnly() {
+		this.iterable = new ArrayList<E>();
+	}
+
 	@Override
 	public Iterator<E> iterator() {
 		return iterable.iterator();

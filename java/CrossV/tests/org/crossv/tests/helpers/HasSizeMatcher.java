@@ -6,16 +6,16 @@ import org.crossv.primitives.*;
 import org.hamcrest.*;
 import org.junit.internal.matchers.*;
 
-public class IsSizeMatcher<E extends Iterable<?>> extends TypeSafeMatcher<E> {
+public class HasSizeMatcher<E extends Iterable<?>> extends TypeSafeMatcher<E> {
 	private final Number size;
 
-	public IsSizeMatcher(Number size) {
+	public HasSizeMatcher(Number size) {
 		this.size = size;
 	}
 
 	@Override
 	public boolean matchesSafely(E obj) {
-		Iterable<?> iterable = (Iterable<?>) obj;
+		Iterable<?> iterable = (Iterable<?>)obj;
 		List<?> list = Iterables.toList(iterable);
 		int listSize = list.size();
 		return size.equals(listSize);
