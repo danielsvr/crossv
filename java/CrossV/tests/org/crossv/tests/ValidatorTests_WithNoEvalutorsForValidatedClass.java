@@ -16,27 +16,27 @@ public class ValidatorTests_WithNoEvalutorsForValidatedClass {
 
 	@Before
 	public void setup() {
-		validator = TestObjectFactory.CreateValidatorWithAEvaluatorForMouseClass();
+		validator = TestObjectFactory.createValidatorWithAEvaluatorForMouseClass();
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithNoContext_ReturnsNoEvaluationResults() {
-		Monkey monkey = TestObjectFactory.CreateMonkey();
+		Monkey monkey = TestObjectFactory.createMonkey();
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
 		assertThat(validation.getResults(), isEmpty());
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithNoContext_ReturnsASuccessfulValidation() {
-		Monkey monkey = TestObjectFactory.CreateMonkey();
+		Monkey monkey = TestObjectFactory.createMonkey();
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
 		assertThat(validation.isSuccessful(), is(true));
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithAnyContext_ReturnsNoEvaluationResults() {
-		Monkey monkey = TestObjectFactory.CreateMonkey();
-		Object context = TestObjectFactory.CreateAnyContext();
+		Monkey monkey = TestObjectFactory.createMonkey();
+		Object context = TestObjectFactory.createAnyContext();
 		ValidationResult validation = 
 				validator.validate(Monkey.class, monkey, context);
 		assertThat(validation.getResults(), isEmpty());
@@ -44,8 +44,8 @@ public class ValidatorTests_WithNoEvalutorsForValidatedClass {
 
 	@Test
 	public void validate_MonkeyObjectWithAnyContext_ReturnsASuccessfulValidation() {
-		Monkey monkey = TestObjectFactory.CreateMonkey();
-		Object context = TestObjectFactory.CreateAnyContext();
+		Monkey monkey = TestObjectFactory.createMonkey();
+		Object context = TestObjectFactory.createAnyContext();
 		ValidationResult validation = validator.validate(Monkey.class, monkey,
 				context);
 		assertThat(validation.isSuccessful(), is(true));

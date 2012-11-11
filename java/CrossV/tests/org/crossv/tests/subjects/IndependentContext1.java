@@ -1,5 +1,5 @@
 package org.crossv.tests.subjects;
 
-public class TopLevelContext {
+public class IndependentContext1 {
 
 }

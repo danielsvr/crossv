@@ -177,12 +177,20 @@ public class Iterables {
 	public static <E> Iterable<E> empty() {
 		return new IterableOnly<E>();
 	}
-	
+
 	public static <E> boolean containsAll(Iterable<E> iterable, Iterable<E> objs) {
-		for(E e : objs)
-			for(E e1 : iterable)
-				if((e == null && e1 != null) || (e != null && !e.equals(e1)))
+		objs = emptyIfNull(objs);
+		iterable = emptyIfNull(iterable);
+		
+		for (E e : objs)
+			for (E e1 : iterable)
+				if ((e == null && e1 != null) || (e != null && !e.equals(e1)))
 					return false;
 		return true;
 	}
+
+	public static <E> Iterable<E> emptyIfNull(Iterable<E> iterable) {
+		return iterable == null ? new IterableOnly<E>() : iterable;
+	}
+
 }

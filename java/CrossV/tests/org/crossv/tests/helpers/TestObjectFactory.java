@@ -10,19 +10,19 @@ import org.crossv.tests.subjects.Mouse;
 
 public class TestObjectFactory {
 
-	public static Monkey CreateMonkey() {
+	public static Monkey createMonkey() {
 		return new Monkey();
 	}
 
-	public static Object CreateAnyContext() {
+	public static Object createAnyContext() {
 		return new AnyContext();
 	}
 
-	public static Validator CreateValidator() {
+	public static Validator createValidator() {
 		return new Validator();
 	}
 
-	public static Validator CreateValidatorWithAEvaluatorForMouseClass() {
+	public static Validator createValidatorWithAEvaluatorForMouseClass() {
 		Evaluator<Mouse, Object> evaluator = new Evaluator<Mouse, Object>(
 				Mouse.class, Object.class) {
 
