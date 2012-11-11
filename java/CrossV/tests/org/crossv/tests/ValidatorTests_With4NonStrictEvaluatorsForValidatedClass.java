@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import org.crossv.ValidationResult;
 import org.crossv.Validator;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.ExtendedConext;
 import org.crossv.tests.subjects.IndependentContext1;
 import org.crossv.tests.subjects.IndependentContext2;
@@ -25,125 +26,140 @@ public class ValidatorTests_With4NonStrictEvaluatorsForValidatedClass {
 
 	@Before
 	public void setup() {
-		evaluator1 = new TestableMonkeyEvaluator<SuperContext>(
-				SuperContext.class);
-		evaluator2 = new TestableMonkeyEvaluator<ExtendedConext>(
-				ExtendedConext.class);
-		evaluator3 = new TestableMonkeyEvaluator<IndependentContext1>(
-				IndependentContext1.class);
-		evaluator4 = new TestableMonkeyEvaluator<IndependentContext2>(
-				IndependentContext2.class);
-		
-		monkey = new Monkey();
+		evaluator1 = TestObjectFactory.createMonkeyEvaluator(
+				SuperContext.class, "Rule1");
+		evaluator2 = TestObjectFactory.createMonkeyEvaluator(
+				ExtendedConext.class, "Rule2");
+		evaluator3 = TestObjectFactory.createMonkeyEvaluator(
+				IndependentContext1.class, "Rule3");
+		evaluator4 = TestObjectFactory.createMonkeyEvaluator(
+				IndependentContext2.class, "Rule4");
 
-		validator = new Validator(evaluator1, evaluator2, evaluator3, evaluator4);
+		monkey = TestObjectFactory.createMonkey();
+
+		validator = TestObjectFactory.createValidator(evaluator1, evaluator2,
+				evaluator3, evaluator4);
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnExtendedConext_Returns2EvaluationResults() {
 		Object context = new ExtendedConext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
 		assertThat(validation.getResults(), hasSize(2));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnExtendedConext_ReturnsResultsOfEvaluator1() {
 		Object context = new ExtendedConext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
-		assertThat(validation.getResults(), hasAll(evaluator1.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), has(evaluator1.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnExtendedConext_ReturnsResultsOfEvaluator2() {
 		Object context = new ExtendedConext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
-		assertThat(validation.getResults(), hasAll(evaluator2.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), has(evaluator2.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnExtendedConext_DoesntReturnResultsOfEvaluator3() {
 		Object context = new ExtendedConext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator3.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator3.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnExtendedConext_DoesntReturnResultsOfEvaluator4() {
 		Object context = new ExtendedConext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator4.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator4.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext1_Return1EvaluationResult() {
 		Object context = new IndependentContext1();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
 		assertThat(validation.getResults(), hasSize(1));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext1_ReturnResultsOfEvaluator3() {
 		Object context = new IndependentContext1();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
-		assertThat(validation.getResults(), hasAll(evaluator3.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), has(evaluator3.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext1_DoesntReturnResultsOfEvaluator1() {
 		Object context = new IndependentContext1();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator1.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator1.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext1_DoesntReturnResultsOfEvaluator2() {
 		Object context = new IndependentContext1();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator2.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator2.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext1_DoesntReturnResultsOfEvaluator4() {
 		Object context = new IndependentContext1();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator4.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator4.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext2_Return1EvaluationResult() {
 		Object context = new IndependentContext2();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
 		assertThat(validation.getResults(), hasSize(1));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext2_ReturnResultsOfEvaluator4() {
 		Object context = new IndependentContext2();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);
-		assertThat(validation.getResults(), hasAll(evaluator4.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), has(evaluator4.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext2_DoesntReturnResultsOfEvaluator1() {
 		Object context = new IndependentContext2();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator1.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator1.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext2_DoesntReturnResultsOfEvaluator2() {
 		Object context = new IndependentContext2();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator2.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator2.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnIndependentContext2_DoesntReturnResultsOfEvaluator3() {
 		Object context = new IndependentContext2();
-		ValidationResult validation = validator.validate(Monkey.class, monkey, context);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator3.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey,
+				context);
+		assertThat(validation.getResults(), doesntHave(evaluator3.result));
 	}
-
 
 	@Test
 	public void validate_MonkeyObjectOnNoContext_Return3EvaluationResult() {
@@ -154,24 +170,24 @@ public class ValidatorTests_With4NonStrictEvaluatorsForValidatedClass {
 	@Test
 	public void validate_MonkeyObjectOnNoContext_ReturnResultsOfEvaluator1() {
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
-		assertThat(validation.getResults(), hasAll(evaluator1.results));
+		assertThat(validation.getResults(), has(evaluator1.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnNoContext_ReturnResultsOfEvaluator3() {
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
-		assertThat(validation.getResults(), hasAll(evaluator3.results));
+		assertThat(validation.getResults(), has(evaluator3.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnNoContext_ReturnResultsOfEvaluator4() {
 		ValidationResult validation = validator.validate(Monkey.class, monkey);
-		assertThat(validation.getResults(), hasAll(evaluator4.results));
+		assertThat(validation.getResults(), has(evaluator4.result));
 	}
 
 	@Test
 	public void validate_MonkeyObjectOnNoContext_DoesntReturnResultsOfEvaluator2() {
-		ValidationResult validation = validator.validate(Monkey.class, monkey);		
-		assertThat(validation.getResults(), doesntHaveAny(evaluator2.results));
+		ValidationResult validation = validator.validate(Monkey.class, monkey);
+		assertThat(validation.getResults(), doesntHave(evaluator2.result));
 	}
 }

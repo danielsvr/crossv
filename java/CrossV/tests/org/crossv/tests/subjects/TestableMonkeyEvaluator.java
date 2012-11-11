@@ -4,9 +4,10 @@ import org.crossv.EvaluationResult;
 import org.crossv.Evaluator;
 import org.crossv.primitives.Iterables;
 
-public class TestableMonkeyEvaluator<EContext> extends Evaluator<Monkey, EContext> {
+public class TestableMonkeyEvaluator<EContext> extends
+		Evaluator<Monkey, EContext> {
 
-	public Iterable<EvaluationResult> results;
+	public EvaluationResult result;
 
 	public TestableMonkeyEvaluator(Class<EContext> contextClass) {
 		super(Monkey.class, contextClass);
@@ -14,7 +15,8 @@ public class TestableMonkeyEvaluator<EContext> extends Evaluator<Monkey, EContex
 
 	@Override
 	public Iterable<EvaluationResult> Evaluate(Monkey obj, Object context) {
-		return Iterables.empty();
+		return result != null 
+				? Iterables.<EvaluationResult> toIterable(result)
+				: Iterables.<EvaluationResult> empty();
 	}
-
 }

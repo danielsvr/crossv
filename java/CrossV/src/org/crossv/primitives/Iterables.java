@@ -166,10 +166,23 @@ public class Iterables {
 			list.add(item);
 	}
 
-	public static <E> Iterable<E> toIterable(E... es) {
+	public static <E> Iterable<E> toIterable(E obj) {
+		return toIterable(obj, null);
+	}
+
+	public static <E> Iterable<E> toIterable(E... objs) {
+		return toIterable(null, objs);
+	}
+
+	private static <E> Iterable<E> toIterable(E obj1, E[] objs) {
 		List<E> result = new ArrayList<E>();
-		for (E e : es)
-			result.add(e);
+
+		if (obj1 != null)
+			result.add(obj1);
+
+		if (objs != null)
+			for (E e : objs)
+				result.add(e);
 
 		return new IterableOnly<E>(result);
 	}
@@ -181,11 +194,14 @@ public class Iterables {
 	public static <E> boolean containsAll(Iterable<E> iterable, Iterable<E> objs) {
 		objs = emptyIfNull(objs);
 		iterable = emptyIfNull(iterable);
-		
-		for (E e : objs)
+
+		for (E e : objs) {
+			if (count(iterable) == 0)
+				return false;
 			for (E e1 : iterable)
 				if ((e == null && e1 != null) || (e != null && !e.equals(e1)))
 					return false;
+		}
 		return true;
 	}
 

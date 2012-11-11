@@ -1,5 +1,6 @@
 package org.crossv.tests.helpers;
 
+import org.crossv.primitives.Iterables;
 import org.hamcrest.Matcher;
 
 public class Matchers {
@@ -12,11 +13,19 @@ public class Matchers {
 		return new HasSizeMatcher<E>(size);
 	}
 
-	public static <E> Matcher<Iterable<E>> hasAll(Iterable<E> objs) {
-		return new HasElementsMatcher<E>(objs);
+	public static <E> Matcher<Iterable<E>> has(E obj) {
+		return new HasElementsMatcher<E>(Iterables.toIterable(obj));
 	}
 
-	public static <E> Matcher<Iterable<E>> doesntHaveAny(Iterable<E> objs) {
+	public static <E> Matcher<Iterable<E>> hasAll(E... objs) {
+		return new HasElementsMatcher<E>(Iterables.toIterable(objs));
+	}
+
+	public static <E> Matcher<Iterable<E>> doesntHave(E obj) {
+		return org.hamcrest.CoreMatchers.not(has(obj));
+	}
+
+	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
 		return org.hamcrest.CoreMatchers.not(hasAll(objs));
 	}
 }

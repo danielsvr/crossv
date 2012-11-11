@@ -2,24 +2,29 @@ package org.crossv.tests.helpers;
 
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Description;
+import org.hamcrest.SelfDescribing;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
-public class HasElementsMatcher<E> extends TypeSafeMatcher<Iterable<E>> {
+public class HasElementsMatcher<E> extends TypeSafeMatcher<Iterable<E>>
+		implements SelfDescribing {
 
 	private Iterable<E> objs;
+	private boolean areAllContained;
 
-	public HasElementsMatcher(Iterable<E> objs){
+	public HasElementsMatcher(Iterable<E> objs) {
 		this.objs = objs;
 	}
+
 	@Override
 	public void describeTo(Description description) {
-		String message = "Iterable contain all the elements";
-		description.appendText(message);
+		description.appendText("has all elements").appendText(" got: ")
+				.appendValue(areAllContained);
 	}
 
 	@Override
 	public boolean matchesSafely(Iterable<E> obj) {
-		return Iterables.containsAll(obj, objs);
+		areAllContained = Iterables.containsAll(obj, objs);
+		return areAllContained;
 	}
 
 }

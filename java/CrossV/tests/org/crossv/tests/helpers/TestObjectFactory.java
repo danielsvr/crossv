@@ -7,6 +7,7 @@ import org.crossv.primitives.Iterables;
 import org.crossv.tests.subjects.AnyContext;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
+import org.crossv.tests.subjects.TestableMonkeyEvaluator;
 
 public class TestObjectFactory {
 
@@ -34,4 +35,14 @@ public class TestObjectFactory {
 		return new Validator(evaluator);
 	}
 
+	public static <E> TestableMonkeyEvaluator<E> createMonkeyEvaluator(
+			Class<E> clazz, String ruleName) {
+		TestableMonkeyEvaluator<E> eval = new TestableMonkeyEvaluator<E>(clazz);
+		eval.result = new EvaluationResult(ruleName);
+		return eval;
+	}
+
+	public static Validator createValidator(Evaluator<?, ?>... evaluators) {
+		return new Validator(evaluators);
+	}
 }
