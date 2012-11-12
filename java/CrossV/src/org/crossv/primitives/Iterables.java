@@ -162,7 +162,7 @@ public class Iterables {
 	}
 
 	public static <E> void addAllToList(List<E> list, Iterable<E> iterable) {
-		for (E item : iterable)
+		for (E item : emptyIfNull(iterable))
 			list.add(item);
 	}
 
@@ -202,7 +202,7 @@ public class Iterables {
 			for (E e1 : iterable)
 				if ((e == null && e1 == null) || (e != null && e.equals(e1)))
 					found = true;
-			if(!found)
+			if (!found)
 				return false;
 		}
 		return true;

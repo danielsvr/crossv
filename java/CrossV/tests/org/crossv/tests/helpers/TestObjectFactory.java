@@ -1,5 +1,6 @@
 package org.crossv.tests.helpers;
 
+import org.crossv.BasicEvaluator;
 import org.crossv.EvaluationResult;
 import org.crossv.Evaluator;
 import org.crossv.Validator;
@@ -24,11 +25,9 @@ public class TestObjectFactory {
 	}
 
 	public static Validator createValidatorWithAEvaluatorForMouseClass() {
-		Evaluator<Mouse, Object> evaluator = new Evaluator<Mouse, Object>(
-				Mouse.class, Object.class) {
-
+		BasicEvaluator<Mouse> evaluator = new BasicEvaluator<Mouse>(Mouse.class) {
 			@Override
-			public Iterable<EvaluationResult> Evaluate(Mouse obj, Object context) {
+			public Iterable<EvaluationResult> evaluateInstance(Mouse obj) {
 				return Iterables.empty();
 			}
 		};

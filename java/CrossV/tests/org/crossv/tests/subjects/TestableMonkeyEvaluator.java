@@ -14,7 +14,7 @@ public class TestableMonkeyEvaluator<EContext> extends
 	}
 
 	@Override
-	public Iterable<EvaluationResult> Evaluate(Monkey obj, Object context) {
+	public Iterable<EvaluationResult> evaluate(Monkey obj, Object context) {
 		return result != null 
 				? Iterables.<EvaluationResult> toIterable(result)
 				: Iterables.<EvaluationResult> empty();

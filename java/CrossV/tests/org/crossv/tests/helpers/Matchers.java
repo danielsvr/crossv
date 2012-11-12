@@ -1,5 +1,7 @@
 package org.crossv.tests.helpers;
 
+import org.crossv.Evaluator;
+import org.crossv.EvaluatorRegistry;
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Matcher;
 
@@ -27,5 +29,9 @@ public class Matchers {
 
 	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
 		return org.hamcrest.CoreMatchers.not(hasAll(objs));
+	}
+
+	public static Matcher<EvaluatorRegistry> contains(Evaluator<?,?> evaluator) {
+		return new EvaluatorRegistryContainsMatcher(evaluator) ;
 	}
 }
