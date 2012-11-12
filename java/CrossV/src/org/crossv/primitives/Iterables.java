@@ -198,9 +198,12 @@ public class Iterables {
 		for (E e : objs) {
 			if (count(iterable) == 0)
 				return false;
+			boolean found = false;
 			for (E e1 : iterable)
-				if ((e == null && e1 != null) || (e != null && !e.equals(e1)))
-					return false;
+				if ((e == null && e1 == null) || (e != null && e.equals(e1)))
+					found = true;
+			if(!found)
+				return false;
 		}
 		return true;
 	}

@@ -2,6 +2,7 @@ package org.crossv;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -13,20 +14,14 @@ public class Validator {
 
 	public Validator(Evaluator<?, ?>... evaluators) {
 		contextTable = new Hashtable<Class<?>, List<Evaluator<?, ?>>>();
-		// TODO: populate context downstream and accumulate on Object only the
-		// evaluators that are directly inheriting from it
 		for (Evaluator<?, ?> eval : evaluators) {
 			Class<?> clazz = eval.getContextClass();
 			clazz = clazz != null ? clazz : Object.class;
-			do {
-				List<Evaluator<?, ?>> evals = contextTable.get(clazz);
-				evals = evals != null ? evals
-						: new ArrayList<Evaluator<?, ?>>();
-				if (!evals.contains(eval))
-					evals.add(eval);
-				contextTable.put(clazz, evals);
-				clazz = clazz.getSuperclass();
-			} while (clazz != null);
+			List<Evaluator<?, ?>> evals = contextTable.get(clazz);
+			evals = evals != null ? evals : new ArrayList<Evaluator<?, ?>>();
+			if (!evals.contains(eval))
+				evals.add(eval);
+			contextTable.put(clazz, evals);
 		}
 	}
 
@@ -38,16 +33,40 @@ public class Validator {
 	public <E> ValidationResult validate(Class<E> objClass, E obj,
 			Object context) {
 		context = context != null ? context : new Object();
-		List<Evaluator<?, ?>> all = contextTable.get(context.getClass());
+		Class<?> contextClass = context.getClass();
 		List<EvaluationResult> allResults = new ArrayList<EvaluationResult>();
-		for (Evaluator<?, ?> e : Iterables.emptyIfNull(all)) {
-			if (e.getInstanceClass().equals(objClass)) {
-				@SuppressWarnings({ "rawtypes" })
-				Iterable result = ((Evaluator) e).Evaluate(obj, context);
-				Iterables.addAllToList(allResults, result);
+
+		if (!contextClass.equals(Object.class))
+			do {
+				List<Evaluator<?, ?>> all = contextTable.get(contextClass);
+				for (Evaluator<?, ?> e : Iterables.emptyIfNull(all)) {
+					if (e.getInstanceClass().equals(objClass)) {
+						@SuppressWarnings({ "rawtypes" })
+						Iterable result = ((Evaluator) e)
+								.Evaluate(obj, context);
+						Iterables.addAllToList(allResults, result);
+					}
+				}
+				contextClass = contextClass.getSuperclass();
+			} while (contextClass != null);
+		else {
+			Enumeration<Class<?>> keys = contextTable.keys();
+			while (keys.hasMoreElements()) {
+				Class<?> clazz = keys.nextElement();
+				if (clazz.equals(Object.class)
+						|| clazz.getSuperclass().equals(Object.class)) {
+					List<Evaluator<?, ?>> all = contextTable.get(clazz);
+					for (Evaluator<?, ?> e : Iterables.emptyIfNull(all)) {
+						if (e.getInstanceClass().equals(objClass)) {
+							@SuppressWarnings({ "rawtypes" })
+							Iterable result = ((Evaluator) e).Evaluate(obj,
+									context);
+							Iterables.addAllToList(allResults, result);
+						}
+					}
+				}
 			}
 		}
 		return new ValidationResult(allResults);
 	}
-
 }

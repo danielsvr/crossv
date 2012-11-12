@@ -15,7 +15,7 @@ import org.crossv.tests.subjects.SuperContext;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ValidatorTests_With4NonStrictEvaluatorsForValidatedClass {
+public class ValidatorTests_With4NonStrictEvaluatorsThatDontReturnErrorsForValidatedClass {
 
 	private Validator validator;
 	private TestableMonkeyEvaluator<SuperContext> evaluator1;
