@@ -1,12 +1,12 @@
 package org.crossv;
 
-public abstract class BasicEvaluator<E> extends Evaluator<E, Object> {
+public abstract class BasicEvaluator<E> extends ContextEvaluator<E, Object> {
 
 	public BasicEvaluator(Class<E> objCalss) {
 		super(objCalss, Object.class);
 	}
 
-	public final java.lang.Iterable<EvaluationResult> evaluate(E obj,
+	public final java.lang.Iterable<EvaluationResult> evaluateInstance(E obj,
 			Object context) {
 		return evaluateInstance(obj);
 	}

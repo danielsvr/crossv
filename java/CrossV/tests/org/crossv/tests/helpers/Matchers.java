@@ -1,6 +1,6 @@
 package org.crossv.tests.helpers;
 
-import org.crossv.Evaluator;
+import org.crossv.ContextEvaluator;
 import org.crossv.EvaluatorRegistry;
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Matcher;
@@ -31,7 +31,7 @@ public class Matchers {
 		return org.hamcrest.CoreMatchers.not(hasAll(objs));
 	}
 
-	public static Matcher<EvaluatorRegistry> contains(Evaluator<?,?> evaluator) {
+	public static Matcher<EvaluatorRegistry> contains(ContextEvaluator<?,?> evaluator) {
 		return new EvaluatorRegistryContainsMatcher(evaluator) ;
 	}
 }

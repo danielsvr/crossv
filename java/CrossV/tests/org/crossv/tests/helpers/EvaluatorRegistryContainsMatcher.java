@@ -1,6 +1,6 @@
 package org.crossv.tests.helpers;
 
-import org.crossv.Evaluator;
+import org.crossv.ContextEvaluator;
 import org.crossv.EvaluatorRegistry;
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
@@ -8,9 +8,9 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 public class EvaluatorRegistryContainsMatcher extends
 		TypeSafeMatcher<EvaluatorRegistry> {
 
-	private final Evaluator<?, ?> evaluator;
+	private final ContextEvaluator<?, ?> evaluator;
 
-	public EvaluatorRegistryContainsMatcher(Evaluator<?, ?> evaluator) {
+	public EvaluatorRegistryContainsMatcher(ContextEvaluator<?, ?> evaluator) {
 		this.evaluator = evaluator;
 	}
 

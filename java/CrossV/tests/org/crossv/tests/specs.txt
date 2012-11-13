@@ -270,7 +270,8 @@
 /********************ValidatorTests_WithNoEvalutorsForValidatedClass*/
  
  
- /** ValidatorTests_With4NonStrictEvaluatorsForValidatedClass
+ /** EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass
+ * this is the way the provider works, not the validator  
  * when validating a monkey and a context 2 <br/>
  * with evaluators (1,2,3,4) for monkey class <br/>
  * with two evaluators on contexts (1/1, 2/2) on same inheritance chain <br/>
@@ -284,7 +285,8 @@
  * - it doesn't return evaluation results of evaluator 4 <br/>
  */
  
-  /**
+ /** EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass
+ * this is the way the provider works, not the validator  
  * when validating a monkey and a context 3 <br/>
  * with evaluators (1,2,3,4) for monkey class <br/>
  * with two evaluators on contexts (1/1, 2/2) on same inheritance chain <br/>
@@ -298,7 +300,8 @@
  * - it doesn't return evaluation results of evaluator 4 <br/>
  */
  
-  /**
+ /** EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass
+ * this is the way the provider works, not the validator  
  * when validating a monkey and a context 4 <br/>
  * with evaluators (1,2,3,4) for monkey class <br/>
  * with two evaluators on contexts (1/1, 2/2) on same inheritance chain <br/>
@@ -312,7 +315,8 @@
  * - it doesn't return evaluation results of evaluator 3 <br/>
  */
  
-  /**
+/** EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass
+ * this is the way the provider works, not the validator  
  * when validating a monkey and no context <br/>
  * with a validator <br/>
  * with evaluators (1,2,3,4) for monkey class <br/>

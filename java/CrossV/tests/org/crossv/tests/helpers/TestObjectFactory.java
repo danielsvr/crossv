@@ -2,7 +2,7 @@ package org.crossv.tests.helpers;
 
 import org.crossv.BasicEvaluator;
 import org.crossv.EvaluationResult;
-import org.crossv.Evaluator;
+import org.crossv.ContextEvaluator;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
 import org.crossv.tests.subjects.AnyContext;
@@ -41,7 +41,7 @@ public class TestObjectFactory {
 		return eval;
 	}
 
-	public static Validator createValidator(Evaluator<?, ?>... evaluators) {
+	public static Validator createValidator(ContextEvaluator<?, ?>... evaluators) {
 		return new Validator(evaluators);
 	}
 }

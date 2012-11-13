@@ -9,9 +9,9 @@ public class Validator {
 
 	private EvaluatorRegistry registry;
 
-	public Validator(Evaluator<?, ?>... evaluators) {
+	public Validator(ContextEvaluator<?, ?>... evaluators) {
 		registry = new EvaluatorRegistry();
-		for (Evaluator<?, ?> evaluator : evaluators)
+		for (ContextEvaluator<?, ?> evaluator : evaluators)
 			registry.register(evaluator);
 	}
 
@@ -23,18 +23,16 @@ public class Validator {
 		return validate(objClass, obj, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <E> ValidationResult validate(Class<E> objClass, E obj,
 			Object context) {
 		List<EvaluationResult> allResults = new ArrayList<EvaluationResult>();
-		Iterable<Evaluator<E, ?>> all;
+		Iterable<Evaluator> all;
 
 		all = registry.get(objClass, context != null ? context.getClass()
 				: null);
 
-		for (Evaluator<E, ?> e : all) {
-			@SuppressWarnings({ "rawtypes" })
-			Iterable result = ((Evaluator) e).evaluate(obj, context);
+		for (Evaluator e : all) {
+			Iterable<EvaluationResult> result = e.evaluate(obj, context);
 			Iterables.addAllToList(allResults, result);
 		}
 		return new ValidationResult(allResults);

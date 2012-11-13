@@ -1,0 +1,34 @@
+package org.crossv;
+
+import org.crossv.primitives.ArgumentNullException;
+
+public abstract class ContextEvaluator<E, EContext> implements Evaluator {
+	private final Class<E> objClass;
+	private final Class<EContext> contextClass;
+
+	public ContextEvaluator(Class<E> objCalss, Class<EContext> contextClass) {
+		if (objCalss == null)
+			throw new ArgumentNullException("objCalss");
+		if (contextClass == null)
+			throw new ArgumentNullException("contextClass");
+
+		this.objClass = objCalss;
+		this.contextClass = contextClass;
+	}
+
+	public abstract Iterable<EvaluationResult> evaluateInstance(E obj,
+			EContext context);
+
+	@SuppressWarnings("unchecked")
+	public final Iterable<EvaluationResult> evaluate(Object obj, Object context) {
+		return evaluateInstance((E) obj, (EContext) context);
+	}
+
+	public Class<E> getInstanceClass() {
+		return objClass;
+	}
+
+	public Class<EContext> getContextClass() {
+		return contextClass;
+	}
+}
