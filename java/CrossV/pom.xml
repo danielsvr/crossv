@@ -34,4 +34,11 @@
   		<version>1.9.5</version>
   	</dependency>
   </dependencies>
+  <organization>
+  	<name>org</name>
+  	<url>https://github.com/ogman/crossv</url>
+  </organization>
+  <properties>
+  	<email>yochanan.miykael@gmail.com</email>
+  </properties>
 </project>

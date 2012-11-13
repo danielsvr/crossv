@@ -8,6 +8,7 @@ import java.util.List;
 import org.crossv.primitives.Iterables;
 
 public class EvaluatorRegistry {
+	
 	private List<Evaluator> allEvaluators;
 	private Dictionary<Class<?>, List<Evaluator>> objectContextEvaluatorsByEvaluatedClass;
 	private Dictionary<Class<?>, Dictionary<Class<?>, List<Evaluator>>> contextTable;

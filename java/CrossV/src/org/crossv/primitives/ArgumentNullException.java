@@ -37,4 +37,5 @@ public class ArgumentNullException extends IllegalArgumentException {
 		argName = argName == null ? "" : argName;
 		return String.format("%s parameter is null.%s", argName, message);
 	}
+	
 }

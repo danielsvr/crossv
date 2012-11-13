@@ -10,6 +10,7 @@ public class Validation {
 	public Validation(Iterable<EvaluationResult> results) {
 		if (results == null)
 			throw new ArgumentNullException("results");
+		
 		this.results = results;
 		isSuccessful = !EvaluationResults.anyError(results);
 	}
@@ -21,4 +22,5 @@ public class Validation {
 	public Iterable<EvaluationResult> getResults() {
 		return results;
 	}
+	
 }

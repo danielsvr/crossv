@@ -7,7 +7,6 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 
 public class HasElementsMatcher<E> extends TypeSafeMatcher<Iterable<E>>
 		implements SelfDescribing {
-
 	private Iterable<E> objs;
 	private boolean areAllContained;
 
@@ -26,5 +25,4 @@ public class HasElementsMatcher<E> extends TypeSafeMatcher<Iterable<E>>
 		areAllContained = Iterables.containsAll(obj, objs);
 		return areAllContained;
 	}
-
 }

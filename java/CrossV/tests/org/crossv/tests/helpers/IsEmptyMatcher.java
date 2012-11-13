@@ -18,4 +18,5 @@ public class IsEmptyMatcher<E extends Iterable<?>> extends TypeSafeMatcher<E> {
 	public void describeTo(Description description) {
 		description.appendText("Empty iterable ");
 	}
+	
 }

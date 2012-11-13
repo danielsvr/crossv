@@ -16,9 +16,7 @@ public class TestableMouseEvaluator<E> extends ContextEvaluator<Mouse, E> {
 	@Override
 	public Iterable<EvaluationResult> evaluateInstance(Mouse obj, E context)
 			throws IllegalObjectException {
-		return result != null 
-				? Iterables.<EvaluationResult> toIterable(result)
+		return result != null ? Iterables.<EvaluationResult> toIterable(result)
 				: Iterables.<EvaluationResult> empty();
 	}
-
 }

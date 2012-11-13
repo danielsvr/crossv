@@ -3,6 +3,7 @@ package org.crossv;
 import org.crossv.primitives.ArgumentNullException;
 
 public abstract class ContextEvaluator<E, EContext> implements Evaluator {
+	
 	private final Class<E> objClass;
 	private final Class<EContext> contextClass;
 

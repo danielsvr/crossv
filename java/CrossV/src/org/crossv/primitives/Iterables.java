@@ -1,6 +1,10 @@
 package org.crossv.primitives;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 public class Iterables {
 
@@ -212,4 +216,7 @@ public class Iterables {
 		return iterable == null ? new IterableOnly<E>() : iterable;
 	}
 
+	public static <E> Iterable<E> emptyIfNull(E[] evaluators) {
+		return evaluators == null ? new IterableOnly<E>() : toList(evaluators);
+	}
 }

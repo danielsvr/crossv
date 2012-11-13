@@ -5,7 +5,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 
 public class Assert {
-
 	public static <T> void assertThat(String reason, T actual,
 			Matcher<T> matcher) {
 		if (!matcher.matches(actual)) {
@@ -28,4 +27,5 @@ public class Assert {
 	public static <T> void assertThat(T actual, Matcher<T> matcher) {
 		assertThat("", actual, matcher);
 	}
+	
 }

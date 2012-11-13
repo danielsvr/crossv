@@ -1,7 +1,6 @@
 package org.crossv;
 
 public class EvaluationResult {
-
 	private final String message;
 
 	public EvaluationResult(String message) {

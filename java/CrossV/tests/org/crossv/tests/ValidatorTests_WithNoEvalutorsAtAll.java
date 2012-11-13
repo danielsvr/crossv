@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 public class ValidatorTests_WithNoEvalutorsAtAll {
-
 	Validator validator;
 	Validation validation;
 	Monkey monkey;
@@ -36,6 +35,7 @@ public class ValidatorTests_WithNoEvalutorsAtAll {
 				Iterables.<Evaluator> empty());
 		when(registry.get(Monkey.class, NoContext.class)).thenReturn(
 				Iterables.<Evaluator> empty());
+		
 
 		monkey = TestObjectFactory.createMonkey();
 		validator = TestObjectFactory.createValidator(registry);

@@ -1,7 +1,6 @@
 package org.crossv;
 
 public class IllegalObjectException extends IllegalArgumentException {
-
 	private static final long serialVersionUID = -2014799851390392177L;
 
 	public IllegalObjectException(String objectName) {

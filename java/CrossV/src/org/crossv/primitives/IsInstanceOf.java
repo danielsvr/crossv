@@ -1,6 +1,5 @@
 package org.crossv.primitives;
 
-
 public class IsInstanceOf<E> implements Predicate<E> {
 	private final Class<? extends E> clazz;
 
@@ -15,4 +14,5 @@ public class IsInstanceOf<E> implements Predicate<E> {
 		Class<?> valueClazz = value.getClass();
 		return clazz.isAssignableFrom(valueClazz);
 	}
+	
 }

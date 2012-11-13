@@ -16,6 +16,7 @@ public class Validator {
 	public Validator(Evaluator evaluator1, Evaluator... evaluators) {
 		registry = new EvaluatorRegistry();
 		registry.register(evaluator1);
+		
 		if (evaluators != null)
 			for (Evaluator evaluator : evaluators)
 				registry.register(evaluator);

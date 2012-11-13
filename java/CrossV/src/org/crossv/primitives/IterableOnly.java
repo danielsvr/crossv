@@ -25,8 +25,10 @@ public class IterableOnly<E> implements Iterable<E> {
 	public List<E> toList() {
 		return Iterables.toList(this);
 	}
+	
 
 	public Iterable<E> innerIterable() {
 		return iterable;
 	}
+	
 }

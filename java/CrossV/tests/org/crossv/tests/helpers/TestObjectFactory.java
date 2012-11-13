@@ -47,4 +47,5 @@ public class TestObjectFactory {
 	public static EvaluatorRegistry createEvaluatorRegistry() {
 		return new EvaluatorRegistry();
 	}
+	
 }

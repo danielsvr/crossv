@@ -26,4 +26,5 @@ public class HasSizeMatcher<E extends Iterable<?>> extends TypeSafeMatcher<E> {
 		description.appendText("has size ").appendValue(size)
 				.appendText(" got: ").appendValue(listSize);
 	}
+	
 }
