@@ -2,6 +2,7 @@ package org.crossv.tests.helpers;
 
 import org.crossv.BasicEvaluator;
 import org.crossv.EvaluationResult;
+import org.crossv.EvaluatorRegistry;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
 import org.crossv.tests.subjects.Monkey;
@@ -14,7 +15,6 @@ public class TestObjectFactory {
 	public static Monkey createMonkey() {
 		return new Monkey();
 	}
-
 
 	public static Validator createValidatorWithAEvaluatorForMouseClass() {
 		BasicEvaluator<Mouse> evaluator = new BasicEvaluator<Mouse>(Mouse.class) {
@@ -38,5 +38,13 @@ public class TestObjectFactory {
 		TestableMouseEvaluator<E> eval = new TestableMouseEvaluator<E>(clazz);
 		eval.result = new EvaluationResult(ruleName);
 		return eval;
+	}
+
+	public static Validator createValidator(EvaluatorRegistry registry) {
+		return new Validator(registry);
+	}
+
+	public static EvaluatorRegistry createEvaluatorRegistry() {
+		return new EvaluatorRegistry();
 	}
 }

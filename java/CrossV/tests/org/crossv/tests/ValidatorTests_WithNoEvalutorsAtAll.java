@@ -38,7 +38,7 @@ public class ValidatorTests_WithNoEvalutorsAtAll {
 				Iterables.<Evaluator> empty());
 
 		monkey = TestObjectFactory.createMonkey();
-		validator = new Validator(registry);
+		validator = TestObjectFactory.createValidator(registry);
 	}
 
 	@After

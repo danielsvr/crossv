@@ -30,7 +30,7 @@ public class EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass {
 	
 	@Before
 	public void setup() {
-		registry = new EvaluatorRegistry();
+		registry = TestObjectFactory.createEvaluatorRegistry();
 
 		monkeyEvaluator1 = TestObjectFactory.createMonkeyEvaluator(
 				SuperContext.class, "Rule1");
