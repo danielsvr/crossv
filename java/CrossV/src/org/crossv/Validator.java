@@ -9,10 +9,16 @@ public class Validator {
 
 	private EvaluatorRegistry registry;
 
-	public Validator(Evaluator... evaluators) {
+	public Validator(Evaluator evaluator) {
+		this(evaluator, (Evaluator[]) null);
+	}
+
+	public Validator(Evaluator evaluator1, Evaluator... evaluators) {
 		registry = new EvaluatorRegistry();
-		for (Evaluator evaluator : evaluators)
-			registry.register(evaluator);
+		registry.register(evaluator1);
+		if (evaluators != null)
+			for (Evaluator evaluator : evaluators)
+				registry.register(evaluator);
 	}
 
 	public Validator(EvaluatorRegistry registry) {
