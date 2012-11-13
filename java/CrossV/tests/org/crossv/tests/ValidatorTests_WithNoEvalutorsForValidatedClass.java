@@ -13,41 +13,43 @@ import org.junit.*;
 public class ValidatorTests_WithNoEvalutorsForValidatedClass {
 
 	Validator validator;
+	Validation validation;
+	Monkey monkey;
+	Object context;
 
 	@Before
 	public void setup() {
-		validator = TestObjectFactory.createValidatorWithAEvaluatorForMouseClass();
+		validator = TestObjectFactory
+				.createValidatorWithAEvaluatorForMouseClass();
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithNoContext_ReturnsNoEvaluationResults() {
-		Monkey monkey = TestObjectFactory.createMonkey();
-		ValidationResult validation = validator.validate(Monkey.class, monkey);
+		monkey = TestObjectFactory.createMonkey();
+		validation = validator.validate(Monkey.class, monkey);
 		assertThat(validation.getResults(), isEmpty());
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithNoContext_ReturnsASuccessfulValidation() {
-		Monkey monkey = TestObjectFactory.createMonkey();
-		ValidationResult validation = validator.validate(Monkey.class, monkey);
+		monkey = TestObjectFactory.createMonkey();
+		validation = validator.validate(Monkey.class, monkey);
 		assertThat(validation.isSuccessful(), is(true));
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithAnyContext_ReturnsNoEvaluationResults() {
-		Monkey monkey = TestObjectFactory.createMonkey();
-		Object context = TestObjectFactory.createAnyContext();
-		ValidationResult validation = 
-				validator.validate(Monkey.class, monkey, context);
+		monkey = TestObjectFactory.createMonkey();
+		context = TestObjectFactory.createAnyContext();
+		validation = validator.validate(Monkey.class, monkey, context);
 		assertThat(validation.getResults(), isEmpty());
 	}
 
 	@Test
 	public void validate_MonkeyObjectWithAnyContext_ReturnsASuccessfulValidation() {
-		Monkey monkey = TestObjectFactory.createMonkey();
-		Object context = TestObjectFactory.createAnyContext();
-		ValidationResult validation = validator.validate(Monkey.class, monkey,
-				context);
+		monkey = TestObjectFactory.createMonkey();
+		context = TestObjectFactory.createAnyContext();
+		validation = validator.validate(Monkey.class, monkey, context);
 		assertThat(validation.isSuccessful(), is(true));
 	}
 }

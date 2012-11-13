@@ -7,9 +7,10 @@ public abstract class BasicEvaluator<E> extends ContextEvaluator<E, Object> {
 	}
 
 	public final java.lang.Iterable<EvaluationResult> evaluateInstance(E obj,
-			Object context) {
+			Object context) throws IllegalObjectException {
 		return evaluateInstance(obj);
 	}
 
-	public abstract Iterable<EvaluationResult> evaluateInstance(E obj);
+	public abstract Iterable<EvaluationResult> evaluateInstance(E obj)
+			throws IllegalObjectException;
 }

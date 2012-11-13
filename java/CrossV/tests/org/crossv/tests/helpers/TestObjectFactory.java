@@ -9,6 +9,7 @@ import org.crossv.tests.subjects.AnyContext;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
 import org.crossv.tests.subjects.TestableMonkeyEvaluator;
+import org.crossv.tests.subjects.TestableMouseEvaluator;
 
 public class TestObjectFactory {
 
@@ -41,7 +42,15 @@ public class TestObjectFactory {
 		return eval;
 	}
 
-	public static Validator createValidator(ContextEvaluator<?, ?>... evaluators) {
+	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
+			Class<E> clazz, String ruleName) {
+		TestableMouseEvaluator<E> eval = new TestableMouseEvaluator<E>(clazz);
+		eval.result = new EvaluationResult(ruleName);
+		return eval;
+	}
+
+	public static Validator createValidator(
+			ContextEvaluator<?, ?>... evaluators) {
 		return new Validator(evaluators);
 	}
 }

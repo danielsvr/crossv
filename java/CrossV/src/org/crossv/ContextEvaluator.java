@@ -17,10 +17,11 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	}
 
 	public abstract Iterable<EvaluationResult> evaluateInstance(E obj,
-			EContext context);
+			EContext context) throws IllegalObjectException;
 
 	@SuppressWarnings("unchecked")
-	public final Iterable<EvaluationResult> evaluate(Object obj, Object context) {
+	public final Iterable<EvaluationResult> evaluate(Object obj, Object context)
+			throws IllegalObjectException {
 		return evaluateInstance((E) obj, (EContext) context);
 	}
 

@@ -9,9 +9,9 @@ public class Validator {
 
 	private EvaluatorRegistry registry;
 
-	public Validator(ContextEvaluator<?, ?>... evaluators) {
+	public Validator(Evaluator... evaluators) {
 		registry = new EvaluatorRegistry();
-		for (ContextEvaluator<?, ?> evaluator : evaluators)
+		for (Evaluator evaluator : evaluators)
 			registry.register(evaluator);
 	}
 
@@ -19,22 +19,21 @@ public class Validator {
 		this.registry = registry;
 	}
 
-	public <E> ValidationResult validate(Class<E> objClass, E obj) {
-		return validate(objClass, obj, null);
+	public <E> Validation validate(Class<E> objClass, E obj) {
+		return validate(objClass, obj, NoContext.instance);
 	}
 
-	public <E> ValidationResult validate(Class<E> objClass, E obj,
-			Object context) {
+	public <E> Validation validate(Class<E> objClass, E obj, Object ctx) {
 		List<EvaluationResult> allResults = new ArrayList<EvaluationResult>();
-		Iterable<Evaluator> all;
+		Iterable<Evaluator> allEvaluatorsOfE;
 
-		all = registry.get(objClass, context != null ? context.getClass()
-				: null);
+		ctx = ctx != null ? ctx : NoContext.instance;
+		allEvaluatorsOfE = registry.get(objClass, ctx.getClass());
 
-		for (Evaluator e : all) {
-			Iterable<EvaluationResult> result = e.evaluate(obj, context);
+		for (Evaluator evaluator : allEvaluatorsOfE) {
+			Iterable<EvaluationResult> result = evaluator.evaluate(obj, ctx);
 			Iterables.addAllToList(allResults, result);
 		}
-		return new ValidationResult(allResults);
+		return new Validation(allResults);
 	}
 }

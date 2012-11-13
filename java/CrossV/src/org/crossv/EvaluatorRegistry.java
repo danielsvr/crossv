@@ -20,7 +20,7 @@ public class EvaluatorRegistry {
 
 	public void register(Evaluator evaluator) {
 		Class<?> contextClass = evaluator.getContextClass();
-		contextClass = contextClass != null ? contextClass : Object.class;
+		contextClass = contextClass != null ? contextClass : NoContext.class;
 
 		if (!contextClass.equals(Object.class)) {
 			Dictionary<Class<?>, List<Evaluator>> entry = contextTable
@@ -37,7 +37,8 @@ public class EvaluatorRegistry {
 				evals.add(evaluator);
 		}
 
-		if (contextClass.equals(Object.class)
+		if (contextClass.equals(NoContext.class)
+				|| contextClass.equals(Object.class)
 				|| contextClass.getSuperclass().equals(Object.class)) {
 			List<Evaluator> evals = objectContextEvaluatorsByEvaluatedClass
 					.get(evaluator.getInstanceClass());
@@ -63,12 +64,11 @@ public class EvaluatorRegistry {
 	public <E, EContext> Iterable<Evaluator> get(Class<E> objClass,
 			Class<EContext> contextClass) {
 
-		Class<?> ctx = contextClass != null ? contextClass : Object.class;
+		Class<?> ctx = contextClass != null ? contextClass : NoContext.class;
 		List<Evaluator> result = new ArrayList<Evaluator>();
 
-		if (!ctx.equals(Object.class))
+		if (!ctx.equals(NoContext.class))
 			do {
-
 				Dictionary<Class<?>, List<Evaluator>> entry = contextTable
 						.get(ctx);
 				List<Evaluator> all = entry != null ? entry.get(objClass)
