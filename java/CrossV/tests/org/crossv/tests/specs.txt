@@ -253,23 +253,6 @@
 /********************ValidatorTests_WithNoEvalutorsAtAll*/
 
 
-/*ValidatorTests_WithNoEvalutorsForValidatedClass*/
- /**
- * when validating a monkey in a context <br/>
- * with a validator <br/>
- * with no evaluators for monkey class <br/>
- * - it returns no evaluation results <br/>
- * */
-
-/**
- * when validating a monkey in no context <br/>
- * with a validator <br/>
- * with no evaluators for monkey class <br/>
- * - it returns no evaluation results <br/>
- */
-/********************ValidatorTests_WithNoEvalutorsForValidatedClass*/
- 
- 
  /** EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass
  * this is the way the provider works, not the validator  
  * when validating a monkey and a context 2 <br/>
