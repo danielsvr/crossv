@@ -171,24 +171,11 @@ public class Iterables {
 	}
 
 	public static <E> Iterable<E> toIterable(E obj) {
-		return toIterable(obj, null);
+		return new ArrayIterable<E>(obj, null);
 	}
 
 	public static <E> Iterable<E> toIterable(E... objs) {
-		return toIterable(null, objs);
-	}
-
-	private static <E> Iterable<E> toIterable(E obj1, E[] objs) {
-		List<E> result = new ArrayList<E>();
-
-		if (obj1 != null)
-			result.add(obj1);
-
-		if (objs != null)
-			for (E e : objs)
-				result.add(e);
-
-		return new IterableOnly<E>(result);
+		return new ArrayIterable<E>(null, objs);
 	}
 
 	public static <E> Iterable<E> empty() {

@@ -31,14 +31,14 @@ public class Validator {
 	}
 
 	public <E> Validation validate(Class<E> objClass, E obj, Object ctx) {
-		List<EvaluationResult> allResults = new ArrayList<EvaluationResult>();
+		List<Evaluation> allResults = new ArrayList<Evaluation>();
 		Iterable<Evaluator> allEvaluatorsOfE;
 
 		ctx = ctx != null ? ctx : NoContext.instance;
 		allEvaluatorsOfE = registry.get(objClass, ctx.getClass());
 
 		for (Evaluator evaluator : allEvaluatorsOfE) {
-			Iterable<EvaluationResult> result = evaluator.evaluate(obj, ctx);
+			Iterable<Evaluation> result = evaluator.evaluate(obj, ctx);
 			Iterables.addAllToList(allResults, result);
 		}
 		return new Validation(allResults);

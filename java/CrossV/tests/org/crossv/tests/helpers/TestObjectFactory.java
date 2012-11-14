@@ -1,7 +1,7 @@
 package org.crossv.tests.helpers;
 
 import org.crossv.BasicEvaluator;
-import org.crossv.EvaluationResult;
+import org.crossv.Evaluation;
 import org.crossv.EvaluatorRegistry;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
@@ -19,7 +19,7 @@ public class TestObjectFactory {
 	public static Validator createValidatorWithAEvaluatorForMouseClass() {
 		BasicEvaluator<Mouse> evaluator = new BasicEvaluator<Mouse>(Mouse.class) {
 			@Override
-			public Iterable<EvaluationResult> evaluateInstance(Mouse obj) {
+			public Iterable<Evaluation> evaluateInstance(Mouse obj) {
 				return Iterables.empty();
 			}
 		};
@@ -29,14 +29,14 @@ public class TestObjectFactory {
 	public static <E> TestableMonkeyEvaluator<E> createMonkeyEvaluator(
 			Class<E> clazz, String ruleName) {
 		TestableMonkeyEvaluator<E> eval = new TestableMonkeyEvaluator<E>(clazz);
-		eval.result = new EvaluationResult(ruleName);
+		eval.returns(Evaluation.success(ruleName));
 		return eval;
 	}
 
 	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
 			Class<E> clazz, String ruleName) {
 		TestableMouseEvaluator<E> eval = new TestableMouseEvaluator<E>(clazz);
-		eval.result = new EvaluationResult(ruleName);
+		eval.result =Evaluation.success(ruleName);
 		return eval;
 	}
 

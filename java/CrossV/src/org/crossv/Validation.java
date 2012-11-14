@@ -4,10 +4,10 @@ import org.crossv.primitives.ArgumentNullException;
 
 public class Validation {
 
-	private final Iterable<EvaluationResult> results;
+	private final Iterable<Evaluation> results;
 	private boolean isSuccessful;
 
-	public Validation(Iterable<EvaluationResult> results) {
+	public Validation(Iterable<Evaluation> results) {
 		if (results == null)
 			throw new ArgumentNullException("results");
 		
@@ -19,7 +19,7 @@ public class Validation {
 		return this.isSuccessful;
 	}
 
-	public Iterable<EvaluationResult> getResults() {
+	public Iterable<Evaluation> getResults() {
 		return results;
 	}
 	

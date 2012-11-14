@@ -1,23 +1,26 @@
 package org.crossv.tests.subjects;
 
-import org.crossv.EvaluationResult;
 import org.crossv.ContextEvaluator;
+import org.crossv.Evaluation;
 import org.crossv.primitives.Iterables;
 
 public class TestableMonkeyEvaluator<EContext> extends
-		ContextEvaluator<Monkey, EContext> {
+		ContextEvaluator<Monkey, EContext> implements TestableEvaluator {
 
-	public EvaluationResult result;
+	public Evaluation[] results;
 
 	public TestableMonkeyEvaluator(Class<EContext> contextClass) {
 		super(Monkey.class, contextClass);
 	}
 
 	@Override
-	public Iterable<EvaluationResult> evaluateInstance(Monkey obj,
-			Object context) {
-		return result != null ? Iterables.<EvaluationResult> toIterable(result)
-				: Iterables.<EvaluationResult> empty();
+	public Iterable<Evaluation> evaluateInstance(Monkey obj,
+			EContext context) {
+		return Iterables.toIterable(results);
 	}
 
+	@Override
+	public void returns(Evaluation... results) {
+		this.results = results;
+	}
 }
