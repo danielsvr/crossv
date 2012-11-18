@@ -3,7 +3,7 @@ package org.crossv.tests;
 import static org.crossv.tests.helpers.Matchers.doesntHave;
 import static org.crossv.tests.helpers.Matchers.has;
 import static org.crossv.tests.helpers.Matchers.hasSize;
-import static org.crossv.tests.helpers.Assert.assertThat;
+import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluator;
 import org.crossv.EvaluatorRegistry;
@@ -26,7 +26,7 @@ public class EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass {
 	Evaluator mouseEvaluator2;
 	EvaluatorRegistry registry;
 	Iterable<Evaluator> evaluators;
-	
+
 	@Before
 	public void setup() {
 		registry = TestObjectFactory.createEvaluatorRegistry();
@@ -55,9 +55,9 @@ public class EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass {
 				SuperContext.class, "Rule6");
 		registry.register(mouseEvaluator2);
 	}
-	
+
 	@After
-	public void unsetup(){
+	public void unsetup() {
 		monkeyEvaluator1 = null;
 		monkeyEvaluator2 = null;
 		monkeyEvaluator3 = null;

@@ -1,6 +1,6 @@
 package org.crossv.tests;
 
-import static org.crossv.tests.helpers.Assert.assertThat;
+import static org.junit.Assert.assertThat;
 import static org.crossv.tests.helpers.Matchers.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
 

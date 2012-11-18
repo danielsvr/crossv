@@ -29,7 +29,7 @@ public class TestObjectFactory {
 	public static <E> TestableMonkeyEvaluator<E> createMonkeyEvaluator(
 			Class<E> clazz, String ruleName) {
 		TestableMonkeyEvaluator<E> eval = new TestableMonkeyEvaluator<E>(clazz);
-		eval.returns(Evaluation.success(ruleName));
+		eval.withRsults(Evaluation.success(ruleName));
 		return eval;
 	}
 

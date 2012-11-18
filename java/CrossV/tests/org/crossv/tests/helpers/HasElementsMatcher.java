@@ -16,7 +16,7 @@ public class HasElementsMatcher<E> extends TypeSafeMatcher<Iterable<E>>
 
 	@Override
 	public void describeTo(Description description) {
-		description.appendText("has all elements").appendText(" got: ")
+		description.appendText("has all elements. evaludation result = ")
 				.appendValue(areAllContained);
 	}
 

@@ -17,6 +17,10 @@ public class Matchers {
 		return new HasElementsMatcher<E>(Iterables.toIterable(obj));
 	}
 
+	public static <E> Matcher<Iterable<E>> have(E obj) {
+		return new HasElementsMatcher<E>(Iterables.toIterable(obj));
+	}
+
 	public static <E> Matcher<Iterable<E>> hasAll(E... objs) {
 		return new HasElementsMatcher<E>(Iterables.toIterable(objs));
 	}

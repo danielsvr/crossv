@@ -1,5 +1,7 @@
 package org.crossv;
 
+import static org.crossv.EvaluationResults.*;
+
 import org.crossv.primitives.ArgumentNullException;
 
 public class Validation {
@@ -10,9 +12,9 @@ public class Validation {
 	public Validation(Iterable<Evaluation> results) {
 		if (results == null)
 			throw new ArgumentNullException("results");
-		
+
 		this.results = results;
-		isSuccessful = !EvaluationResults.anyError(results);
+		isSuccessful = !containsAnyError(results);
 	}
 
 	public boolean isSuccessful() {
@@ -22,5 +24,4 @@ public class Validation {
 	public Iterable<Evaluation> getResults() {
 		return results;
 	}
-	
 }

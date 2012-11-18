@@ -20,7 +20,7 @@ public class TestableMonkeyEvaluator<EContext> extends
 	}
 
 	@Override
-	public void returns(Evaluation... results) {
+	public void withRsults(Evaluation... results) {
 		this.results = results;
 	}
 }
