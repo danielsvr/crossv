@@ -7,7 +7,7 @@ public class ValidationByContextStrategy extends ValidationStrategy {
 	@Override
 	public Iterable<Evaluator> apply(Iterable<Evaluator> evaluators,
 			Class<?> contextClass) {
-		return new EvaluatorsByContextIterable(evaluators);
+		return new EvaluatorsByContextIterable(evaluators, contextClass);
 	}
 
 }
