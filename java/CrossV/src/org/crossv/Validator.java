@@ -44,7 +44,7 @@ public class Validator {
 		context = context != null ? context : NoContext.instance;
 		Class<?> contextClass = context.getClass();
 		evaluators = registry.get(objClass, contextClass);
-		evaluators = strategy.apply(evaluators, contextClass);
+		evaluators = strategy.apply(evaluators);
 
 		for (Evaluator evaluator : evaluators) {
 			Iterable<Evaluation> results = evaluator.evaluate(obj, context);

@@ -10,47 +10,52 @@ import org.crossv.Evaluator;
 
 public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 
-	private Iterable<Evaluator> evaluators;
-	private List<Evaluator> arragedEvaluators;
+	private Iterator<Evaluator> evaluators;
+	private Dictionary<Integer, List<Evaluator>> evaluatorsByLevel;
+	private int currentLevel;
+	private EvaluatorListener evaluatorListener;
 
-	public EvaluatorsByContextIterator(Iterable<Evaluator> evaluators,
-			Class<?> contextClass) {
+	public EvaluatorsByContextIterator(EvaluatorListener evaluatorListener,
+			Iterator<Evaluator> evaluators) {
 
+		this.evaluatorListener = evaluatorListener;
 		this.evaluators = evaluators;
-		this.arragedEvaluators = new ArrayList<Evaluator>();
-
-		List<Class<?>> allContexts = new ArrayList<Class<?>>();
-		for (Evaluator evaluator : evaluators)
-			allContexts.add(evaluator.getContextClass());
-
-		Dictionary<Class<?>, Integer> lvls = new Hashtable<Class<?>, Integer>();
-		for (Evaluator evaluator : evaluators) {
-			Class<?> context;
-			context = evaluator.getContextClass();
-			Integer l = lvls.get(context);
-			l = l != null ? l : new Integer(0);
-			for (Evaluator evl : evaluators) {
-				Class<?> otherContext;
-				otherContext = evl.getContextClass();
-				if (context != otherContext
-						&& context.isAssignableFrom(otherContext)) {
-					l = new Integer(l.intValue() + 1);
-				}
-			}
-			lvls.put(context, l);
-		}
+		this.evaluatorsByLevel = new Hashtable<Integer, List<Evaluator>>();
+		this.currentLevel = 1;
 	}
 
 	@Override
 	public boolean hasNext() {
-		// TODO Auto-generated method stub
-		return false;
+		return evaluators.hasNext();
 	}
 
 	@Override
 	public Evaluator next() {
-		// TODO Auto-generated method stub
+		do {
+			Evaluator evaluator = evaluators.next();
+			Class<?> clazz = evaluator.getContextClass();
+			int i = -1;
+			while (clazz != null) {
+				i++;
+				clazz = clazz.getSuperclass();
+			}
+			if (i == currentLevel) {
+				EvaluatorProxy proxy = new EvaluatorProxy(evaluator);
+				proxy.addListener(evaluatorListener);
+				return proxy;
+			} else {
+				List<Evaluator> evals = getEvaluatorsByLevel(i);
+				evals.add(evaluator);
+			}
+		} while (evaluators.hasNext());
 		return null;
+	}
+
+	private List<Evaluator> getEvaluatorsByLevel(int i) {
+		List<Evaluator> evals = evaluatorsByLevel.get(i);
+		evals = evals != null ? evals : new ArrayList<Evaluator>();
+		evaluatorsByLevel.put(Integer.valueOf(i), evals);
+		return evals;
 	}
 
 	@Override

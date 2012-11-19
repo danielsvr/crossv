@@ -5,7 +5,7 @@ package org.crossv.primitives;
  * 
  * @author OG USER
  */
-public class ArgumentNullException extends IllegalArgumentException {
+public class ArgumentNullException extends ArgumentException {
 	private static final long serialVersionUID = -7332722930057619897L;
 
 	/**
@@ -29,7 +29,7 @@ public class ArgumentNullException extends IllegalArgumentException {
 	 *            not be null.
 	 */
 	public ArgumentNullException(String argName, String message) {
-		super(createMessage(argName, message));
+		super(argName, createMessage(argName, message), false);
 	}
 
 	private static String createMessage(String argName, String message) {
@@ -37,5 +37,5 @@ public class ArgumentNullException extends IllegalArgumentException {
 		argName = argName == null ? "" : argName;
 		return String.format("%s parameter is null.%s", argName, message);
 	}
-	
+
 }
