@@ -55,7 +55,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 		validator = null;
 		validation = null;
 	}
-	
+
 	@Test
 	public void validate_MonkeyOnExtendedConext_ValidationIsNotSuccessful() {
 		validator = new Validator(registry);
@@ -87,7 +87,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 				new ExtendedConext());
 		assertThat(validation.getResults(), doesntHave(extendedContextSuccess));
 	}
-	
+
 	@Test
 	public void validate_MonkeyOnExtendedConext_ValidationDoesntHaveResultsOfIndependentContext() {
 		validator = new Validator(registry);
@@ -96,4 +96,45 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 		assertThat(validation.getResults(),
 				doesntHave(independentContext1Success));
 	}
+
+	@Test
+	public void validate_MonkeyOnIndependentContext1_ValidationIsSuccessful() {
+		validator = new Validator(registry);
+		validation = validator.validate(Monkey.class, new Monkey(),
+				new IndependentContext1());
+		assertThat(validation.isSuccessful(), is(true));
+	}
+
+	@Test
+	public void validate_MonkeyOnIndependentContext1_Returns1ValidationResults() {
+		validator = new Validator(registry);
+		validation = validator.validate(Monkey.class, new Monkey(),
+				new IndependentContext1());
+		assertThat(validation.getResults(), hasSize(1));
+	}
+
+	@Test
+	public void validate_MonkeyOnIndependentContext1_ValidationHasResultsOfSuperContext() {
+		validator = new Validator(registry);
+		validation = validator.validate(Monkey.class, new Monkey(),
+				new IndependentContext1());
+		assertThat(validation.getResults(), doesntHave(superContextError));
+	}
+
+	@Test
+	public void validate_MonkeyOnIndependentContext1_ValidationDoesntHaveResultsOfExtendedContext() {
+		validator = new Validator(registry);
+		validation = validator.validate(Monkey.class, new Monkey(),
+				new IndependentContext1());
+		assertThat(validation.getResults(), doesntHave(extendedContextSuccess));
+	}
+
+	@Test
+	public void validate_MonkeyOnIndependentContext1_ValidationDoesntHaveResultsOfIndependentContext() {
+		validator = new Validator(registry);
+		validation = validator.validate(Monkey.class, new Monkey(),
+				new IndependentContext1());
+		assertThat(validation.getResults(), have(independentContext1Success));
+	}
+
 }
