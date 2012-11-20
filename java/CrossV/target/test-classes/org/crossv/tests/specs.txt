@@ -1,16 +1,4 @@
- /**
- * when validating a monkey and a context 3 <br/>
- * with evaluators (1,2,3) for monkey class <br/>
- * with two evaluators on contexts (1/1, 2/2) on same inheritance chain <br/>
- * with one context (3/3) on other inheritance chain <br/>
- * with evaluator 1 returning error <br/>
- * (2 extends 1 extends Object, 3 extends Object) <br/>
- * - it returns 1 evaluation result <br/>
- * - it returns evaluation results or evaluator 3 <br/>
- * - it doesn't return evaluation results of evaluator 1 <br/>
- * - it doesn't return evaluation results of evaluator 2 <br/>
- */
- 
+
  /**
  * when validating a monkey and a context 4 <br/>
  * with evaluators (1,2,3,4,5) for monkey class <br/>
@@ -236,3 +224,15 @@ move these things to https://github.com/ogman/crossv/issues
  * - it doesn't return evaluation results of evaluator 3 <br/>
  */
  
+  /**
+ * when validating a monkey and a context 3 <br/>
+ * with evaluators (1,2,3) for monkey class <br/>
+ * with two evaluators on contexts (1/1, 2/2) on same inheritance chain <br/>
+ * with one context (3/3) on other inheritance chain <br/>
+ * with evaluator 1 returning error <br/>
+ * (2 extends 1 extends Object, 3 extends Object) <br/>
+ * - it returns 1 evaluation result <br/>
+ * - it returns evaluation results or evaluator 3 <br/>
+ * - it doesn't return evaluation results of evaluator 1 <br/>
+ * - it doesn't return evaluation results of evaluator 2 <br/>
+ */

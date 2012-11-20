@@ -7,8 +7,7 @@ import java.util.List;
 
 import org.crossv.primitives.Iterables;
 
-public class EvaluatorRegistry {
-
+public final class EvaluatorRegistry {
 	private List<Evaluator> allEvaluators;
 	private Dictionary<Class<?>, List<Evaluator>> noContextEvaluatorsByEvaluatedClass;
 	private Dictionary<Class<?>, Dictionary<Class<?>, List<Evaluator>>> contextTable;
@@ -78,7 +77,7 @@ public class EvaluatorRegistry {
 		register((Evaluator) evaluator);
 	}
 
-	public boolean contains(ContextEvaluator<?, ?> evaluator) {
+	public boolean contains(Evaluator evaluator) {
 		return allEvaluators.contains(evaluator);
 	}
 
