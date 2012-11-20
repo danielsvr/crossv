@@ -3,7 +3,7 @@ package org.crossv.primitives;
 /**
  * This is an helper exception specific to null arguments
  * 
- * @author OG USER
+ * @author yochanan.miykael
  */
 public class ArgumentNullException extends ArgumentException {
 	private static final long serialVersionUID = -7332722930057619897L;

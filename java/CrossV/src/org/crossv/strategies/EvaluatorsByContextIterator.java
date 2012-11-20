@@ -11,49 +11,56 @@ import org.crossv.Evaluator;
 public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 
 	private Iterator<EvaluatorProxy> evaluators;
-	private Dictionary<Integer, List<Evaluator>> evaluatorsByLevel;
+	private Dictionary<Integer, List<EvaluatorProxy>> evaluatorsByLevel;
 	private int currentLevel;
-	private EvaluatorListener evaluatorListener;
+	private boolean allEvaluatorsIterated;
 
-	public EvaluatorsByContextIterator(EvaluatorListener evaluatorListener,
-			Iterator<EvaluatorProxy> evaluators) {
-
-		this.evaluatorListener = evaluatorListener;
+	public EvaluatorsByContextIterator(Iterator<EvaluatorProxy> evaluators) {
 		this.evaluators = evaluators;
-		this.evaluatorsByLevel = new Hashtable<Integer, List<Evaluator>>();
+		this.evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
 		this.currentLevel = 1;
 	}
 
 	@Override
 	public boolean hasNext() {
-		return evaluators.hasNext();
+		return evaluators.hasNext() || !evaluatorsByLevel.isEmpty();
 	}
 
 	@Override
 	public Evaluator next() {
-		do {
-			Evaluator evaluator = evaluators.next();
-			Class<?> clazz = evaluator.getContextClass();
-			int i = -1;
-			while (clazz != null) {
-				i++;
-				clazz = clazz.getSuperclass();
-			}
-			if (i == currentLevel) {
-				EvaluatorProxy proxy = new EvaluatorProxy(evaluator);
-				proxy.addListener(evaluatorListener);
-				return proxy;
-			} else {
-				List<Evaluator> evals = getEvaluatorsByLevel(i);
-				evals.add(evaluator);
-			}
-		} while (evaluators.hasNext());
+		List<EvaluatorProxy> evals;
+		if (!allEvaluatorsIterated) {
+			do {
+				EvaluatorProxy evaluator = evaluators.next();
+				Class<?> clazz = evaluator.getContextClass();
+				int i = -1;
+				while (clazz != null) {
+					i++;
+					clazz = clazz.getSuperclass();
+				}
+				if (i == currentLevel) {
+					return evaluator;
+				} else {
+					evals = getEvaluatorsByLevel(i);
+					evals.add(evaluator);
+				}
+			} while (evaluators.hasNext());
+			allEvaluatorsIterated = true;
+		} else {
+			do {
+				currentLevel++;
+				evals = getEvaluatorsByLevel(currentLevel);
+				EvaluatorProxy eval = evals.get(0);
+				evals.remove(0);
+				return eval;
+			} while (evals != null && evals.isEmpty());
+		}
 		return null;
 	}
 
-	private List<Evaluator> getEvaluatorsByLevel(int i) {
-		List<Evaluator> evals = evaluatorsByLevel.get(i);
-		evals = evals != null ? evals : new ArrayList<Evaluator>();
+	private List<EvaluatorProxy> getEvaluatorsByLevel(int i) {
+		List<EvaluatorProxy> evals = evaluatorsByLevel.get(i);
+		evals = evals != null ? evals : new ArrayList<EvaluatorProxy>();
 		evaluatorsByLevel.put(Integer.valueOf(i), evals);
 		return evals;
 	}

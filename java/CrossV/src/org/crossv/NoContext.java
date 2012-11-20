@@ -4,7 +4,6 @@ package org.crossv;
  * Utility class for defining evaluators without context.
  * 
  * @author yochanan.miykael
- * @version 1.0.0.*
  */
 public final class NoContext {
 
