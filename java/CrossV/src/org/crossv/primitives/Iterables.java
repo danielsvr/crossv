@@ -144,12 +144,7 @@ public class Iterables {
 		if (converter == null)
 			throw new ArgumentNullException("converter");
 
-		Iterator<E> iterator = iterable.iterator();
-		List<ER> selection = new ArrayList<ER>();
-		while (iterator.hasNext())
-			selection.add(converter.eval(iterator.next()));
-
-		return new IterableOnly<ER>(selection);
+		return new LazyConvertorIterable<ER, E>(iterable, converter);
 	}
 
 	public static <E, ER> Iterable<ER> select(E[] iterable,
@@ -159,11 +154,7 @@ public class Iterables {
 		if (converter == null)
 			throw new ArgumentNullException("converter");
 
-		List<ER> selection = new ArrayList<ER>();
-		for (int i = 0; i < iterable.length; i++) {
-			selection.add(converter.eval(iterable[i]));
-		}
-		return new IterableOnly<ER>(selection);
+		return new LazyConvertorIterable<ER, E>(iterable, converter);
 	}
 
 	public static <E> void addAllToList(List<E> list, Iterable<E> iterable) {
@@ -174,7 +165,6 @@ public class Iterables {
 	public static <E> Iterable<E> toIterable(E obj) {
 		return new ArrayIterable<E>(obj, null);
 	}
-
 
 	public static <E> Iterable<E> toIterable(Enumeration<E> obj) {
 		return new EnumerationIterable<E>(obj);
@@ -211,5 +201,9 @@ public class Iterables {
 
 	public static <E> Iterable<E> emptyIfNull(E[] evaluators) {
 		return evaluators == null ? new IterableOnly<E>() : toList(evaluators);
+	}
+
+	public static <E, ER> Iterable<ER> cast(Iterable<E> iterable) {
+		return new LazyCastIterable<E, ER>(iterable);
 	}
 }

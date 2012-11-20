@@ -10,13 +10,13 @@ import org.crossv.Evaluator;
 
 public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 
-	private Iterator<Evaluator> evaluators;
+	private Iterator<EvaluatorProxy> evaluators;
 	private Dictionary<Integer, List<Evaluator>> evaluatorsByLevel;
 	private int currentLevel;
 	private EvaluatorListener evaluatorListener;
 
 	public EvaluatorsByContextIterator(EvaluatorListener evaluatorListener,
-			Iterator<Evaluator> evaluators) {
+			Iterator<EvaluatorProxy> evaluators) {
 
 		this.evaluatorListener = evaluatorListener;
 		this.evaluators = evaluators;

@@ -6,10 +6,10 @@ import org.crossv.Evaluator;
 
 public class EvaluatorsByContextIterable implements Iterable<Evaluator> {
 
-	private Iterable<Evaluator> evaluators;
+	private Iterable<EvaluatorProxy> evaluators;
 	private EvaluatorListener evaluatorListener;
 
-	public EvaluatorsByContextIterable(EvaluatorListener evaluatorListener, Iterable<Evaluator> evaluators) {
+	public EvaluatorsByContextIterable(EvaluatorListener evaluatorListener, Iterable<EvaluatorProxy> evaluators) {
 		this.evaluatorListener = evaluatorListener;
 		this.evaluators = evaluators;
 	}

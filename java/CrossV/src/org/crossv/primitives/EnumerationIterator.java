@@ -24,7 +24,7 @@ public class EnumerationIterator<E> implements Iterator<E> {
 	@Override
 	public void remove() {
 		throw new IllegalStateException(
-				"Cannot remove lements from an enumeration.");
+				"Cannot remove elements from an enumeration.");
 	}
 
 }
