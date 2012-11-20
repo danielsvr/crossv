@@ -5,6 +5,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
+import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.Iterables;
 
 public final class EvaluatorRegistry {
@@ -36,6 +37,11 @@ public final class EvaluatorRegistry {
 
 	public void register(Evaluator evaluator) {
 		Class<?> contextClass = evaluator.getContextClass();
+		if (contextClass.equals(Object.class))
+			throw new ArgumentException("evaluator",
+					"An evaluator cannot have Object class as a context. "
+							+ "You can provide the NoContext class or "
+							+ "simply 'null' instead.");
 		contextClass = contextClass != null ? contextClass : NoContext.class;
 		List<Evaluator> evals;
 		Class<?> instanceClass = evaluator.getInstanceClass();

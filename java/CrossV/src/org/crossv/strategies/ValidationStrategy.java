@@ -6,5 +6,5 @@ public abstract class ValidationStrategy {
 
 	public static ValidationStrategy DEFAULT = new ValidationByContextStrategy();
 
-	public abstract Iterable<Evaluator> apply(Iterable<Evaluator> evaluators, Class<?> contextClass);
+	public abstract Iterable<Evaluator> apply(Iterable<Evaluator> evaluators);
 }

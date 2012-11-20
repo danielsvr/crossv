@@ -3,6 +3,7 @@ package org.crossv.primitives;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
@@ -172,6 +173,11 @@ public class Iterables {
 
 	public static <E> Iterable<E> toIterable(E obj) {
 		return new ArrayIterable<E>(obj, null);
+	}
+
+
+	public static <E> Iterable<E> toIterable(Enumeration<E> obj) {
+		return new EnumerationIterable<E>(obj);
 	}
 
 	public static <E> Iterable<E> toIterable(E... objs) {
