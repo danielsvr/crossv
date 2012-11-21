@@ -1,8 +1,6 @@
 package org.crossv.primitives;
 
-import java.util.Iterator;
-
-public class LazyArrayConverterIterator<E, ER> implements Iterator<ER> {
+public class LazyArrayConverterIterator<E, ER> extends IteratorAdapter<ER> {
 
 	private final E[] array;
 	private final Function<E, ER> converter;
@@ -23,10 +21,4 @@ public class LazyArrayConverterIterator<E, ER> implements Iterator<ER> {
 	public ER next() {
 		return converter.eval(array[index]);
 	}
-
-	@Override
-	public void remove() {
-		throw new IllegalStateException("Cannot remove elements.");
-	}
-
 }

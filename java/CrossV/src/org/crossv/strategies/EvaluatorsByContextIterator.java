@@ -5,73 +5,66 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.crossv.Evaluator;
 
 public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 
-	private Iterator<EvaluatorProxy> evaluators;
-	private Iterator<EvaluatorProxy> tempEvaluators;
+	private Iterator<EvaluatorProxy> mainIterator;
+	private Iterator<EvaluatorProxy> remainsIterator;
 	private Dictionary<Integer, List<EvaluatorProxy>> evaluatorsByLevel;
 	private int currentDepth;
+	private IteratorCancelationSource cancelationSource;
 
-	public EvaluatorsByContextIterator(Iterator<EvaluatorProxy> evaluators) {
-		this.evaluators = evaluators;
+	public EvaluatorsByContextIterator(Iterator<EvaluatorProxy> evaluators,
+			IteratorCancelationSource cancelationSource) {
+		this.mainIterator = evaluators;
+		this.cancelationSource = cancelationSource;
 		this.evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
 		this.currentDepth = 1;
 	}
 
 	@Override
 	public boolean hasNext() {
-		return evaluators.hasNext()
-				|| (tempEvaluators != null && tempEvaluators.hasNext());
+		if (cancelationSource.isCanceled())
+			return false;
+
+		return mainIterator.hasNext()
+				|| (remainsIterator != null && remainsIterator.hasNext());
 	}
 
 	@Override
 	public Evaluator next() {
-		if (currentDepth == 1) {
-			EvaluatorProxy eval = getEval();
-			if (eval != null)
-				return eval;
-		}
-		return getEval2();
-	}
+		if (cancelationSource.isCanceled())
+			throw new NoSuchElementException("Iteration canceled.");
 
-	private Evaluator getEval2() {
-		if (evaluators.hasNext())
-			return getEval();
-		if (tempEvaluators == null || !tempEvaluators.hasNext()) {
-			currentDepth++;
-			List<EvaluatorProxy> evaluatorsByLevel;
-			evaluatorsByLevel = getEvaluatorsByLevel(currentDepth);
-			if (evaluatorsByLevel != null)
-				tempEvaluators = evaluatorsByLevel.iterator();
-		}
-		return tempEvaluators.next();
-	}
-
-	public EvaluatorProxy getEval() {
-		List<EvaluatorProxy> evals;
-	 while (evaluators.hasNext()){
-			EvaluatorProxy evaluator = evaluators.next();
+		List<EvaluatorProxy> evaluatorsByLevel;
+		while (mainIterator.hasNext()) {
+			EvaluatorProxy evaluator = mainIterator.next();
 
 			int contextDepth = evaluator.getContextDepth();
-			if (contextDepth == currentDepth) {
+			if (contextDepth == currentDepth)
 				return evaluator;
-			} else {
-				evals = getEvaluatorsByLevel(contextDepth);
-				if (!evals.contains(evaluator))
-					evals.add(evaluator);
+			else {
+				evaluatorsByLevel = getEvaluatorsByLevel(contextDepth);
+				if (!evaluatorsByLevel.contains(evaluator))
+					evaluatorsByLevel.add(evaluator);
 			}
 		}
-		
-		return null;
+		if (remainsIterator == null || !remainsIterator.hasNext()) {
+			currentDepth++;
+			evaluatorsByLevel = getEvaluatorsByLevel(currentDepth);
+			if (evaluatorsByLevel != null)
+				remainsIterator = evaluatorsByLevel.iterator();
+		}
+		return remainsIterator.next();
 	}
 
 	private List<EvaluatorProxy> getEvaluatorsByLevel(int i) {
 		List<EvaluatorProxy> evals = evaluatorsByLevel.get(i);
 		evals = evals != null ? evals : new ArrayList<EvaluatorProxy>();
-		evaluatorsByLevel.put(Integer.valueOf(i), evals);
+		evaluatorsByLevel.put(i, evals);
 		return evals;
 	}
 

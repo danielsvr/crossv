@@ -10,7 +10,8 @@ import java.util.List;
 
 import org.crossv.Evaluator;
 import org.crossv.strategies.EvaluatorProxy;
-import org.crossv.strategies.EvaluatorsByContextIterable;
+import org.crossv.strategies.EvaluatorsByContextIterator;
+import org.crossv.strategies.NeverCancel;
 import org.crossv.tests.subjects.ExtendedConext;
 import org.crossv.tests.subjects.ExtraExtendedConext;
 import org.crossv.tests.subjects.IndependentContext1;
@@ -51,11 +52,11 @@ public class EvaluatorsByContextIteratorTests {
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
 				IndependentContext1.class);
 		testedlist.add(new EvaluatorProxy(evaluator));
-		Iterable<Evaluator> it = new EvaluatorsByContextIterable(testedlist);
-		Iterator<Evaluator> itr = it.iterator();
+		Iterator<Evaluator> itr = new EvaluatorsByContextIterator(
+				testedlist.iterator(), NeverCancel.instance);
 		Evaluator next;
 		Class<?> contextClass;
-		
+
 		next = itr.next();
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(SuperContext.class));

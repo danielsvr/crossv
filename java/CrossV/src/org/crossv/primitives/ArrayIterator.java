@@ -1,8 +1,6 @@
 package org.crossv.primitives;
 
-import java.util.Iterator;
-
-public class ArrayIterator<E> implements Iterator<E> {
+public class ArrayIterator<E> extends IteratorAdapter<E> {
 
 	int index;
 	E obj;
@@ -25,9 +23,5 @@ public class ArrayIterator<E> implements Iterator<E> {
 		if (++index == -1)
 			return obj;
 		return objs != null ? objs[index] : null;
-	}
-
-	@Override
-	public void remove() {
 	}
 }

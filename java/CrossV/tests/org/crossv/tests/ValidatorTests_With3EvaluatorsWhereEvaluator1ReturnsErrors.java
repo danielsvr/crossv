@@ -20,6 +20,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * @deprecated rename and refactor these tests! these are ment fot default
+ *             validation strategy
+ */
 @Deprecated
 public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 

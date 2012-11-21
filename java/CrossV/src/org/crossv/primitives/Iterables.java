@@ -29,15 +29,6 @@ public class Iterables {
 		return list;
 	}
 
-	public static <E> List<E> asList(IterableOnly<E> iterable) {
-		if (iterable == null)
-			throw new ArgumentNullException("iterable");
-
-		if (iterable.innerIterable() instanceof List)
-			return (List<E>) iterable.innerIterable();
-		return toList((Iterable<E>) iterable);
-	}
-
 	public static <E> List<E> asList(Iterable<E> iterable) {
 		if (iterable == null)
 			throw new ArgumentNullException("iterable");
@@ -143,8 +134,10 @@ public class Iterables {
 			throw new ArgumentNullException("iterable");
 		if (converter == null)
 			throw new ArgumentNullException("converter");
-
-		return new LazyConvertorIterable<ER, E>(iterable, converter);
+		LazyConverterIterator<E, ER> iterator;
+		iterator = new LazyConverterIterator<E, ER>(iterable.iterator(),
+				converter);
+		return new IterableObjects<ER>(iterator);
 	}
 
 	public static <E, ER> Iterable<ER> select(E[] iterable,
@@ -153,8 +146,9 @@ public class Iterables {
 			throw new ArgumentNullException("iterable");
 		if (converter == null)
 			throw new ArgumentNullException("converter");
-
-		return new LazyConvertorIterable<ER, E>(iterable, converter);
+		LazyArrayConverterIterator<E, ER> iterator;
+		iterator = new LazyArrayConverterIterator<E, ER>(iterable, converter);
+		return new IterableObjects<ER>(iterator);
 	}
 
 	public static <E> void addAllToList(List<E> list, Iterable<E> iterable) {
@@ -163,19 +157,25 @@ public class Iterables {
 	}
 
 	public static <E> Iterable<E> toIterable(E obj) {
-		return new ArrayIterable<E>(obj, null);
+		ArrayIterator<E> arrayIterator;
+		arrayIterator = new ArrayIterator<E>(obj, null);
+		return new IterableObjects<E>(arrayIterator);
 	}
 
 	public static <E> Iterable<E> toIterable(Enumeration<E> obj) {
-		return new EnumerationIterable<E>(obj);
+		EnumerationIterator<E> iterator;
+		iterator = new EnumerationIterator<E>(obj);
+		return new IterableObjects<E>(iterator);
 	}
 
 	public static <E> Iterable<E> toIterable(E... objs) {
-		return new ArrayIterable<E>(null, objs);
+		ArrayIterator<E> arrayIterator;
+		arrayIterator = new ArrayIterator<E>(null, objs);
+		return new IterableObjects<E>(arrayIterator);
 	}
 
 	public static <E> Iterable<E> empty() {
-		return new IterableOnly<E>();
+		return new EmptyIterable<E>();
 	}
 
 	public static <E> boolean containsAll(Iterable<E> iterable, Iterable<E> objs) {
@@ -196,14 +196,16 @@ public class Iterables {
 	}
 
 	public static <E> Iterable<E> emptyIfNull(Iterable<E> iterable) {
-		return iterable == null ? new IterableOnly<E>() : iterable;
+		return iterable == null ? new EmptyIterable<E>() : iterable;
 	}
 
 	public static <E> Iterable<E> emptyIfNull(E[] evaluators) {
-		return evaluators == null ? new IterableOnly<E>() : toList(evaluators);
+		return evaluators == null ? new EmptyIterable<E>() : toList(evaluators);
 	}
 
 	public static <E, ER> Iterable<ER> cast(Iterable<E> iterable) {
-		return new LazyCastIterable<E, ER>(iterable);
+		LazyCastIterator<E, ER> castIterator;
+		castIterator = new LazyCastIterator<E, ER>(iterable.iterator());
+		return new IterableObjects<ER>(castIterator);
 	}
 }

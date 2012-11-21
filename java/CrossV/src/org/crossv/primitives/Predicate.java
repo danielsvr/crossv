@@ -1,7 +1,5 @@
 package org.crossv.primitives;
 
-public interface Predicate<T> {
-	
+public interface Predicate<T> {	
 	boolean eval(T value);
-	
 }

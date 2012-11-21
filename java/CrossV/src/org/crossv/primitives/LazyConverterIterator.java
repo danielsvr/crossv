@@ -2,7 +2,7 @@ package org.crossv.primitives;
 
 import java.util.Iterator;
 
-public class LazyConverterIterator<E, ER> implements Iterator<ER> {
+public class LazyConverterIterator<E, ER> extends IteratorAdapter<ER> {
 
 	private final Iterator<E> iterator;
 	private final Function<E, ER> converter;
@@ -25,10 +25,4 @@ public class LazyConverterIterator<E, ER> implements Iterator<ER> {
 	public ER next() {
 		return converter.eval(iterator.next());
 	}
-
-	@Override
-	public void remove() {
-		throw new IllegalStateException("Cannot remove elements.");
-	}
-
 }

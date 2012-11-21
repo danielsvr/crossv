@@ -1,9 +1,8 @@
 package org.crossv.primitives;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 
-public class EnumerationIterator<E> implements Iterator<E> {
+public class EnumerationIterator<E> extends IteratorAdapter<E> {
 
 	private Enumeration<E> enumeration;
 
@@ -20,11 +19,4 @@ public class EnumerationIterator<E> implements Iterator<E> {
 	public E next() {
 		return enumeration.nextElement();
 	}
-
-	@Override
-	public void remove() {
-		throw new IllegalStateException(
-				"Cannot remove elements from an enumeration.");
-	}
-
 }
