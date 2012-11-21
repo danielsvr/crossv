@@ -20,6 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+@Deprecated
 public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 
 	static Evaluation superContextError = Evaluation.error("Error");

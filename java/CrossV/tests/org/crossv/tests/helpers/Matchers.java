@@ -32,5 +32,8 @@ public class Matchers {
 	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
 		return org.hamcrest.CoreMatchers.not(hasAll(objs));
 	}
-	
+
+	public static Matcher<Object> equalToObject(Object obj) {
+		return org.hamcrest.CoreMatchers.equalTo(obj);
+	}
 }
