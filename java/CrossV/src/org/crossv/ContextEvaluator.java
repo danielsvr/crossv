@@ -9,6 +9,7 @@ import org.crossv.primitives.ArgumentNullException;
  * {@link ContextEvaluator}&lt;E, NoContext&gt; is an implementation of
  * {@link Evaluator}
  * 
+ * @author yochanan.miykael
  */
 public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 

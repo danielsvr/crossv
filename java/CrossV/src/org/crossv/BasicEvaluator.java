@@ -6,6 +6,8 @@ package org.crossv;
  * 
  * {@link BasicEvaluator}&lt;E&gt; extends the abstract class
  * {@link ContextEvaluator}&lt;E, NoContext&gt;
+ * 
+ * @author yochanan.miykael
  */
 public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
 

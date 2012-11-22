@@ -27,7 +27,7 @@ import org.junit.Test;
 @Deprecated
 public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 
-	static Evaluation superContextError = Evaluation.error("Error");
+	static Evaluation superContextError = Evaluation.fault("Error");
 	static Evaluation extendedContextSuccess = Evaluation.success("Success");
 	static Evaluation independentContext1Success = Evaluation
 			.success("Success");

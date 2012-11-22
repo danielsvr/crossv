@@ -3,6 +3,8 @@ package org.crossv;
 /**
  * An evaluator that will evaluate an object in a context and will provide
  * meta-data for a easer manipulation.
+ * 
+ * @author yochanan.miykael
  */
 public interface Evaluator {
 
@@ -19,7 +21,7 @@ public interface Evaluator {
 	 * @throws IllegalObjectException
 	 *             if the provided instance of the object is not the same
 	 *             {@link Class} as configured or if the provided context is not
-	 *             the same {@link Class} as configured. 
+	 *             the same {@link Class} as configured.
 	 */
 	Iterable<Evaluation> evaluate(Object obj, Object context)
 			throws IllegalObjectException;

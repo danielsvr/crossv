@@ -8,19 +8,40 @@ import java.util.List;
 import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.Iterables;
 
+
+/**
+ * An registry of evaluators that will be used by the {@link Validator}.
+ * 
+ * @author yochanan.miykael
+ */
 public final class EvaluatorRegistry {
 	private List<Evaluator> allEvaluators;
 	private Dictionary<Class<?>, List<Evaluator>> noContextEvaluatorsByEvaluatedClass;
 	private Dictionary<Class<?>, Dictionary<Class<?>, List<Evaluator>>> contextTable;
 
+	/**
+	 * Creates an instance of an {@link EvaluatorRegistry}.
+	 */
 	public EvaluatorRegistry() {
 		this(null);
 	}
 
+	/**
+	 * Creates an instance of an {@link EvaluatorRegistry}.
+	 * 
+	 * @param evaluator
+	 *            that will be added to the registry.
+	 */
 	public EvaluatorRegistry(Evaluator evaluator) {
 		this(evaluator, (Evaluator[]) null);
 	}
 
+	/**
+	 * Creates an instance of an {@link EvaluatorRegistry}.
+	 * 
+	 * @param evaluators
+	 *            that will be added to the registry.
+	 */
 	public EvaluatorRegistry(Evaluator evaluator1, Evaluator... evaluators) {
 		allEvaluators = new ArrayList<Evaluator>();
 		contextTable = new Hashtable<Class<?>, Dictionary<Class<?>, List<Evaluator>>>();
@@ -35,6 +56,12 @@ public final class EvaluatorRegistry {
 			register(evaluator);
 	}
 
+	/**
+	 * Registers an instance of {@link Evaluator}.
+	 * 
+	 * @param evaluator
+	 *            that will be registered.
+	 */
 	public void register(Evaluator evaluator) {
 		Class<?> contextClass = evaluator.getContextClass();
 		if (contextClass.equals(Object.class))
@@ -79,14 +106,50 @@ public final class EvaluatorRegistry {
 		allEvaluators.add(evaluator);
 	}
 
+	/**
+	 * Registers an instance of {@link ContextEvaluator}&lt;E, EContext&gt;.
+	 * 
+	 * @param evaluator
+	 *            that will be registered.
+	 */
 	public <E, EContext> void register(ContextEvaluator<E, EContext> evaluator) {
 		register((Evaluator) evaluator);
 	}
 
+	/**
+	 * Registers an instance of {@link BasicEvaluator}&lt;E&gt;.
+	 * 
+	 * @param evaluator
+	 *            that will be registered.
+	 */
+	public <E> void register(BasicEvaluator<E> evaluator) {
+		register((Evaluator) evaluator);
+	}
+
+	/**
+	 * Evaluates if the provided evaluator is present in the registry.
+	 * 
+	 * @param evaluator
+	 *            that will be searched.
+	 * @return {@code true} is the provided evaluator is present in the
+	 *         registry.{@code false} otherwise.
+	 */
 	public boolean contains(Evaluator evaluator) {
 		return allEvaluators.contains(evaluator);
 	}
 
+	/**
+	 * Gets all the registered evaluators for the provided object and context
+	 * {@link Class}es.
+	 * 
+	 * @param objClass
+	 *            is the {@link Class} of the object that will be evaluated.
+	 * @param contextClass
+	 *            is the {@link Class} of the context on which the object will
+	 *            be evaluated.
+	 * @return a sequence of evaluators for the provided object and context
+	 *         {@link Class}es.
+	 */
 	public <E, EContext> Iterable<Evaluator> get(Class<E> objClass,
 			Class<EContext> contextClass) {
 
