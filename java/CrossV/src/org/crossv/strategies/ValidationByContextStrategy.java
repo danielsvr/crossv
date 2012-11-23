@@ -5,7 +5,6 @@ import static org.crossv.primitives.Iterables.addAllToList;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
@@ -18,7 +17,6 @@ public class ValidationByContextStrategy extends ValidationStrategy {
 	List<Evaluation> evaluations;
 	int currentEvaluationDepth;
 	boolean isIterationCanceled;
-	UUID currentBatchId;
 
 	public ValidationByContextStrategy() {
 		cancelationSource = new IteratorCancelationSource() {
@@ -39,7 +37,6 @@ public class ValidationByContextStrategy extends ValidationStrategy {
 	protected Iterable<Evaluator> applyStrategy(Iterable<EvaluatorProxy> proxies) {
 		EvaluatorsByContextIterator iterator;
 
-		currentBatchId = UUID.randomUUID();
 		evaluations = new ArrayList<Evaluation>();
 		currentEvaluationDepth = 0;
 		isIterationCanceled = false;
@@ -50,7 +47,6 @@ public class ValidationByContextStrategy extends ValidationStrategy {
 	@Override
 	protected void proxyCreated(EvaluatorProxy proxy) {
 		proxy.addListener(listener);
-		proxy.setEvaluationBatchId(currentBatchId);
 	}
 
 	private boolean isIterationCanceled() {
@@ -59,7 +55,7 @@ public class ValidationByContextStrategy extends ValidationStrategy {
 
 	private void inspectEvaluatorResults(EvaluatorProxy proxy,
 			Iterable<Evaluation> result) {
-		if (!proxy.getEvaluationBatchId().equals(currentBatchId))
+		if (!proxy.getEvaluationBatchId().equals(getCurrentBatchId()))
 			return;
 
 		addAllToList(evaluations, result);
