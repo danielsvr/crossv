@@ -11,7 +11,7 @@ public abstract class ValidationStrategy {
 	public final Iterable<Evaluator> apply(Iterable<Evaluator> evaluators) {
 		Iterable<Evaluator> proxies;
 		Iterable<EvaluatorProxy> castedProxies;
-		
+
 		proxies = Iterables.select(evaluators,
 				new Function<Evaluator, Evaluator>() {
 					public Evaluator eval(Evaluator value) {
@@ -19,12 +19,12 @@ public abstract class ValidationStrategy {
 					}
 				});
 		castedProxies = Iterables.<Evaluator, EvaluatorProxy> cast(proxies);
-		
+
 		return applyStrategy(castedProxies);
 	}
 
 	protected abstract Iterable<Evaluator> applyStrategy(
-			Iterable<EvaluatorProxy> evaluators);
+			Iterable<EvaluatorProxy> proxies);
 
 	protected void proxyCreated(EvaluatorProxy proxy) {
 	}

@@ -1,16 +1,12 @@
 package org.crossv.strategies;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
 import org.crossv.NoContext;
 
 public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
-
-	private final UUID id = UUID.randomUUID();
-
 	private final Evaluator realEvaluator;
 	private final ArrayList<EvaluatorProxyListener> listeners;
 	private Integer contextInheritanceDepth;
@@ -69,9 +65,9 @@ public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
 		for (EvaluatorProxyListener listener : listeners)
 			listener.evaluateMethodCalled(this, result);
 	}
-	
+
 	@Override
 	public String toString() {
-		return super.toString() + id;
+		return super.toString() + "#" + getContextClass();
 	}
 }

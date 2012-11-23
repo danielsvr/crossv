@@ -24,4 +24,9 @@ public class ArrayIterator<E> extends IteratorAdapter<E> {
 			return obj;
 		return objs != null ? objs[index] : null;
 	}
+
+	@Override
+	public void reset() {
+		index = obj != null ? -2 : -1;
+	}
 }

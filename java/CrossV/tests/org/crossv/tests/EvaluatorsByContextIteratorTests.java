@@ -1,17 +1,16 @@
 package org.crossv.tests;
 
 import static org.crossv.tests.helpers.Matchers.equalToObject;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.crossv.Evaluator;
+import org.crossv.primitives.IterableObjects;
+import org.crossv.primitives.Iterables;
 import org.crossv.strategies.EvaluatorProxy;
 import org.crossv.strategies.EvaluatorsByContextIterator;
-import org.crossv.strategies.NeverCancel;
 import org.crossv.tests.subjects.ExtendedConext;
 import org.crossv.tests.subjects.ExtraExtendedConext;
 import org.crossv.tests.subjects.IndependentContext1;
@@ -52,30 +51,30 @@ public class EvaluatorsByContextIteratorTests {
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
 				IndependentContext1.class);
 		testedlist.add(new EvaluatorProxy(evaluator));
-		Iterator<Evaluator> itr = new EvaluatorsByContextIterator(
-				testedlist.iterator(), NeverCancel.instance);
+		Iterable<Evaluator> it = new IterableObjects<Evaluator>(
+				new EvaluatorsByContextIterator(testedlist));
+
 		Evaluator next;
 		Class<?> contextClass;
 
-		next = itr.next();
+		next = Iterables.elementAt(it, 0);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(SuperContext.class));
-		next = itr.next();
+		next = Iterables.elementAt(it, 1);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(IndependentContext1.class));
-		next = itr.next();
+		next = Iterables.elementAt(it, 2);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(ExtendedConext.class));
-		next = itr.next();
+		next = Iterables.elementAt(it, 3);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(ExtendedConext.class));
-		next = itr.next();
+		next = Iterables.elementAt(it, 4);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(ExtendedConext.class));
-		next = itr.next();
+		next = Iterables.elementAt(it, 5);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(ExtraExtendedConext.class));
-		assertThat(itr.hasNext(), is(false));
 	}
 
 }

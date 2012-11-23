@@ -12,5 +12,8 @@ public class EmptyIterable<E> implements Iterable<E> {
 	}
 
 	private class EmptyIterator extends IteratorAdapter<E> {
+		@Override
+		public void reset() {
+		}
 	}
 }

@@ -135,8 +135,7 @@ public class Iterables {
 		if (converter == null)
 			throw new ArgumentNullException("converter");
 		LazyConverterIterator<E, ER> iterator;
-		iterator = new LazyConverterIterator<E, ER>(iterable.iterator(),
-				converter);
+		iterator = new LazyConverterIterator<E, ER>(iterable, converter);
 		return new IterableObjects<ER>(iterator);
 	}
 
@@ -178,6 +177,20 @@ public class Iterables {
 		return new EmptyIterable<E>();
 	}
 
+	public static <E> E elementAt(Iterable<E> iterable, int index) {
+		int i = -1;
+		for (E e : iterable) {
+			i++;
+			if (i == index)
+				return e;
+		}
+
+		String message;
+		message = "Provided index exceeds the boundary of the iterable instance.";
+		message = String.format("%sIndex: %d.", message, index);
+		throw new IndexOutOfBoundsException(message);
+	}
+
 	public static <E> boolean containsAll(Iterable<E> iterable, Iterable<E> objs) {
 		objs = emptyIfNull(objs);
 		iterable = emptyIfNull(iterable);
@@ -205,7 +218,7 @@ public class Iterables {
 
 	public static <E, ER> Iterable<ER> cast(Iterable<E> iterable) {
 		LazyCastIterator<E, ER> castIterator;
-		castIterator = new LazyCastIterator<E, ER>(iterable.iterator());
+		castIterator = new LazyCastIterator<E, ER>(iterable);
 		return new IterableObjects<ER>(castIterator);
 	}
 }

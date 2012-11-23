@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.crossv.Evaluator;
+import org.crossv.primitives.IteratorCancelationSource;
+import org.crossv.primitives.NeverCancel;
 
 public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 
@@ -17,9 +19,13 @@ public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 	private int currentDepth;
 	private IteratorCancelationSource cancelationSource;
 
-	public EvaluatorsByContextIterator(Iterator<EvaluatorProxy> evaluators,
+	public EvaluatorsByContextIterator(Iterable<EvaluatorProxy> evaluators) {
+		this(evaluators, NeverCancel.instance);
+	}
+
+	public EvaluatorsByContextIterator(Iterable<EvaluatorProxy> evaluators,
 			IteratorCancelationSource cancelationSource) {
-		this.mainIterator = evaluators;
+		this.mainIterator = evaluators.iterator();
 		this.cancelationSource = cancelationSource;
 		this.evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
 		this.currentDepth = 1;

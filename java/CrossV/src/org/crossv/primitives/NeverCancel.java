@@ -1,4 +1,4 @@
-package org.crossv.strategies;
+package org.crossv.primitives;
 
 public class NeverCancel implements IteratorCancelationSource {
 	public static NeverCancel instance = new NeverCancel();

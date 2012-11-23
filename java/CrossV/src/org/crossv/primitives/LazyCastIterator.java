@@ -4,10 +4,12 @@ import java.util.Iterator;
 
 public class LazyCastIterator<E, ER> extends IteratorAdapter<ER> {
 
-	private final Iterator<E> iterator;
+	private Iterator<E> iterator;
+	private final Iterable<E> iterable;
 
-	public LazyCastIterator(Iterator<E> iterator) {
-		this.iterator = iterator;
+	public LazyCastIterator(Iterable<E> iterable) {
+		this.iterable = iterable;
+		this.iterator = iterable.iterator();
 	}
 
 	@Override
@@ -19,5 +21,10 @@ public class LazyCastIterator<E, ER> extends IteratorAdapter<ER> {
 	@Override
 	public ER next() {
 		return (ER) iterator.next();
+	}
+
+	@Override
+	public void reset() {
+		iterator = iterable.iterator();
 	}
 }

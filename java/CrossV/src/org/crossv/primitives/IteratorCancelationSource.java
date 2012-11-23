@@ -1,4 +1,4 @@
-package org.crossv.strategies;
+package org.crossv.primitives;
 
 public interface IteratorCancelationSource {
 	boolean isCanceled();

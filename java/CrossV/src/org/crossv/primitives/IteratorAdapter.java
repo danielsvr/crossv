@@ -3,7 +3,8 @@ package org.crossv.primitives;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class IteratorAdapter<E> implements Iterator<E> {
+public abstract class IteratorAdapter<E> implements Iterator<E>,
+		Resettable {
 
 	protected IteratorAdapter() {
 	}
@@ -15,13 +16,19 @@ public class IteratorAdapter<E> implements Iterator<E> {
 
 	@Override
 	public E next() {
-		throw new NoSuchElementException(
-				"There are no more elements to iterate.");
+		String message = "There are no more elements to iterate.";
+		throw new NoSuchElementException(message);
 	}
 
 	@Override
 	public void remove() {
-		throw new IllegalStateException(
-				"Cannot remove elements from an empty iterator");
+		String message = "Cannot remove elements from a readonly iterator";
+		throw new IllegalStateException(message);
+	}
+	
+	@Override
+	public void reset() {
+		String message = "Cannot reset one way iterator";
+		throw new IllegalStateException(message);
 	}
 }

@@ -21,4 +21,9 @@ public class LazyArrayConverterIterator<E, ER> extends IteratorAdapter<ER> {
 	public ER next() {
 		return converter.eval(array[index]);
 	}
+
+	@Override
+	public void reset() {
+		index = -1;
+	}
 }
