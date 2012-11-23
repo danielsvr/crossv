@@ -1,38 +1,31 @@
 package org.crossv.strategies;
 
-import java.util.Iterator;
+import static org.crossv.EvaluationUtil.containsAnyFault;
+import static org.crossv.primitives.Iterables.addAllToList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
 import org.crossv.primitives.IterableObjects;
 import org.crossv.primitives.IteratorCancelationSource;
-import org.crossv.primitives.IteratorFactory;
 
 public class ValidationByContextStrategy extends ValidationStrategy {
-	@Override
-	protected Iterable<Evaluator> applyStrategy(Iterable<EvaluatorProxy> proxies) {
+	IteratorCancelationSource cancelationSource;
+	EvaluatorProxyListener listener;
+	List<Evaluation> evaluations;
+	int currentEvaluationDepth;
+	boolean isIterationCanceled;
+	UUID currentBatchId;
 
-		IteratorCancelationSource cancelationSource;
-		EvaluatorsByContextIterator iterator;
-
+	public ValidationByContextStrategy() {
 		cancelationSource = new IteratorCancelationSource() {
 			public boolean isCanceled() {
 				return isIterationCanceled();
 			}
 		};
-
-		return new IterableObjects<Evaluator>(new IteratorFactory() {
-			@Override
-			public Iterator<Evaluator> create() {
-				return new EvaluatorsByContextIterator(proxies,
-						cancelationSource);
-			}
-		});
-	}
-
-	@Override
-	protected void proxyCreated(EvaluatorProxy proxy) {
-		EvaluatorProxyListener listener;
 
 		listener = new EvaluatorProxyListener() {
 			public void evaluateMethodCalled(EvaluatorProxy proxy,
@@ -40,15 +33,41 @@ public class ValidationByContextStrategy extends ValidationStrategy {
 				inspectEvaluatorResults(proxy, result);
 			}
 		};
+	}
 
+	@Override
+	protected Iterable<Evaluator> applyStrategy(Iterable<EvaluatorProxy> proxies) {
+		EvaluatorsByContextIterator iterator;
+
+		currentBatchId = UUID.randomUUID();
+		evaluations = new ArrayList<Evaluation>();
+		currentEvaluationDepth = 0;
+		isIterationCanceled = false;
+		iterator = new EvaluatorsByContextIterator(proxies, cancelationSource);
+		return new IterableObjects<Evaluator>(iterator);
+	}
+
+	@Override
+	protected void proxyCreated(EvaluatorProxy proxy) {
 		proxy.addListener(listener);
+		proxy.setEvaluationBatchId(currentBatchId);
 	}
 
 	private boolean isIterationCanceled() {
-		return false;
+		return isIterationCanceled;
 	}
 
 	private void inspectEvaluatorResults(EvaluatorProxy proxy,
 			Iterable<Evaluation> result) {
+		if (!proxy.getEvaluationBatchId().equals(currentBatchId))
+			return;
+
+		addAllToList(evaluations, result);
+
+		if (proxy.getContextDepth() == currentEvaluationDepth)
+			return;
+
+		isIterationCanceled = containsAnyFault(evaluations);
+		currentEvaluationDepth++;
 	}
 }

@@ -6,7 +6,9 @@ import org.crossv.primitives.Iterables;
 
 public abstract class ValidationStrategy {
 
-	public static ValidationStrategy DEFAULT = new ValidationByContextStrategy();
+	public static ValidationStrategy createDefault() {
+		return new ValidationByContextStrategy();
+	}
 
 	public final Iterable<Evaluator> apply(Iterable<Evaluator> evaluators) {
 		Iterable<Evaluator> proxies;

@@ -1,6 +1,6 @@
 package org.crossv;
 
-import static org.crossv.EvaluationResults.containsAnyFault;
+import static org.crossv.EvaluationUtil.containsAnyFault;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.Function;

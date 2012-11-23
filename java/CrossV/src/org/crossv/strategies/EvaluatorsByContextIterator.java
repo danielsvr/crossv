@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.crossv.Evaluator;
+import org.crossv.primitives.IteratorAdapter;
 import org.crossv.primitives.IteratorCancelationSource;
 import org.crossv.primitives.NeverCancel;
 
-public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
+public class EvaluatorsByContextIterator extends IteratorAdapter<Evaluator> {
 
 	private Iterator<EvaluatorProxy> mainIterator;
 	private Iterator<EvaluatorProxy> remainsIterator;
 	private Dictionary<Integer, List<EvaluatorProxy>> evaluatorsByLevel;
 	private int currentDepth;
 	private IteratorCancelationSource cancelationSource;
+	private final Iterable<EvaluatorProxy> evaluators;
 
 	public EvaluatorsByContextIterator(Iterable<EvaluatorProxy> evaluators) {
 		this(evaluators, NeverCancel.instance);
@@ -25,6 +27,7 @@ public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 
 	public EvaluatorsByContextIterator(Iterable<EvaluatorProxy> evaluators,
 			IteratorCancelationSource cancelationSource) {
+		this.evaluators = evaluators;
 		this.mainIterator = evaluators.iterator();
 		this.cancelationSource = cancelationSource;
 		this.evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
@@ -35,6 +38,9 @@ public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 	public boolean hasNext() {
 		if (cancelationSource.isCanceled())
 			return false;
+
+		if (!mainIterator.hasNext())
+			ensureRemainsIterator();
 
 		return mainIterator.hasNext()
 				|| (remainsIterator != null && remainsIterator.hasNext());
@@ -58,13 +64,22 @@ public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 					evaluatorsByLevel.add(evaluator);
 			}
 		}
-		if (remainsIterator == null || !remainsIterator.hasNext()) {
-			currentDepth++;
-			evaluatorsByLevel = getEvaluatorsByLevel(currentDepth);
-			if (evaluatorsByLevel != null)
-				remainsIterator = evaluatorsByLevel.iterator();
-		}
+		ensureRemainsIterator();
+		if (remainsIterator == null)
+			throw new NoSuchElementException(
+					"There are no more elements to iterate.");
 		return remainsIterator.next();
+	}
+
+	public void ensureRemainsIterator() {
+		List<EvaluatorProxy> evaluators;
+		if (remainsIterator != null && remainsIterator.hasNext())
+			return;
+
+		currentDepth++;
+		evaluators = getEvaluatorsByLevel(currentDepth);
+		if (evaluators != null)
+			remainsIterator = evaluators.iterator();
 	}
 
 	private List<EvaluatorProxy> getEvaluatorsByLevel(int i) {
@@ -75,8 +90,10 @@ public class EvaluatorsByContextIterator implements Iterator<Evaluator> {
 	}
 
 	@Override
-	public void remove() {
-		throw new IllegalStateException(
-				"Cannot reomve evaluators at this point.");
+	public void reset() {
+		mainIterator = evaluators.iterator();
+		remainsIterator = null;
+		evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
+		currentDepth = 1;
 	}
 }

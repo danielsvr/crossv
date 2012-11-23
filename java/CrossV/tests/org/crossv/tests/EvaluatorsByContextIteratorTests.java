@@ -51,19 +51,20 @@ public class EvaluatorsByContextIteratorTests {
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
 				IndependentContext1.class);
 		testedlist.add(new EvaluatorProxy(evaluator));
-		Iterable<Evaluator> it = new IterableObjects<Evaluator>(
-				new EvaluatorsByContextIterator(testedlist));
+		EvaluatorsByContextIterator iterator = new EvaluatorsByContextIterator(
+				testedlist);
+		Iterable<Evaluator> it = new IterableObjects<Evaluator>(iterator);
 
 		Evaluator next;
 		Class<?> contextClass;
 
-		next = Iterables.elementAt(it, 0);
+		 next = Iterables.elementAt(it, 0);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(SuperContext.class));
-		next = Iterables.elementAt(it, 1);
+		 next = Iterables.elementAt(it, 1);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(IndependentContext1.class));
-		next = Iterables.elementAt(it, 2);
+	    next = Iterables.elementAt(it, 2);
 		contextClass = next.getContextClass();
 		assertThat(contextClass, equalToObject(ExtendedConext.class));
 		next = Iterables.elementAt(it, 3);
