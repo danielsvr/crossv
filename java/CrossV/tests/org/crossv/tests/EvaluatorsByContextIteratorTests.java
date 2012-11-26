@@ -9,8 +9,7 @@ import java.util.List;
 import org.crossv.Evaluator;
 import org.crossv.primitives.IterableObjects;
 import org.crossv.primitives.Iterables;
-import org.crossv.strategies.EvaluatorProxy;
-import org.crossv.strategies.EvaluatorsByContextIterator;
+import org.crossv.strategies.StrategicIteratorByContext;
 import org.crossv.tests.subjects.ExtendedConext;
 import org.crossv.tests.subjects.ExtraExtendedConext;
 import org.crossv.tests.subjects.IndependentContext1;
@@ -29,29 +28,29 @@ public class EvaluatorsByContextIteratorTests {
 
 	@Test
 	public void monkey() {
-		List<EvaluatorProxy> testedlist;
+		List<Evaluator> testedlist;
 		TestableEvaluator evaluator;
 
-		testedlist = new ArrayList<EvaluatorProxy>();
+		testedlist = new ArrayList<Evaluator>();
 		evaluator = new TestableMonkeyEvaluator<ExtendedConext>(
 				ExtendedConext.class);
-		testedlist.add(new EvaluatorProxy(evaluator));
+		testedlist.add(evaluator);
 		evaluator = new TestableMonkeyEvaluator<ExtendedConext>(
 				ExtendedConext.class);
-		testedlist.add(new EvaluatorProxy(evaluator));
+		testedlist.add(evaluator);
 		evaluator = new TestableMonkeyEvaluator<SuperContext>(
 				SuperContext.class);
-		testedlist.add(new EvaluatorProxy(evaluator));
+		testedlist.add(evaluator);
 		evaluator = new TestableMonkeyEvaluator<ExtraExtendedConext>(
 				ExtraExtendedConext.class);
-		testedlist.add(new EvaluatorProxy(evaluator));
+		testedlist.add(evaluator);
 		evaluator = new TestableMonkeyEvaluator<ExtendedConext>(
 				ExtendedConext.class);
-		testedlist.add(new EvaluatorProxy(evaluator));
+		testedlist.add(evaluator);
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
 				IndependentContext1.class);
-		testedlist.add(new EvaluatorProxy(evaluator));
-		EvaluatorsByContextIterator iterator = new EvaluatorsByContextIterator(
+		testedlist.add(evaluator);
+		StrategicIteratorByContext iterator = new StrategicIteratorByContext(
 				testedlist);
 		Iterable<Evaluator> it = new IterableObjects<Evaluator>(iterator);
 

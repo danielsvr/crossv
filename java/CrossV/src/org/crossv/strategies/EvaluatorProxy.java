@@ -6,15 +6,21 @@ import java.util.UUID;
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
 import org.crossv.NoContext;
+import org.crossv.primitives.ArgumentNullException;
+import org.crossv.primitives.Iterables;
 
 public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
 	private final Evaluator realEvaluator;
 	private final ArrayList<EvaluatorProxyListener> listeners;
 	private Integer contextInheritanceDepth;
-	private UUID evaluationBatchId;
+	private final UUID batchId;
+	private boolean shouldReturnEmptyResults;
 
-	public EvaluatorProxy(Evaluator realEvaluator) {
+	public EvaluatorProxy(Evaluator realEvaluator, UUID batchId) {
+		if (realEvaluator == null)
+			throw new ArgumentNullException("realEvaluator");
 		this.realEvaluator = realEvaluator;
+		this.batchId = batchId;
 		this.listeners = new ArrayList<EvaluatorProxyListener>();
 	}
 
@@ -25,12 +31,19 @@ public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
 		result = realEvaluator.evaluate(obj, context);
 		evaluateMethodCalled(result);
 
+		if (shouldReturnEmptyResults)
+			return Iterables.empty();
+
 		return result;
 	}
 
 	@Override
 	public Class<?> getInstanceClass() {
 		return realEvaluator.getInstanceClass();
+	}
+
+	public UUID getBatchId() {
+		return batchId;
 	}
 
 	@Override
@@ -70,15 +83,11 @@ public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
 
 	@Override
 	public String toString() {
-		return super.toString() + "# Context ="
+		return super.getClass().getSimpleName() + "# Context = "
 				+ getContextClass().getSimpleName();
 	}
 
-	public void setEvaluationBatchId(UUID currentBatchId) {
-		this.evaluationBatchId = currentBatchId;
-	}
-
-	public UUID getEvaluationBatchId() {
-		return evaluationBatchId;
+	public void shouldReturnEmptyResults() {
+		shouldReturnEmptyResults = true;
 	}
 }

@@ -21,7 +21,7 @@ public class Validator {
 
 	public Validator(EvaluatorRegistry registry) {
 		this.registry = registry;
-		this.strategy = ValidationStrategy.createDefault();
+		this.strategy = ValidationStrategy.DEFAULT;
 	}
 
 	public ValidationStrategy getStrategy() {
@@ -29,7 +29,7 @@ public class Validator {
 	}
 
 	public void setStrategy(ValidationStrategy strategy) {
-		this.strategy = strategy == null ? ValidationStrategy.createDefault()
+		this.strategy = strategy == null ? ValidationStrategy.DEFAULT
 				: strategy;
 	}
 
