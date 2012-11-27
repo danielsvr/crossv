@@ -17,7 +17,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class EvaluatorRegistryTests_With4EvaluatorsForMonkeyClass {
+public class EvaluatorRegistryTests {
 	Evaluator monkeyEvaluator1;
 	Evaluator monkeyEvaluator2;
 	Evaluator monkeyEvaluator3;

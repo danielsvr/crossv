@@ -5,6 +5,7 @@ import org.crossv.Evaluation;
 import org.crossv.EvaluatorRegistry;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
+import org.crossv.strategies.ValidationByCotextStrategy;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
 import org.crossv.tests.subjects.TestableMonkeyEvaluator;
@@ -28,15 +29,21 @@ public class TestObjectFactory {
 
 	public static <E> TestableMonkeyEvaluator<E> createMonkeyEvaluator(
 			Class<E> clazz, String ruleName) {
-		TestableMonkeyEvaluator<E> eval = new TestableMonkeyEvaluator<E>(clazz);
+		TestableMonkeyEvaluator<E> eval = createMonkeyEvaluator(clazz);
 		eval.withRsults(Evaluation.success(ruleName));
+		return eval;
+	}
+
+	public static <E> TestableMonkeyEvaluator<E> createMonkeyEvaluator(
+			Class<E> clazz) {
+		TestableMonkeyEvaluator<E> eval = new TestableMonkeyEvaluator<E>(clazz);
 		return eval;
 	}
 
 	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
 			Class<E> clazz, String ruleName) {
 		TestableMouseEvaluator<E> eval = new TestableMouseEvaluator<E>(clazz);
-		eval.result =Evaluation.success(ruleName);
+		eval.result = Evaluation.success(ruleName);
 		return eval;
 	}
 
@@ -47,5 +54,9 @@ public class TestObjectFactory {
 	public static EvaluatorRegistry createEvaluatorRegistry() {
 		return new EvaluatorRegistry();
 	}
-	
+
+	public static ValidationByCotextStrategy createValidationByCotextStrategy() {
+		return new ValidationByCotextStrategy();
+	}
+
 }

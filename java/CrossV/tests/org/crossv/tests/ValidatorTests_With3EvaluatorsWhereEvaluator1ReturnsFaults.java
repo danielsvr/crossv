@@ -20,12 +20,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * @deprecated rename and refactor these tests! these are ment fot default
- *             validation strategy
- */
-@Deprecated
-public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
+public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 
 	static Evaluation superContextError = Evaluation.fault("Error");
 	static Evaluation extendedContextSuccess = Evaluation.success("Success");
@@ -141,5 +136,4 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsErrors {
 				new IndependentContext1());
 		assertThat(validation.getResults(), have(independentContext1Success));
 	}
-
 }
