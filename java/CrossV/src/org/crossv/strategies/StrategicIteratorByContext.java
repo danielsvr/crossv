@@ -13,16 +13,12 @@ public class StrategicIteratorByContext extends StrategicIterator {
 	private Iterator<EvaluatorProxy> remainsIterator;
 	private Dictionary<Integer, List<EvaluatorProxy>> evaluatorsByLevel;
 
-	public StrategicIteratorByContext(Iterable<Evaluator> evaluators) {
+	public StrategicIteratorByContext(Iterator<Evaluator> evaluators) {
 		super(evaluators);
-		resetState();
-	}
-
-	@Override
-	protected void resetState() {
 		remainsIterator = null;
 		evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
 	}
+
 
 	@Override
 	protected boolean hasNextEvaluator() {

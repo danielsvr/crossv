@@ -10,7 +10,7 @@ public class StrategicIterableByContext extends StrategicIterable {
 
 	@Override
 	public StrategicIterator iterator() {
-		return new StrategicIteratorByContext(evaluators);
+		return new StrategicIteratorByContext(evaluators.iterator());
 	}
 	
 }

@@ -3,8 +3,7 @@ package org.crossv.primitives;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public abstract class IteratorAdapter<E> implements Iterator<E>,
-		Resettable {
+public abstract class IteratorAdapter<E> implements Iterator<E> {
 
 	protected IteratorAdapter() {
 	}
@@ -23,12 +22,6 @@ public abstract class IteratorAdapter<E> implements Iterator<E>,
 	@Override
 	public void remove() {
 		String message = "Cannot remove elements from a readonly iterator";
-		throw new IllegalStateException(message);
-	}
-	
-	@Override
-	public void reset() {
-		String message = "Cannot reset one way iterator";
 		throw new IllegalStateException(message);
 	}
 }

@@ -7,9 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.crossv.Evaluator;
-import org.crossv.primitives.IterableObjects;
 import org.crossv.primitives.Iterables;
-import org.crossv.strategies.StrategicIteratorByContext;
+import org.crossv.strategies.ValidationByCotextStrategy;
 import org.crossv.tests.subjects.ExtendedConext;
 import org.crossv.tests.subjects.ExtraExtendedConext;
 import org.crossv.tests.subjects.IndependentContext1;
@@ -50,10 +49,8 @@ public class EvaluatorsByContextIteratorTests {
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
 				IndependentContext1.class);
 		testedlist.add(evaluator);
-		StrategicIteratorByContext iterator = new StrategicIteratorByContext(
-				testedlist);
-		Iterable<Evaluator> it = new IterableObjects<Evaluator>(iterator);
-
+		
+		Iterable<Evaluator> it = new ValidationByCotextStrategy().apply(testedlist);
 		Evaluator next;
 		Class<?> contextClass;
 

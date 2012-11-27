@@ -17,7 +17,6 @@ import org.crossv.primitives.IteratorAdapter;
 public abstract class StrategicIterator extends IteratorAdapter<Evaluator>
 		implements EvaluatorProxyListener {
 
-	private final Iterable<Evaluator> evaluators;
 	private Iterator<Evaluator> mainIterator;
 	private List<Evaluation> evaluations;
 	private int iterationDepth;
@@ -25,20 +24,16 @@ public abstract class StrategicIterator extends IteratorAdapter<Evaluator>
 	private boolean shouldStop;
 	private UUID currentBatchId;
 
-	protected StrategicIterator(Iterable<Evaluator> evaluators) {
+	protected StrategicIterator(Iterator<Evaluator> evaluators) {
 		if (evaluators == null)
 			throw new ArgumentNullException("evaluators");
-		this.evaluators = evaluators;
-		privateReset();
-	}
-
-	private void privateReset() {
-		mainIterator = evaluators.iterator();
+		mainIterator = evaluators;
 		evaluations = new ArrayList<Evaluation>();
 		iterationDepth = 1;
 		evaluationDepth = 1;
 		currentBatchId = UUID.randomUUID();
 	}
+
 
 	@Override
 	public final Evaluator next() {
@@ -88,12 +83,6 @@ public abstract class StrategicIterator extends IteratorAdapter<Evaluator>
 		return hasNext;
 	}
 
-	@Override
-	public final void reset() {
-		privateReset();
-		resetState();
-	}
-
 	protected final Iterable<Evaluation> getEvaluations() {
 		return evaluations;
 	}
@@ -139,6 +128,4 @@ public abstract class StrategicIterator extends IteratorAdapter<Evaluator>
 	}
 
 	protected abstract boolean hasNextEvaluator();
-
-	protected abstract void resetState();
 }

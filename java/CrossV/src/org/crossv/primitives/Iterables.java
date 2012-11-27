@@ -134,9 +134,7 @@ public class Iterables {
 			throw new ArgumentNullException("iterable");
 		if (converter == null)
 			throw new ArgumentNullException("converter");
-		LazyConverterIterator<E, ER> iterator;
-		iterator = new LazyConverterIterator<E, ER>(iterable, converter);
-		return new IterableObjects<ER>(iterator);
+		return new LazyConverterIterable<E, ER>(iterable, converter);
 	}
 
 	public static <E, ER> Iterable<ER> select(E[] iterable,
@@ -145,9 +143,7 @@ public class Iterables {
 			throw new ArgumentNullException("iterable");
 		if (converter == null)
 			throw new ArgumentNullException("converter");
-		LazyArrayConverterIterator<E, ER> iterator;
-		iterator = new LazyArrayConverterIterator<E, ER>(iterable, converter);
-		return new IterableObjects<ER>(iterator);
+		return new LazyArrayConverterIterable<E, ER>(iterable, converter);
 	}
 
 	public static <E> void addAllToList(List<E> list, Iterable<E> iterable) {
@@ -156,21 +152,15 @@ public class Iterables {
 	}
 
 	public static <E> Iterable<E> toIterable(E obj) {
-		ArrayIterator<E> arrayIterator;
-		arrayIterator = new ArrayIterator<E>(obj, null);
-		return new IterableObjects<E>(arrayIterator);
+		return new ArrayIterable<E>(obj, null);
 	}
 
 	public static <E> Iterable<E> toIterable(Enumeration<E> obj) {
-		EnumerationIterator<E> iterator;
-		iterator = new EnumerationIterator<E>(obj);
-		return new IterableObjects<E>(iterator);
+		return new EnumerationIterable<E>(obj);
 	}
 
 	public static <E> Iterable<E> toIterable(E... objs) {
-		ArrayIterator<E> arrayIterator;
-		arrayIterator = new ArrayIterator<E>(null, objs);
-		return new IterableObjects<E>(arrayIterator);
+		return new ArrayIterable<E>(null, objs);
 	}
 
 	public static <E> Iterable<E> empty() {
@@ -217,8 +207,6 @@ public class Iterables {
 	}
 
 	public static <E, ER> Iterable<ER> cast(Iterable<E> iterable) {
-		LazyCastIterator<E, ER> castIterator;
-		castIterator = new LazyCastIterator<E, ER>(iterable);
-		return new IterableObjects<ER>(castIterator);
+		return new LazyCastIterable<E, ER>(iterable);
 	}
 }
