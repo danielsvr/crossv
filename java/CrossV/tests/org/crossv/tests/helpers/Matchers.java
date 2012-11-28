@@ -1,5 +1,6 @@
 package org.crossv.tests.helpers;
 
+import org.crossv.Evaluation;
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Matcher;
 
@@ -27,6 +28,16 @@ public class Matchers {
 
 	public static <E> Matcher<Iterable<E>> doesntHave(E obj) {
 		return org.hamcrest.CoreMatchers.not(has(obj));
+	}
+
+	public static Matcher<Iterable<Evaluation>> doesntHaveFaultsWith(
+			Exception exception) {
+		return org.hamcrest.CoreMatchers.not(new HasFaultsWith(exception));
+	}
+
+	public static Matcher<Iterable<Evaluation>> haveFaultsWith(
+			Exception exception) {
+		return new HasFaultsWith(exception);
 	}
 
 	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {

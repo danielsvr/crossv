@@ -7,6 +7,8 @@ package org.crossv;
  */
 public class EvaluationFault extends Evaluation {
 
+	private Throwable cause;
+
 	/**
 	 * Creates an instance of {@link EvaluationFault};
 	 * 
@@ -14,10 +16,23 @@ public class EvaluationFault extends Evaluation {
 	 *            The message that the details will hold.
 	 */
 	public EvaluationFault(String message) {
-		super(new EvaluationFaultDetails(message));
+		super(createDetails(message));
 	}
 
-	public EvaluationFault(Throwable e) {
-		super(new EvaluationFaultDetails(e));
+	public EvaluationFault(Throwable cause) {
+		super(createDetails(cause.getMessage()));
+		this.cause = cause;
+	}
+
+	public Throwable getCause() {
+		return cause;
+	}
+
+	@Override
+	public String toString() {
+		String message = getMessage();
+		if (cause != null)
+			message = cause.toString();
+		return getClass().getSimpleName() + "<" + message + ">";
 	}
 }

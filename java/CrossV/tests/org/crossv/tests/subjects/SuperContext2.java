@@ -1,4 +1,4 @@
 package org.crossv.tests.subjects;
 
-public class SuperContext {
+public class SuperContext2 {
 }

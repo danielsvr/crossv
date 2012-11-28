@@ -10,10 +10,10 @@ import org.crossv.Evaluation;
 import org.crossv.EvaluatorRegistry;
 import org.crossv.Validation;
 import org.crossv.Validator;
-import org.crossv.tests.subjects.ExtendedConext;
+import org.crossv.tests.subjects.ExtendedContext1;
 import org.crossv.tests.subjects.IndependentContext1;
 import org.crossv.tests.subjects.Monkey;
-import org.crossv.tests.subjects.SuperContext;
+import org.crossv.tests.subjects.SuperContext1;
 import org.crossv.tests.subjects.TestableEvaluator;
 import org.crossv.tests.subjects.TestableMonkeyEvaluator;
 import org.junit.After;
@@ -35,12 +35,12 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 	public void setup() {
 		registry = new EvaluatorRegistry();
 		TestableEvaluator evaluator;
-		evaluator = new TestableMonkeyEvaluator<SuperContext>(
-				SuperContext.class);
+		evaluator = new TestableMonkeyEvaluator<SuperContext1>(
+				SuperContext1.class);
 		evaluator.returns(superContextError);
 		registry.register(evaluator);
-		evaluator = new TestableMonkeyEvaluator<ExtendedConext>(
-				ExtendedConext.class);
+		evaluator = new TestableMonkeyEvaluator<ExtendedContext1>(
+				ExtendedContext1.class);
 		evaluator.returns(extendedContextSuccess);
 		registry.register(evaluator);
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
@@ -60,7 +60,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 	public void validate_MonkeyOnExtendedConext_ValidationIsNotSuccessful() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey(),
-				new ExtendedConext());
+				new ExtendedContext1());
 		assertThat(validation.isSuccessful(), is(false));
 	}
 
@@ -68,7 +68,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 	public void validate_MonkeyOnExtendedConext_Returns1ValidationResults() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey(),
-				new ExtendedConext());
+				new ExtendedContext1());
 		assertThat(validation.getResults(), hasSize(1));
 	}
 
@@ -76,7 +76,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 	public void validate_MonkeyOnExtendedConext_ValidationHasResultsOfSuperContext() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey(),
-				new ExtendedConext());
+				new ExtendedContext1());
 		assertThat(validation.getResults(), have(superContextError));
 	}
 
@@ -84,7 +84,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 	public void validate_MonkeyOnExtendedConext_ValidationDoesntHaveResultsOfExtendedContext() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey(),
-				new ExtendedConext());
+				new ExtendedContext1());
 		assertThat(validation.getResults(), doesntHave(extendedContextSuccess));
 	}
 
@@ -92,7 +92,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 	public void validate_MonkeyOnExtendedConext_ValidationDoesntHaveResultsOfIndependentContext() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey(),
-				new ExtendedConext());
+				new ExtendedContext1());
 		assertThat(validation.getResults(),
 				doesntHave(independentContext1Success));
 	}

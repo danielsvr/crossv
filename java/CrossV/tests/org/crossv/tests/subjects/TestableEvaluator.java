@@ -5,5 +5,5 @@ import org.crossv.Evaluator;
 
 public interface TestableEvaluator extends Evaluator {
 	void returns(Evaluation... results);
-	void isThrowing(Exception exception);
+	void isThrowing(RuntimeException exception);
 }

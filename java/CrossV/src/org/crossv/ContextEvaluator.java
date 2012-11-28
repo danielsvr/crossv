@@ -86,7 +86,7 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 		try {
 			return evaluateInstance((E) obj, (EContext) context);
 		} catch (Throwable e) {
-			return Evaluation.fault(e);
+			return Evaluation.fault(new EvaluationFaultException(e));
 		}
 	}
 
@@ -119,8 +119,8 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	protected static void checkClass(Class<?> expected, Class<?> actual)
 			throws IllegalObjectException {
 		String message;
-
-		if (expected.isAssignableFrom(actual))
+		
+		if (actual.equals(NoContext.class) || expected.isAssignableFrom(actual))
 			return;
 
 		message = String.format("Expected class is <%s> or a sublass of it.",

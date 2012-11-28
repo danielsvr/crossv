@@ -8,7 +8,7 @@ public class TestableMonkeyEvaluator<EContext> extends
 		ContextEvaluator<Monkey, EContext> implements TestableEvaluator {
 
 	public Evaluation[] results;
-	private Throwable exception;
+	private RuntimeException exception;
 
 	public TestableMonkeyEvaluator(Class<EContext> contextClass) {
 		super(Monkey.class, contextClass);
@@ -17,7 +17,7 @@ public class TestableMonkeyEvaluator<EContext> extends
 	@Override
 	public Iterable<Evaluation> evaluateInstance(Monkey obj, EContext context)  {
 		if (exception != null)
-			throw new RuntimeException(exception);
+			throw exception;
 		return Iterables.toIterable(results);
 	}
 
@@ -27,7 +27,7 @@ public class TestableMonkeyEvaluator<EContext> extends
 	}
 
 	@Override
-	public void isThrowing(Exception exception) {
+	public void isThrowing(RuntimeException exception) {
 		this.exception = exception;
 	}
 }

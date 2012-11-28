@@ -8,11 +8,11 @@ import static org.junit.Assert.assertThat;
 import org.crossv.Evaluator;
 import org.crossv.EvaluatorRegistry;
 import org.crossv.tests.helpers.TestObjectFactory;
-import org.crossv.tests.subjects.ExtendedConext;
+import org.crossv.tests.subjects.ExtendedContext1;
 import org.crossv.tests.subjects.IndependentContext1;
 import org.crossv.tests.subjects.IndependentContext2;
 import org.crossv.tests.subjects.Monkey;
-import org.crossv.tests.subjects.SuperContext;
+import org.crossv.tests.subjects.SuperContext1;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +32,11 @@ public class EvaluatorRegistryTests {
 		registry = TestObjectFactory.createEvaluatorRegistry();
 
 		monkeyEvaluator1 = TestObjectFactory.createMonkeyEvaluator(
-				SuperContext.class, "Rule1");
+				SuperContext1.class, "Rule1");
 		registry.register(monkeyEvaluator1);
 
 		monkeyEvaluator2 = TestObjectFactory.createMonkeyEvaluator(
-				ExtendedConext.class, "Rule2");
+				ExtendedContext1.class, "Rule2");
 		registry.register(monkeyEvaluator2);
 
 		monkeyEvaluator3 = TestObjectFactory.createMonkeyEvaluator(
@@ -48,11 +48,11 @@ public class EvaluatorRegistryTests {
 		registry.register(monkeyEvaluator4);
 
 		mouseEvaluator1 = TestObjectFactory.createMouseEvaluator(
-				SuperContext.class, "Rule5");
+				SuperContext1.class, "Rule5");
 		registry.register(mouseEvaluator1);
 
 		mouseEvaluator2 = TestObjectFactory.createMouseEvaluator(
-				SuperContext.class, "Rule6");
+				SuperContext1.class, "Rule6");
 		registry.register(mouseEvaluator2);
 	}
 
@@ -70,43 +70,43 @@ public class EvaluatorRegistryTests {
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_Returns2Evaluators() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, hasSize(2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_ReturnsMonkeyEvaluator1() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, has(monkeyEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_ReturnsMonkeyEvaluator2() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, has(monkeyEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMonkeyEvaluator3() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, doesntHave(monkeyEvaluator3));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMonkeyEvaluator4() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, doesntHave(monkeyEvaluator4));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMouseEvaluator1() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, doesntHave(mouseEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMouseEvaluator2() {
-		evaluators = registry.get(Monkey.class, ExtendedConext.class);
+		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
 		assertThat(evaluators, doesntHave(mouseEvaluator2));
 	}
 

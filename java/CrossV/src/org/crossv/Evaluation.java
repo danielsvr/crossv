@@ -28,6 +28,11 @@ public abstract class Evaluation {
 		return details.getMessage();
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + "<" + getMessage() + ">";
+	}
+
 	/**
 	 * Creates an instance of {@link EvaluationSuccess} that holds the provided
 	 * message.

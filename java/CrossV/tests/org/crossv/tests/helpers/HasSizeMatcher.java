@@ -1,7 +1,5 @@
 package org.crossv.tests.helpers;
 
-import java.util.List;
-
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
@@ -17,8 +15,7 @@ public class HasSizeMatcher<E extends Iterable<?>> extends TypeSafeMatcher<E> {
 	@Override
 	public boolean matchesSafely(E obj) {
 		Iterable<?> iterable = (Iterable<?>) obj;
-		List<?> list = Iterables.toList(iterable);
-		listSize = list.size();
+		listSize = Iterables.count(iterable);
 		return size.equals(listSize);
 	}
 
