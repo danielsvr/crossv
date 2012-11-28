@@ -39,7 +39,7 @@ public class Validator {
 
 	public <E> Validation validate(Class<E> objClass, E obj, Object context) {
 		List<Evaluation> allResults = new ArrayList<Evaluation>();
-		Iterable<Evaluator> evaluators;
+		Iterable<? extends Evaluator> evaluators;
 
 		context = context != null ? context : NoContext.instance;
 		Class<?> contextClass = context.getClass();

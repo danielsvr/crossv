@@ -5,9 +5,9 @@ import org.crossv.primitives.ArgumentNullException;
 
 public abstract class StrategicIterable implements Iterable<Evaluator> {
 
-	protected final Iterable<Evaluator> evaluators;
+	protected final Iterable<? extends Evaluator> evaluators;
 
-	protected StrategicIterable(Iterable<Evaluator> evaluators) {
+	protected StrategicIterable(Iterable<? extends Evaluator> evaluators) {
 		if (evaluators == null)
 			throw new ArgumentNullException("evaluators");
 		this.evaluators = evaluators;

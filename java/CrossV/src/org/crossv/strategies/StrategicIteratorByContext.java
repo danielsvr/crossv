@@ -13,7 +13,7 @@ public class StrategicIteratorByContext extends StrategicIterator {
 	private Iterator<EvaluatorProxy> remainsIterator;
 	private Dictionary<Integer, List<EvaluatorProxy>> evaluatorsByLevel;
 
-	public StrategicIteratorByContext(Iterator<Evaluator> evaluators) {
+	public StrategicIteratorByContext(Iterator<? extends Evaluator> evaluators) {
 		super(evaluators);
 		remainsIterator = null;
 		evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
@@ -22,7 +22,7 @@ public class StrategicIteratorByContext extends StrategicIterator {
 
 	@Override
 	protected boolean hasNextEvaluator() {
-		Iterator<Evaluator> mainIterator;
+		Iterator<? extends Evaluator> mainIterator;
 		mainIterator = getMainIterator();
 
 		return mainIterator.hasNext()
@@ -31,7 +31,7 @@ public class StrategicIteratorByContext extends StrategicIterator {
 
 	@Override
 	protected EvaluatorProxy getNextEvaluator() {
-		Iterator<Evaluator> mainIterator;
+		Iterator<? extends Evaluator> mainIterator;
 		Evaluator evaluator;
 		EvaluatorProxy proxy;
 

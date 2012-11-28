@@ -9,5 +9,5 @@ public abstract class ValidationStrategy {
 	protected ValidationStrategy() {
 	}
 
-	public abstract Iterable<Evaluator> apply(Iterable<Evaluator> evaluators);
+	public abstract Iterable<? extends Evaluator> apply(Iterable<? extends Evaluator> evaluators);
 }

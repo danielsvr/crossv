@@ -4,7 +4,7 @@ import org.crossv.Evaluator;
 
 public class StrategicIterableByContext extends StrategicIterable {
 
-	public StrategicIterableByContext(Iterable<Evaluator> evaluators) {
+	public StrategicIterableByContext(Iterable<? extends Evaluator> evaluators) {
 		super(evaluators);
 	}
 
