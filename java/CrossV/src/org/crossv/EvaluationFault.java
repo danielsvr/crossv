@@ -14,6 +14,10 @@ public class EvaluationFault extends Evaluation {
 	 *            The message that the details will hold.
 	 */
 	public EvaluationFault(String message) {
-		super(createDetails(message));
+		super(new EvaluationFaultDetails(message));
+	}
+
+	public EvaluationFault(Throwable e) {
+		super(new EvaluationFaultDetails(e));
 	}
 }

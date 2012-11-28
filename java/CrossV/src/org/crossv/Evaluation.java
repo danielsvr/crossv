@@ -1,5 +1,7 @@
 package org.crossv;
 
+import org.crossv.primitives.Iterables;
+
 /**
  * The base class that describes the result of an {@link Evaluator}. <br/>
  * The build-in results are: {@link EvaluationFault}, {@link EvaluationSuccess}
@@ -76,5 +78,9 @@ public abstract class Evaluation {
 	 **/
 	protected static EvaluationDetails createDetails(String message) {
 		return new EvaluationDetails(message);
+	}
+
+	public static Iterable<Evaluation> fault(Throwable e) {
+		return Iterables.<Evaluation> toIterable(new EvaluationFault(e));
 	}
 }

@@ -55,7 +55,7 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	 *             constructor
 	 */
 	public abstract Iterable<Evaluation> evaluateInstance(E obj,
-			EContext context) throws IllegalObjectException;
+			EContext context) throws Exception, IllegalObjectException;
 
 	/**
 	 * Evaluates an instance of the object {@link Class} on specific instance of
@@ -83,8 +83,11 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 		if (obj != null)
 			checkClass(objClass, obj.getClass());
 		checkClass(contextClass, context.getClass());
-
-		return evaluateInstance((E) obj, (EContext) context);
+		try {
+			return evaluateInstance((E) obj, (EContext) context);
+		} catch (Throwable e) {
+			return Evaluation.fault(e);
+		}
 	}
 
 	/**
