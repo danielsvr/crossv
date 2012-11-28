@@ -12,7 +12,6 @@ import java.util.List;
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
 import org.crossv.primitives.Iterables;
-import org.crossv.primitives.Predicate;
 import org.crossv.strategies.ValidationByCotextStrategy;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.ExtendedConext;
@@ -35,15 +34,19 @@ public class ValidationByCotextStrategyTests {
 
 		unorderedEcaluators = new ArrayList<TestableEvaluator>();
 		evaluator = TestObjectFactory.createMonkeyEvaluator(SuperContext.class);
+		evaluator.returns(Evaluation.fault("fail"));
 		unorderedEcaluators.add(evaluator);
 		evaluator = TestObjectFactory
 				.createMonkeyEvaluator(ExtraExtendedConext.class);
+		evaluator.returns(Evaluation.success("ok"));
 		unorderedEcaluators.add(evaluator);
 		evaluator = TestObjectFactory
 				.createMonkeyEvaluator(ExtendedConext.class);
+		evaluator.returns(Evaluation.success("ok"));
 		unorderedEcaluators.add(evaluator);
 		evaluator = TestObjectFactory
 				.createMonkeyEvaluator(IndependentContext1.class);
+		evaluator.returns(Evaluation.success("ok"));
 		unorderedEcaluators.add(evaluator);
 
 		strategy = TestObjectFactory.createValidationByCotextStrategy();
@@ -97,19 +100,9 @@ public class ValidationByCotextStrategyTests {
 	}
 
 	@Test
-	public void EvaluateFirstThreeElements_OriginalFirstElementReturnFaults_StrategicIteratorDoentIterate() {
-		TestableEvaluator element;
+	public void Evaluate_FirstThreeElements_StrategicIteratorDoentIterate() {
 		Iterator<Evaluator> iterator;
 
-		element = Iterables.firstOrDefault(unorderedEcaluators,
-				new Predicate<TestableEvaluator>() {
-					public boolean eval(TestableEvaluator value) {
-						return value.getContextClass().equals(
-								SuperContext.class);
-					}
-				});
-
-		element.withRsults(Evaluation.fault("fail"));
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		iterator = strategicIterable.iterator();
 		iterator.next().evaluate(null, new SuperContext());
@@ -119,30 +112,18 @@ public class ValidationByCotextStrategyTests {
 	}
 
 	@Test
-	public void EvaluateFirstThreeElements_OriginalFirstElementReturnFaults_ThirdEvaluatorsReturnEmptyIterator() {
-		TestableEvaluator element;
+	public void Evaluate_FirstThreeElements_ThirdEvaluatorsReturnEmptyIterable() {
 		Iterator<Evaluator> iterator;
-		Evaluator thirdEvaluator;
-		ExtendedConext thirdContext;
-		Iterable<Evaluation> thirdEvaluatorResults;
+		Evaluator element;
+		Iterable<Evaluation> results;
 
-		element = Iterables.firstOrDefault(unorderedEcaluators,
-				new Predicate<TestableEvaluator>() {
-					public boolean eval(TestableEvaluator value) {
-						return value.getContextClass().equals(
-								SuperContext.class);
-					}
-				});
-
-		element.withRsults(Evaluation.fault("fail"));
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		iterator = strategicIterable.iterator();
 		iterator.next().evaluate(null, new SuperContext());
 		iterator.next().evaluate(null, new IndependentContext1());
-		thirdEvaluator = iterator.next();
-		thirdContext = new ExtendedConext();
-		thirdEvaluatorResults = thirdEvaluator.evaluate(null, thirdContext);
+		element = iterator.next();
+		results = element.evaluate(null, new ExtendedConext());
 
-		assertThat(thirdEvaluatorResults, isEmpty());
+		assertThat(results, isEmpty());
 	}
 }

@@ -37,15 +37,15 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 		TestableEvaluator evaluator;
 		evaluator = new TestableMonkeyEvaluator<SuperContext>(
 				SuperContext.class);
-		evaluator.withRsults(superContextError);
+		evaluator.returns(superContextError);
 		registry.register(evaluator);
 		evaluator = new TestableMonkeyEvaluator<ExtendedConext>(
 				ExtendedConext.class);
-		evaluator.withRsults(extendedContextSuccess);
+		evaluator.returns(extendedContextSuccess);
 		registry.register(evaluator);
 		evaluator = new TestableMonkeyEvaluator<IndependentContext1>(
 				IndependentContext1.class);
-		evaluator.withRsults(independentContext1Success);
+		evaluator.returns(independentContext1Success);
 		registry.register(evaluator);
 	}
 
