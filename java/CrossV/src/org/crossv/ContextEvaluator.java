@@ -77,12 +77,17 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	@SuppressWarnings("unchecked")
 	public final Iterable<Evaluation> evaluate(Object obj, Object context)
 			throws IllegalObjectException {
+		Class<? extends Object> actualContextClass;
 
 		if (context == null)
 			throw new ArgumentNullException("context");
 		if (obj != null)
 			checkClass(objClass, obj.getClass());
-		checkClass(contextClass, context.getClass());
+		
+		actualContextClass = context.getClass();
+		if (!actualContextClass.equals(NoContext.class))
+			checkClass(contextClass, actualContextClass);
+		
 		try {
 			return evaluateInstance((E) obj, (EContext) context);
 		} catch (Throwable e) {
@@ -119,8 +124,8 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	protected static void checkClass(Class<?> expected, Class<?> actual)
 			throws IllegalObjectException {
 		String message;
-		
-		if (actual.equals(NoContext.class) || expected.isAssignableFrom(actual))
+
+		if (expected.isAssignableFrom(actual))
 			return;
 
 		message = String.format("Expected class is <%s> or a sublass of it.",

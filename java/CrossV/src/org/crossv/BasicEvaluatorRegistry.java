@@ -1,13 +1,14 @@
 package org.crossv;
 
+import static org.crossv.primitives.Iterables.addAllToList;
+import static org.crossv.primitives.Iterables.emptyIfNull;
+
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 
 import org.crossv.primitives.ArgumentException;
-import org.crossv.primitives.Iterables;
-
 
 /**
  * An registry of evaluators that will be used by the {@link Validator}.
@@ -63,18 +64,21 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 	 *            that will be registered.
 	 */
 	public void register(Evaluator evaluator) {
-		Class<?> contextClass = evaluator.getContextClass();
+		Class<?> contextClass;
+		Class<?> instanceClass;
+		List<Evaluator> evals;
+		Dictionary<Class<?>, List<Evaluator>> entry;
+
+		contextClass = evaluator.getContextClass();
+		contextClass = contextClass != null ? contextClass : NoContext.class;
 		if (contextClass.equals(Object.class))
 			throw new ArgumentException("evaluator",
 					"An evaluator cannot have Object class as a context. "
-							+ "You can provide the NoContext class or "
-							+ "simply 'null' instead.");
-		contextClass = contextClass != null ? contextClass : NoContext.class;
-		List<Evaluator> evals;
-		Class<?> instanceClass = evaluator.getInstanceClass();
+							+ "You can provide the NoContext class or simply "
+							+ "'null' instead.");
 
+		instanceClass = evaluator.getInstanceClass();
 		if (!contextClass.equals(NoContext.class)) {
-			Dictionary<Class<?>, List<Evaluator>> entry;
 
 			entry = contextTable.get(contextClass);
 			entry = entry != null ? entry
@@ -92,7 +96,6 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 		}
 
 		if (contextClass.equals(NoContext.class)
-				|| contextClass.equals(Object.class)
 				|| contextClass.getSuperclass().equals(Object.class)) {
 
 			evals = noContextEvaluatorsByEvaluatedClass.get(instanceClass);
@@ -153,21 +156,21 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 	@Override
 	public <E, EContext> Iterable<Evaluator> get(Class<E> objClass,
 			Class<EContext> contextClass) {
-
-		List<Evaluator> result = new ArrayList<Evaluator>();
+		List<Evaluator> result;
 		Class<?> actualContextClass;
 		Dictionary<Class<?>, List<Evaluator>> entry;
 		List<Evaluator> all;
 
 		actualContextClass = contextClass != null ? contextClass
 				: NoContext.class;
+		result = new ArrayList<Evaluator>();
 
 		if (!actualContextClass.equals(NoContext.class))
 			do {
 				entry = contextTable.get(actualContextClass);
 				all = entry != null ? entry.get(objClass) : null;
 
-				Iterables.addAllToList(result, all);
+				addAllToList(result, all);
 
 				actualContextClass = actualContextClass.getSuperclass();
 			} while (actualContextClass != null);
@@ -175,6 +178,6 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 			result = noContextEvaluatorsByEvaluatedClass.get(objClass);
 		}
 
-		return Iterables.emptyIfNull(result);
+		return emptyIfNull(result);
 	}
 }

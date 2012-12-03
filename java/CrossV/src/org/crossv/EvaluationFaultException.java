@@ -16,8 +16,9 @@ public class EvaluationFaultException extends RuntimeException {
 
 	@Override
 	public boolean equals(Object obj) {
-		Throwable otherException = null;
-
+		Throwable otherException;
+		
+		otherException = null;
 		if (obj != null && obj instanceof EvaluationFaultException) {
 			EvaluationFaultException faultException = (EvaluationFaultException) obj;
 			otherException = faultException.cause;

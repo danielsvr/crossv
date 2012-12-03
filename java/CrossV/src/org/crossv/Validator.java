@@ -1,9 +1,10 @@
 package org.crossv;
 
+import static org.crossv.primitives.Iterables.addAllToList;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ValidationStrategy;
 
 public class Validator {
@@ -20,9 +21,9 @@ public class Validator {
 	}
 
 	public Validator(BasicEvaluatorRegistry registry) {
-		this((EvaluatorProvider)registry);
+		this((EvaluatorProvider) registry);
 	}
-	
+
 	public Validator(EvaluatorProvider evaluatorProvider) {
 		this.evaluatorProvider = evaluatorProvider;
 		this.strategy = ValidationStrategy.DEFAULT;
@@ -42,18 +43,22 @@ public class Validator {
 	}
 
 	public <E> Validation validate(Class<E> objClass, E obj, Object context) {
-		List<Evaluation> allResults = new ArrayList<Evaluation>();
+		List<Evaluation> allEvaluations;
+		Iterable<Evaluation> currentEvaluations;
 		Iterable<? extends Evaluator> evaluators;
+		Class<?> contextClass;
 
 		context = context != null ? context : NoContext.instance;
-		Class<?> contextClass = context.getClass();
+		contextClass = context.getClass();
+
 		evaluators = evaluatorProvider.get(objClass, contextClass);
 		evaluators = strategy.apply(evaluators);
 
+		allEvaluations = new ArrayList<Evaluation>();
 		for (Evaluator evaluator : evaluators) {
-			Iterable<Evaluation> results = evaluator.evaluate(obj, context);
-			Iterables.addAllToList(allResults, results);
+			currentEvaluations = evaluator.evaluate(obj, context);
+			addAllToList(allEvaluations, currentEvaluations);
 		}
-		return new Validation(allResults);
+		return new Validation(allEvaluations);
 	}
 }

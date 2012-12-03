@@ -30,6 +30,7 @@ public class EvaluationUtil {
 	}
 
 	private class IsEvaluationFault implements Predicate<Evaluation> {
+		@Override
 		public boolean eval(Evaluation value) {
 			boolean isFault;
 

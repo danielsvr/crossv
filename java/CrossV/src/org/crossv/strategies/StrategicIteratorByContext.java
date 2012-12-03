@@ -19,7 +19,6 @@ public class StrategicIteratorByContext extends StrategicIterator {
 		evaluatorsByLevel = new Hashtable<Integer, List<EvaluatorProxy>>();
 	}
 
-
 	@Override
 	protected boolean hasNextEvaluator() {
 		Iterator<? extends Evaluator> mainIterator;
@@ -57,6 +56,7 @@ public class StrategicIteratorByContext extends StrategicIterator {
 		return remainsIterator.next();
 	}
 
+	@Override
 	protected void ensureIterationDepth() {
 		List<EvaluatorProxy> evaluators;
 		if (remainsIterator != null && remainsIterator.hasNext())

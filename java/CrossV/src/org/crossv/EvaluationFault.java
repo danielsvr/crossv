@@ -30,7 +30,9 @@ public class EvaluationFault extends Evaluation {
 
 	@Override
 	public String toString() {
-		String message = getMessage();
+		String message;
+		
+		message = getMessage();
 		if (cause != null)
 			message = cause.toString();
 		return getClass().getSimpleName() + "<" + message + ">";

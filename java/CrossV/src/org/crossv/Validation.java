@@ -1,13 +1,13 @@
 package org.crossv;
 
 import static org.crossv.EvaluationUtil.containsAnyFault;
+import static org.crossv.primitives.Iterables.select;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.Function;
-import org.crossv.primitives.Iterables;
 
 public class Validation {
-
+	private EvaluationMessageSelector messageOnly;
 	private final Iterable<Evaluation> results;
 	private boolean isSuccessful;
 
@@ -16,7 +16,8 @@ public class Validation {
 			throw new ArgumentNullException("results");
 
 		this.results = results;
-		isSuccessful = !containsAnyFault(results);
+		this.isSuccessful = !containsAnyFault(results);
+		this.messageOnly = new EvaluationMessageSelector();
 	}
 
 	public boolean isSuccessful() {
@@ -28,10 +29,14 @@ public class Validation {
 	}
 
 	public Iterable<String> getMessages() {
-		return Iterables.select(results, new Function<Evaluation, String>() {
-			public String eval(Evaluation value) {
-				return value.getMessage();
-			}
-		});
+		return select(results, messageOnly);
+	}
+
+	private class EvaluationMessageSelector implements
+			Function<Evaluation, String> {
+		@Override
+		public String eval(Evaluation value) {
+			return value.getMessage();
+		}
 	}
 }
