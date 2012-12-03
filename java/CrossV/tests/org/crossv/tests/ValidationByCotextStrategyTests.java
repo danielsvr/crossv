@@ -24,9 +24,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ValidationByCotextStrategyTests {
-	List<TestableEvaluator> unorderedEcaluators;
-	Iterable<Evaluator> strategicIterable;
-	ValidationByCotextStrategy strategy;
+	static List<TestableEvaluator> unorderedEcaluators;
+	static Iterable<Evaluator> strategicIterable;
+	static ValidationByCotextStrategy strategy;
 
 	@Before
 	public void setup() {

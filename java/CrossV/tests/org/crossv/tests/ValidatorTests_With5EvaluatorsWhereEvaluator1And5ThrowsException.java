@@ -9,7 +9,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluation;
-import org.crossv.EvaluatorRegistry;
+import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Validation;
 import org.crossv.Validator;
 import org.crossv.tests.subjects.ExtendedContext1;
@@ -33,13 +33,13 @@ public class ValidatorTests_With5EvaluatorsWhereEvaluator1And5ThrowsException {
 	static Evaluation independentContext1Success = Evaluation
 			.success("Success");
 
-	EvaluatorRegistry registry;
+	BasicEvaluatorRegistry registry;
 	Validator validator;
 	Validation validation;
 
 	@Before
 	public void setup() {
-		registry = new EvaluatorRegistry();
+		registry = new BasicEvaluatorRegistry();
 		TestableEvaluator evaluator;
 		evaluator = new TestableMonkeyEvaluator<SuperContext1>(
 				SuperContext1.class);

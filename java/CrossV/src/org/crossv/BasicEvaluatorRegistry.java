@@ -14,35 +14,35 @@ import org.crossv.primitives.Iterables;
  * 
  * @author yochanan.miykael
  */
-public final class EvaluatorRegistry {
+public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 	private List<Evaluator> allEvaluators;
 	private Dictionary<Class<?>, List<Evaluator>> noContextEvaluatorsByEvaluatedClass;
 	private Dictionary<Class<?>, Dictionary<Class<?>, List<Evaluator>>> contextTable;
 
 	/**
-	 * Creates an instance of an {@link EvaluatorRegistry}.
+	 * Creates an instance of an {@link BasicEvaluatorRegistry}.
 	 */
-	public EvaluatorRegistry() {
+	public BasicEvaluatorRegistry() {
 		this(null);
 	}
 
 	/**
-	 * Creates an instance of an {@link EvaluatorRegistry}.
+	 * Creates an instance of an {@link BasicEvaluatorRegistry}.
 	 * 
 	 * @param evaluator
 	 *            that will be added to the registry.
 	 */
-	public EvaluatorRegistry(Evaluator evaluator) {
+	public BasicEvaluatorRegistry(Evaluator evaluator) {
 		this(evaluator, (Evaluator[]) null);
 	}
 
 	/**
-	 * Creates an instance of an {@link EvaluatorRegistry}.
+	 * Creates an instance of an {@link BasicEvaluatorRegistry}.
 	 * 
 	 * @param evaluators
 	 *            that will be added to the registry.
 	 */
-	public EvaluatorRegistry(Evaluator evaluator1, Evaluator... evaluators) {
+	public BasicEvaluatorRegistry(Evaluator evaluator1, Evaluator... evaluators) {
 		allEvaluators = new ArrayList<Evaluator>();
 		contextTable = new Hashtable<Class<?>, Dictionary<Class<?>, List<Evaluator>>>();
 		noContextEvaluatorsByEvaluatedClass = new Hashtable<Class<?>, List<Evaluator>>();
@@ -150,6 +150,7 @@ public final class EvaluatorRegistry {
 	 * @return a sequence of evaluators for the provided object and context
 	 *         {@link Class}es.
 	 */
+	@Override
 	public <E, EContext> Iterable<Evaluator> get(Class<E> objClass,
 			Class<EContext> contextClass) {
 

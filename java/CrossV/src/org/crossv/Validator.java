@@ -8,7 +8,7 @@ import org.crossv.strategies.ValidationStrategy;
 
 public class Validator {
 
-	private EvaluatorRegistry registry;
+	private EvaluatorProvider evaluatorProvider;
 	private ValidationStrategy strategy;
 
 	public Validator(Evaluator evaluator) {
@@ -16,11 +16,15 @@ public class Validator {
 	}
 
 	public Validator(Evaluator evaluator1, Evaluator... evaluators) {
-		this(new EvaluatorRegistry(evaluator1, evaluators));
+		this(new BasicEvaluatorRegistry(evaluator1, evaluators));
 	}
 
-	public Validator(EvaluatorRegistry registry) {
-		this.registry = registry;
+	public Validator(BasicEvaluatorRegistry registry) {
+		this((EvaluatorProvider)registry);
+	}
+	
+	public Validator(EvaluatorProvider evaluatorProvider) {
+		this.evaluatorProvider = evaluatorProvider;
 		this.strategy = ValidationStrategy.DEFAULT;
 	}
 
@@ -43,7 +47,7 @@ public class Validator {
 
 		context = context != null ? context : NoContext.instance;
 		Class<?> contextClass = context.getClass();
-		evaluators = registry.get(objClass, contextClass);
+		evaluators = evaluatorProvider.get(objClass, contextClass);
 		evaluators = strategy.apply(evaluators);
 
 		for (Evaluator evaluator : evaluators) {

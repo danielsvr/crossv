@@ -4,7 +4,7 @@ import static org.junit.Assert.assertThat;
 import static org.crossv.tests.helpers.Matchers.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
 
-import org.crossv.EvaluatorRegistry;
+import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Validation;
 import org.crossv.Validator;
 import org.crossv.tests.helpers.TestObjectFactory;
@@ -18,11 +18,11 @@ public class ValidatorTests_WithNoEvalutorsAtAll {
 	Validator validator;
 	Validation validation;
 	Monkey monkey;
-	EvaluatorRegistry registry;
+	BasicEvaluatorRegistry registry;
 
 	@Before
 	public void setup() {
-		registry = new EvaluatorRegistry();
+		registry = new BasicEvaluatorRegistry();
 		monkey = TestObjectFactory.createMonkey();
 		validator = TestObjectFactory.createValidator(registry);
 	}

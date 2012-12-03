@@ -7,7 +7,6 @@ package org.crossv;
  * @author yochanan.miykael
  */
 public interface Evaluator {
-
 	/**
 	 * When implemented, evaluates an instance of the object {@link Class} on
 	 * specific instance of the context class.

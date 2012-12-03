@@ -6,7 +6,7 @@ import static org.crossv.tests.helpers.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluator;
-import org.crossv.EvaluatorRegistry;
+import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.ExtendedContext1;
 import org.crossv.tests.subjects.IndependentContext1;
@@ -17,42 +17,42 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class EvaluatorRegistryTests {
-	Evaluator monkeyEvaluator1;
-	Evaluator monkeyEvaluator2;
-	Evaluator monkeyEvaluator3;
-	Evaluator monkeyEvaluator4;
-	Evaluator mouseEvaluator1;
-	Evaluator mouseEvaluator2;
-	EvaluatorRegistry registry;
-	Iterable<Evaluator> evaluators;
+public class BasicEvaluatorRegistryTests {
+	static Evaluator monkeyEvaluator1;
+	static Evaluator monkeyEvaluator2;
+	static Evaluator monkeyEvaluator3;
+	static Evaluator monkeyEvaluator4;
+	static Evaluator mouseEvaluator1;
+	static Evaluator mouseEvaluator2;
+	static BasicEvaluatorRegistry registry;
+	static Iterable<Evaluator> evaluators;
 
 	@Before
 	public void setup() {
 		registry = TestObjectFactory.createEvaluatorRegistry();
 
-		monkeyEvaluator1 = TestObjectFactory.createMonkeyEvaluator(
-				SuperContext1.class, "Rule1");
+		monkeyEvaluator1 = TestObjectFactory
+				.createMonkeyEvaluator(SuperContext1.class);
 		registry.register(monkeyEvaluator1);
 
-		monkeyEvaluator2 = TestObjectFactory.createMonkeyEvaluator(
-				ExtendedContext1.class, "Rule2");
+		monkeyEvaluator2 = TestObjectFactory
+				.createMonkeyEvaluator(ExtendedContext1.class);
 		registry.register(monkeyEvaluator2);
 
-		monkeyEvaluator3 = TestObjectFactory.createMonkeyEvaluator(
-				IndependentContext1.class, "Rule3");
+		monkeyEvaluator3 = TestObjectFactory
+				.createMonkeyEvaluator(IndependentContext1.class);
 		registry.register(monkeyEvaluator3);
 
-		monkeyEvaluator4 = TestObjectFactory.createMonkeyEvaluator(
-				IndependentContext2.class, "Rule4");
+		monkeyEvaluator4 = TestObjectFactory
+				.createMonkeyEvaluator(IndependentContext2.class);
 		registry.register(monkeyEvaluator4);
 
-		mouseEvaluator1 = TestObjectFactory.createMouseEvaluator(
-				SuperContext1.class, "Rule5");
+		mouseEvaluator1 = TestObjectFactory
+				.createMouseEvaluator(SuperContext1.class);
 		registry.register(mouseEvaluator1);
 
-		mouseEvaluator2 = TestObjectFactory.createMouseEvaluator(
-				SuperContext1.class, "Rule6");
+		mouseEvaluator2 = TestObjectFactory
+				.createMouseEvaluator(SuperContext1.class);
 		registry.register(mouseEvaluator2);
 	}
 

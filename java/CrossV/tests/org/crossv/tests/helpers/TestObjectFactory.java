@@ -1,8 +1,8 @@
 package org.crossv.tests.helpers;
 
 import org.crossv.BasicEvaluator;
+import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
-import org.crossv.EvaluatorRegistry;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ValidationByCotextStrategy;
@@ -42,21 +42,26 @@ public class TestObjectFactory {
 
 	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
 			Class<E> clazz, String ruleName) {
-		TestableMouseEvaluator<E> eval = new TestableMouseEvaluator<E>(clazz);
+		TestableMouseEvaluator<E> eval = createMouseEvaluator(clazz);
 		eval.result = Evaluation.success(ruleName);
 		return eval;
 	}
 
-	public static Validator createValidator(EvaluatorRegistry registry) {
+	public static Validator createValidator(BasicEvaluatorRegistry registry) {
 		return new Validator(registry);
 	}
 
-	public static EvaluatorRegistry createEvaluatorRegistry() {
-		return new EvaluatorRegistry();
+	public static BasicEvaluatorRegistry createEvaluatorRegistry() {
+		return new BasicEvaluatorRegistry();
 	}
 
 	public static ValidationByCotextStrategy createValidationByCotextStrategy() {
 		return new ValidationByCotextStrategy();
+	}
+
+	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
+			Class<E> clazz) {
+		return new TestableMouseEvaluator<E>(clazz);
 	}
 
 }
