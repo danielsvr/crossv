@@ -184,52 +184,16 @@ public class ValidatorTests_With5EvaluatorsWhereEvaluator1And5ThrowsException {
 	}
 
 	@Test
-	public void validate_MonkeyOnNoContext_ValidationIsNotSuccessful() {
+	public void validate_MonkeyOnNoContext_ValidationIsSuccessful() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.isSuccessful(), is(false));
+		assertThat(validation.isSuccessful(), is(true));
 	}
 
 	@Test
-	public void validate_MonkeyOnNoContext_Returns4ValidationResults() {
+	public void validate_MonkeyOnNoContext_ReturnsNoValidationResults() {
 		validator = new Validator(registry);
 		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.getResults(), hasSize(4));
+		assertThat(validation.getResults(), hasSize(0));
 	}
-
-	@Test
-	public void validate_MonkeyOnNoContext_ValidationHasResultsOfSuperContext1() {
-		validator = new Validator(registry);
-		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.getResults(), haveFaultsWith(exception1));
-	}
-
-	@Test
-	public void validate_MonkeyOnNoContext_ValidationHasResultsOfSuperContext2() {
-		validator = new Validator(registry);
-		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.getResults(), have(superContext2Success));
-	}
-	
-	@Test
-	public void validate_MonkeyOnNoContext_ValidationHasResultsOfIndependentContext1() {
-		validator = new Validator(registry);
-		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.getResults(), have(independentContext1Success));
-	}
-	
-	@Test
-	public void validate_MonkeyOnNoContext_ValidationHasResultsOfExtendedContext2() {
-		validator = new Validator(registry);
-		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.getResults(), haveFaultsWith(exception2));
-	}
-	
-	@Test
-	public void validate_MonkeyOnNoContext_ValidationDoesntHaveResultsOfExtendedContext1() {
-		validator = new Validator(registry);
-		validation = validator.validate(Monkey.class, new Monkey());
-		assertThat(validation.getResults(), have(extendedContext1Success));
-	}
-	
 }

@@ -31,12 +31,10 @@ public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
 	 *            evaluated.
 	 * @param context
 	 *            an instance of the {@link NoContext} class
-	 * @throws IllegalObjectException
-	 *             if the provided instance is not the same {@link Class} as
-	 *             provided in constructor
 	 */
+	@Override
 	public final Iterable<Evaluation> evaluateInstance(E obj, NoContext context)
-			throws IllegalObjectException {
+			throws Exception {
 		return evaluateInstance(obj);
 	}
 
@@ -47,10 +45,7 @@ public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
 	 * @param obj
 	 *            the instance of the object {@link Class} that will be
 	 *            evaluated.
-	 * @throws IllegalObjectException
-	 *             if the provided instance is not the same {@link Class} as
-	 *             provided in constructor
 	 */
 	public abstract Iterable<Evaluation> evaluateInstance(E obj)
-			throws IllegalObjectException;
+			throws Exception;
 }

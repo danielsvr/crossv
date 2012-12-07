@@ -22,6 +22,7 @@ public class Matchers {
 		return new HasElementsMatcher<E>(Iterables.toIterable(obj));
 	}
 
+	@SafeVarargs
 	public static <E> Matcher<Iterable<E>> hasAll(E... objs) {
 		return new HasElementsMatcher<E>(Iterables.toIterable(objs));
 	}
@@ -40,6 +41,7 @@ public class Matchers {
 		return new HasFaultsWith(exception);
 	}
 
+	@SafeVarargs
 	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
 		return org.hamcrest.CoreMatchers.not(hasAll(objs));
 	}

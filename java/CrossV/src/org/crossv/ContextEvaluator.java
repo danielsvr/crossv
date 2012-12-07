@@ -48,14 +48,9 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	 * @param context
 	 *            an instance of the context {@link Class} on which the object
 	 *            will be evaluated.
-	 * @throws IllegalObjectException
-	 *             if the provided instance of the object is not the same
-	 *             {@link Class} as provided in constructor or if the provided
-	 *             context is not the same {@link Class} as provided in
-	 *             constructor
 	 */
 	public abstract Iterable<Evaluation> evaluateInstance(E obj,
-			EContext context) throws Exception, IllegalObjectException;
+			EContext context) throws Exception;
 
 	/**
 	 * Evaluates an instance of the object {@link Class} on specific instance of
@@ -68,30 +63,22 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	 * @param context
 	 *            an instance of the context {@link Class} on which the object
 	 *            will be evaluated.
-	 * @throws IllegalObjectException
-	 *             if the provided instance of the object is not the same
-	 *             {@link Class} as provided in constructor or if the provided
-	 *             context is not the same {@link Class} as provided in
-	 *             constructor
 	 */
-	@SuppressWarnings("unchecked")
-	public final Iterable<Evaluation> evaluate(Object obj, Object context)
-			throws IllegalObjectException {
-		Class<? extends Object> actualContextClass;
+	public final Iterable<Evaluation> evaluate(Object obj, Object context) {
+		EContext actualContext;
+		E actualObj = null;
 
-		if (context == null)
-			throw new ArgumentNullException("context");
-		if (obj != null)
-			checkClass(objClass, obj.getClass());
-		
-		actualContextClass = context.getClass();
-		if (!actualContextClass.equals(NoContext.class))
-			checkClass(contextClass, actualContextClass);
-		
 		try {
-			return evaluateInstance((E) obj, (EContext) context);
+			if (context == null)
+				return Evaluation.fault(new ArgumentNullException("context"));
+
+			if (obj != null)
+				actualObj = objClass.cast(obj);
+			actualContext = contextClass.cast(context);
+
+			return evaluateInstance(actualObj, actualContext);
 		} catch (Throwable e) {
-			return Evaluation.fault(new EvaluationFaultException(e));
+			return Evaluation.fault(e);
 		}
 	}
 
@@ -113,24 +100,5 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 	 * */
 	public Class<EContext> getContextClass() {
 		return contextClass;
-	}
-
-	/**
-	 * Utility method for checking two classes.
-	 * 
-	 * @throws IllegalObjectException
-	 *             if the expected class is not assignable from actual class
-	 */
-	protected static void checkClass(Class<?> expected, Class<?> actual)
-			throws IllegalObjectException {
-		String message;
-
-		if (expected.isAssignableFrom(actual))
-			return;
-
-		message = String.format("Expected class is <%s> or a sublass of it.",
-				expected.getName());
-
-		throw new IllegalObjectException(actual.getName(), message);
 	}
 }

@@ -3,6 +3,7 @@ package org.crossv.tests.helpers;
 import org.crossv.BasicEvaluator;
 import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
+import org.crossv.NoContext;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ValidationByCotextStrategy;
@@ -37,6 +38,11 @@ public class TestObjectFactory {
 	public static <E> TestableMonkeyEvaluator<E> createMonkeyEvaluator(
 			Class<E> clazz) {
 		TestableMonkeyEvaluator<E> eval = new TestableMonkeyEvaluator<E>(clazz);
+		return eval;
+	}
+
+	public static TestableMonkeyEvaluator<NoContext> createMonkeyEvaluator() {
+		TestableMonkeyEvaluator<NoContext> eval = new TestableMonkeyEvaluator<NoContext>(NoContext.class);
 		return eval;
 	}
 

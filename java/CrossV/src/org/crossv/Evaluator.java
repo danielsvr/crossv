@@ -17,13 +17,8 @@ public interface Evaluator {
 	 * @param context
 	 *            an instance of the context {@link Class} on which the object
 	 *            will be evaluated.
-	 * @throws IllegalObjectException
-	 *             if the provided instance of the object is not the same
-	 *             {@link Class} as configured or if the provided context is not
-	 *             the same {@link Class} as configured.
 	 */
-	Iterable<Evaluation> evaluate(Object obj, Object context)
-			throws IllegalObjectException;
+	Iterable<Evaluation> evaluate(Object obj, Object context);
 
 	/**
 	 * When implemented, gets the {@link Class} of the object that later will be

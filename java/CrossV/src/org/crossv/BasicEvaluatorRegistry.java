@@ -95,8 +95,7 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 				evals.add(evaluator);
 		}
 
-		if (contextClass.equals(NoContext.class)
-				|| contextClass.getSuperclass().equals(Object.class)) {
+		if (contextClass.equals(NoContext.class)) {
 
 			evals = noContextEvaluatorsByEvaluatedClass.get(instanceClass);
 			evals = evals != null ? evals : new ArrayList<Evaluator>();

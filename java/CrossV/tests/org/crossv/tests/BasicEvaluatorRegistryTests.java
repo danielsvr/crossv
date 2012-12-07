@@ -22,6 +22,9 @@ public class BasicEvaluatorRegistryTests {
 	static Evaluator monkeyEvaluator2;
 	static Evaluator monkeyEvaluator3;
 	static Evaluator monkeyEvaluator4;
+	static Evaluator monkeyEvaluator5;
+	static Evaluator monkeyEvaluator6;
+	static Evaluator monkeyEvaluator7;
 	static Evaluator mouseEvaluator1;
 	static Evaluator mouseEvaluator2;
 	static BasicEvaluatorRegistry registry;
@@ -47,6 +50,18 @@ public class BasicEvaluatorRegistryTests {
 				.createMonkeyEvaluator(IndependentContext2.class);
 		registry.register(monkeyEvaluator4);
 
+		monkeyEvaluator5 = TestObjectFactory
+				.createMonkeyEvaluator();
+		registry.register(monkeyEvaluator5);
+
+		monkeyEvaluator6 = TestObjectFactory
+				.createMonkeyEvaluator();
+		registry.register(monkeyEvaluator6);
+
+		monkeyEvaluator7 = TestObjectFactory
+				.createMonkeyEvaluator();
+		registry.register(monkeyEvaluator7);
+
 		mouseEvaluator1 = TestObjectFactory
 				.createMouseEvaluator(SuperContext1.class);
 		registry.register(mouseEvaluator1);
@@ -54,6 +69,7 @@ public class BasicEvaluatorRegistryTests {
 		mouseEvaluator2 = TestObjectFactory
 				.createMouseEvaluator(SuperContext1.class);
 		registry.register(mouseEvaluator2);
+
 	}
 
 	@After
@@ -203,19 +219,19 @@ public class BasicEvaluatorRegistryTests {
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_ReturnMonkeyEvaluator1() {
 		evaluators = registry.get(Monkey.class, null);
-		assertThat(evaluators, has(monkeyEvaluator1));
+		assertThat(evaluators, has(monkeyEvaluator5));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_ReturnMonkeyEvaluator3() {
 		evaluators = registry.get(Monkey.class, null);
-		assertThat(evaluators, has(monkeyEvaluator3));
+		assertThat(evaluators, has(monkeyEvaluator6));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_ReturnMonkeyEvaluator4() {
 		evaluators = registry.get(Monkey.class, null);
-		assertThat(evaluators, has(monkeyEvaluator4));
+		assertThat(evaluators, has(monkeyEvaluator7));
 	}
 
 	@Test

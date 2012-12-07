@@ -159,6 +159,7 @@ public class Iterables {
 		return new EnumerationIterable<E>(obj);
 	}
 
+	@SafeVarargs
 	public static <E> Iterable<E> toIterable(E... objs) {
 		return new ArrayIterable<E>(null, objs);
 	}
