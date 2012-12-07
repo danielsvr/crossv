@@ -21,11 +21,10 @@ public class Matchers {
 	public static <E> Matcher<Iterable<E>> have(E obj) {
 		return new HasElementsMatcher<E>(Iterables.toIterable(obj));
 	}
-
-	@SafeVarargs
-	public static <E> Matcher<Iterable<E>> hasAll(E... objs) {
-		return new HasElementsMatcher<E>(Iterables.toIterable(objs));
-	}
+//
+//	public static <E> Matcher<Iterable<E>> hasAll(E... objs) {
+//		return new HasElementsMatcher<E>(Iterables.toIterable(objs));
+//	}
 
 	public static <E> Matcher<Iterable<E>> doesntHave(E obj) {
 		return org.hamcrest.CoreMatchers.not(has(obj));
@@ -41,10 +40,9 @@ public class Matchers {
 		return new HasFaultsWith(exception);
 	}
 
-	@SafeVarargs
-	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
-		return org.hamcrest.CoreMatchers.not(hasAll(objs));
-	}
+//	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
+//		return org.hamcrest.CoreMatchers.not(hasAll(objs));
+//	}
 
 	public static Matcher<Object> equalToObject(Object obj) {
 		return org.hamcrest.CoreMatchers.equalTo(obj);
