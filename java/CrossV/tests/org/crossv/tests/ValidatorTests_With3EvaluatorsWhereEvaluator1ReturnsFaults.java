@@ -21,7 +21,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
-
 	static Evaluation superContextError = Evaluation.fault("Error");
 	static Evaluation extendedContextSuccess = Evaluation.success("Success");
 	static Evaluation independentContext1Success = Evaluation

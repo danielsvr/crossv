@@ -8,7 +8,7 @@ import org.crossv.primitives.ArgumentNullException;
 
 public final class ValidationByCotextStrategy extends ValidationStrategy {
 	@Override
-	public Iterable<Evaluator> apply(Iterable<? extends Evaluator> evaluators) {
+	public Iterable<? extends Evaluator> apply(Iterable<? extends Evaluator> evaluators) {
 		if (evaluators == null)
 			throw new ArgumentNullException("evaluators");
 

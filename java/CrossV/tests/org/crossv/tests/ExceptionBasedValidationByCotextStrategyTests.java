@@ -1,9 +1,8 @@
 package org.crossv.tests;
 
 import static org.crossv.tests.helpers.Matchers.equalToObject;
-import static org.crossv.tests.helpers.Matchers.isEmpty;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,8 +10,9 @@ import java.util.List;
 
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
+import org.crossv.ValidationException;
 import org.crossv.primitives.Iterables;
-import org.crossv.strategies.ValidationByCotextStrategy;
+import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.ExtendedContext1;
 import org.crossv.tests.subjects.ExtraExtendedConext1;
@@ -23,17 +23,18 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ValidationByCotextStrategyTests {
+public class ExceptionBasedValidationByCotextStrategyTests {
 	static List<TestableEvaluator> unorderedEcaluators;
 	static Iterable<? extends Evaluator> strategicIterable;
-	static ValidationByCotextStrategy strategy;
+	static ExceptionBasedValidationByCotextStrategy strategy;
 
 	@Before
 	public void setup() {
 		TestableEvaluator evaluator;
 
 		unorderedEcaluators = new ArrayList<TestableEvaluator>();
-		evaluator = TestObjectFactory.createMonkeyEvaluator(SuperContext1.class);
+		evaluator = TestObjectFactory
+				.createMonkeyEvaluator(SuperContext1.class);
 		evaluator.returns(Evaluation.fault("fail"));
 		unorderedEcaluators.add(evaluator);
 		evaluator = TestObjectFactory
@@ -49,7 +50,8 @@ public class ValidationByCotextStrategyTests {
 		evaluator.returns(Evaluation.success("ok"));
 		unorderedEcaluators.add(evaluator);
 
-		strategy = TestObjectFactory.createValidationByCotextStrategy();
+		strategy = TestObjectFactory
+				.createExceptionBasedValidationByCotextStrategy();
 	}
 
 	@After
@@ -100,30 +102,19 @@ public class ValidationByCotextStrategyTests {
 	}
 
 	@Test
-	public void evaluate_FirstThreeElements_StrategicIteratorDoentIterate() {
-		Iterator<? extends Evaluator> iterator;
-
-		strategicIterable = strategy.apply(unorderedEcaluators);
-		iterator = strategicIterable.iterator();
-		iterator.next().evaluate(null, new SuperContext1());
-		iterator.next().evaluate(null, new IndependentContext1());
-		iterator.next().evaluate(null, new ExtendedContext1());
-		assertThat(iterator.hasNext(), equalTo(false));
-	}
-
-	@Test
-	public void evaluate_FirstThreeElements_ThirdEvaluatorsReturnEmptyIterable() {
+	public void evaluate_FirstThreeElements_ThirdEvaluatorsThrowsValidationException() {
 		Iterator<? extends Evaluator> iterator;
 		Evaluator element;
-		Iterable<Evaluation> results;
 
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		iterator = strategicIterable.iterator();
 		iterator.next().evaluate(null, new SuperContext1());
 		iterator.next().evaluate(null, new IndependentContext1());
 		element = iterator.next();
-		results = element.evaluate(null, new ExtendedContext1());
-
-		assertThat(results, isEmpty());
+		try {
+			element.evaluate(null, new ExtendedContext1());
+			fail("this evaluation should throw a validation exception");
+		} catch (ValidationException e) {
+		}
 	}
 }

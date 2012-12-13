@@ -6,6 +6,7 @@ import org.crossv.Evaluation;
 import org.crossv.NoContext;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
+import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.strategies.ValidationByCotextStrategy;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
@@ -68,6 +69,10 @@ public class TestObjectFactory {
 	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
 			Class<E> clazz) {
 		return new TestableMouseEvaluator<E>(clazz);
+	}
+
+	public static ExceptionBasedValidationByCotextStrategy createExceptionBasedValidationByCotextStrategy() {
+		return new ExceptionBasedValidationByCotextStrategy();
 	}
 
 }

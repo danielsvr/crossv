@@ -1,18 +1,3 @@
-/**
- * when validating a monkey in no context <br/>
- * with evaluators (1,2,3) for monkey class <br/>
- * with different strict contexts (1/1, 2/2, 3/3) <br/>
- * - it returns no evaluation results <br/>
- */
- 
- /**
- * when validating a monkey and no context <br/>
- * with evaluators (1,2,3) for monkey class <br/>
- * with different strict contexts (1/1, 2/2, 3/3) on the same inheritance chain
- * (3 extends 2 extends 1 extends Object) <br/>
- * - it returns no evaluation results <br/>
- */
- 
  /**
  * when validating a monkey and no context <br/>
  * with evaluators (1,2,3) for monkey class <br/>
@@ -30,8 +15,8 @@
  * with evaluators (1,2,3) for monkey class <br/>
  * with two evaluators on contexts (1/1, 2/2) on same inheritance chain <br/>
  * with one context (3/3) on other inheritance chain <br/>
- * with evaluator 1 returning error <br/>
  * (2 extends 1 extends Object, 3 extends Object) <br/>
+ * with evaluator 1 returning error <br/>
  * - it returns 2 evaluation results <br/>
  * - it returns evaluation results or evaluator 1 <br/>
  * - it returns evaluation results or evaluator 3 <br/>
@@ -61,20 +46,12 @@
  * - it doesn't return evaluation results of evaluator 2 <br/>
  */
  
- /**
- * when validating a monkey in a context <br/>
- * with evaluators (1,2,3) for monkey class <br/>
- * with different strict contexts (1/1, 2/2, 3/3) <br/>
- * - it returns no evaluation results <br/>
- */
  
- /**
- * when validating a monkey and a context <br/>
- * with evaluators (1,2,3) for monkey class <br/>
- * with different strict contexts (1/1, 2/2, 3/3) on the same inheritance chain
- * (3 extends 2 extends 1 extends Object) <br/>
- * - it returns no evaluation results <br/>
- */
+ 
+
+
+ 
+
   
  /**
  * when validating a monkey and the strict context 1 <br/>

@@ -26,7 +26,7 @@ public class Validator {
 
 	public Validator(EvaluatorProvider evaluatorProvider) {
 		this.evaluatorProvider = evaluatorProvider;
-		this.strategy = ValidationStrategy.DEFAULT;
+		this.strategy = ValidationStrategy.getDefault();
 	}
 
 	public ValidationStrategy getStrategy() {
@@ -34,7 +34,7 @@ public class Validator {
 	}
 
 	public void setStrategy(ValidationStrategy strategy) {
-		this.strategy = strategy == null ? ValidationStrategy.DEFAULT
+		this.strategy = strategy == null ? ValidationStrategy.getDefault()
 				: strategy;
 	}
 
