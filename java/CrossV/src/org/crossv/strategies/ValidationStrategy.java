@@ -16,18 +16,11 @@ public abstract class ValidationStrategy {
 	public abstract Iterable<? extends Evaluator> apply(
 			Iterable<? extends Evaluator> evaluators);
 
-	private static ValidationByCotextStrategy createValidationByContext() {
-		return new ValidationByCotextStrategy();
-	}
-
-	private static ExceptionBasedValidationByCotextStrategy createExceptionExceptionBasedValidationStrategy() {
-		return new ExceptionBasedValidationByCotextStrategy();
-	}
-
-	public final static ValidationStrategy getDefault() {
+	public static ValidationStrategy getDefault() {
 		return getDefault(null);
 	}
-	public final static ValidationStrategy getDefault(InputStream resourceStream) {
+	
+	public static ValidationStrategy getDefault(InputStream resourceStream) {
 		if(resourceStream == null)
 			return createValidationByContext();
 		
@@ -68,5 +61,13 @@ public abstract class ValidationStrategy {
 			e.printStackTrace();
 			return createValidationByContext();
 		}
+	}
+
+	private static ValidationByCotextStrategy createValidationByContext() {
+		return new ValidationByCotextStrategy();
+	}
+
+	private static ExceptionBasedValidationByCotextStrategy createExceptionExceptionBasedValidationStrategy() {
+		return new ExceptionBasedValidationByCotextStrategy();
 	}
 }
