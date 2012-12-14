@@ -1,6 +1,6 @@
 package org.crossv.strategies;
 
-import static org.crossv.EvaluationUtil.containsAnyFault;
+import static org.crossv.Evaluations.containsAnyFault;
 import static org.crossv.primitives.Iterables.addAllToList;
 
 import java.util.ArrayList;

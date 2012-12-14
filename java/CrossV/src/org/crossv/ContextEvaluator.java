@@ -70,7 +70,7 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 
 		try {
 			if (context == null)
-				return Evaluation.fault(new ArgumentNullException("context"));
+				return Evaluations.fault(new ArgumentNullException("context"));
 
 			if (obj != null)
 				actualObj = objClass.cast(obj);
@@ -78,7 +78,7 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 
 			return evaluateInstance(actualObj, actualContext);
 		} catch (Throwable e) {
-			return Evaluation.fault(e);
+			return Evaluations.fault(e);
 		}
 	}
 

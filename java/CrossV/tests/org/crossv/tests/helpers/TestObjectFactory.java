@@ -3,6 +3,7 @@ package org.crossv.tests.helpers;
 import org.crossv.BasicEvaluator;
 import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
+import org.crossv.Evaluations;
 import org.crossv.NoContext;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
@@ -50,7 +51,7 @@ public class TestObjectFactory {
 	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
 			Class<E> clazz, String ruleName) {
 		TestableMouseEvaluator<E> eval = createMouseEvaluator(clazz);
-		eval.result = Evaluation.success(ruleName);
+		eval.results = Evaluations.success(ruleName);
 		return eval;
 	}
 

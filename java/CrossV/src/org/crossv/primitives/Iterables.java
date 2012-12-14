@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-public class Iterables {
+public final class Iterables {
 
 	public static <E> List<E> toList(Iterable<E> iterable) {
 		if (iterable == null)
@@ -113,7 +113,20 @@ public class Iterables {
 		return countInternal(iterable, null);
 	}
 
-	public static <E> E firstOrDefault(Iterable<E> iterable, Predicate<E> predicate) {
+	public static <E> E firstOrDefault(Iterable<E> iterable) {
+		if (iterable == null)
+			throw new ArgumentNullException("iterable");
+
+		Iterator<E> iterator = iterable.iterator();
+		if (iterator.hasNext()) {
+			E next = iterator.next();
+			return next;
+		}
+		return null;
+	}
+
+	public static <E> E firstOrDefault(Iterable<E> iterable,
+			Predicate<E> predicate) {
 		if (iterable == null)
 			throw new ArgumentNullException("iterable");
 		if (predicate == null)

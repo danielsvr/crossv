@@ -1,6 +1,6 @@
 package org.crossv;
 
-import static org.crossv.EvaluationUtil.containsAnyFault;
+import static org.crossv.Evaluations.containsAnyFault;
 import static org.crossv.primitives.Iterables.select;
 
 import org.crossv.primitives.ArgumentNullException;
