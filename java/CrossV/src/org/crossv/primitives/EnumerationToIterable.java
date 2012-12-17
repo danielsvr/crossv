@@ -3,11 +3,11 @@ package org.crossv.primitives;
 import java.util.Enumeration;
 import java.util.Iterator;
 
-public class EnumerationIterable<E> implements Iterable<E> {
+public class EnumerationToIterable<E> implements Iterable<E> {
 
 	private Enumeration<E> enumeration;
 
-	public EnumerationIterable(Enumeration<E> enumeration) {
+	public EnumerationToIterable(Enumeration<E> enumeration) {
 		if (enumeration == null)
 			throw new ArgumentNullException("enumeration");
 		this.enumeration = enumeration;

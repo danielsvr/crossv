@@ -6,6 +6,7 @@ import org.crossv.Evaluation;
 import org.crossv.NoContext;
 import org.crossv.Validator;
 import org.crossv.evaluators.getters.GetterEvaluator;
+import org.crossv.evaluators.getters.LengthGreaterThan;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.strategies.ValidationByCotextStrategy;
@@ -45,7 +46,8 @@ public class TestObjectFactory {
 	}
 
 	public static TestableMonkeyEvaluator<NoContext> createMonkeyEvaluator() {
-		TestableMonkeyEvaluator<NoContext> eval = new TestableMonkeyEvaluator<NoContext>(NoContext.class);
+		TestableMonkeyEvaluator<NoContext> eval = new TestableMonkeyEvaluator<NoContext>(
+				NoContext.class);
 		return eval;
 	}
 
@@ -77,10 +79,14 @@ public class TestObjectFactory {
 		return new ExceptionBasedValidationByCotextStrategy();
 	}
 
-	public static <E, EGetter> GetterEvaluator<E, EGetter> createTestableGetterEvaluator(
-			Class<E> objClass, Class<EGetter> getterClass, String getterName) {
-		return new TestableGetterEvaluator<E, EGetter>(objClass, getterClass,
-				getterName);
+	public static <E> GetterEvaluator<E> createTestableGetterEvaluator(
+			Class<E> objClass, String getterName) {
+		return new TestableGetterEvaluator<E>(objClass, getterName);
+	}
+
+	public static <E> LengthGreaterThan<E> createGetterLengthGtEvaluator(
+			Class<E> objClass, String getterName, int length) {
+		return new LengthGreaterThan<E>(objClass, getterName, length);
 	}
 
 }

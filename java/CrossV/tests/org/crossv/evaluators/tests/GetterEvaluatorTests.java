@@ -14,7 +14,7 @@ import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
 public class GetterEvaluatorTests {
-	GetterEvaluator<Monkey, ?> evalutor;
+	GetterEvaluator<Monkey> evalutor;
 	Iterable<Evaluation> evaluations;
 
 	@Test
@@ -23,7 +23,7 @@ public class GetterEvaluatorTests {
 		Monkey monkey;
 
 		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, Object.class, "NonExistingGetterName");
+				Monkey.class, "NonExistingGetterName");
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -37,7 +37,7 @@ public class GetterEvaluatorTests {
 		Monkey monkey;
 
 		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, Object.class, "NonExistingGetterName");
+				Monkey.class, "NonExistingGetterName");
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -50,19 +50,19 @@ public class GetterEvaluatorTests {
 		Monkey monkey;
 
 		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, String.class, "Name");
+				Monkey.class, "Name");
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
 		assertThat(evaluations, isEmpty());
 	}
-	
+
 	@Test
 	public void evaluate_NameGetterOnNullMokeyInstance_NoExceptionsAreThrown() {
 		Monkey monkey;
 
 		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, String.class, "Name");
+				Monkey.class, "Name");
 		monkey = null;
 		evaluations = evalutor.evaluate(monkey);
 

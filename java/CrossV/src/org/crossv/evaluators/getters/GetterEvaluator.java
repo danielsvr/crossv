@@ -5,48 +5,44 @@ import static org.crossv.primitives.Iterables.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.crossv.BasicEvaluator;
 import org.crossv.Evaluation;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.Strings;
 
-public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
+public abstract class GetterEvaluator<E> extends BasicEvaluator<E> {
 	private final String getterName;
-	private final Class<EGetter> getterClass;
+	private Class<?> getterClass;
 
-	public GetterEvaluator(Class<E> objClass, Class<EGetter> getterClass,
-			String getterName) {
+	public GetterEvaluator(Class<E> objClass, String getterName) {
 		super(objClass);
-		if (getterClass == null)
-			throw new ArgumentNullException("getterClass");
 		if (Strings.isNullOrWhitespace(getterName))
 			throw new ArgumentNullException("getterName");
-		this.getterClass = getterClass;
 		this.getterName = getterName;
 	}
 
-	protected EGetter getValue(E obj) throws ReflectiveOperationException {
+	protected Object getValue(E obj) throws ReflectiveOperationException {
 		Object result;
 		Class<E> instanceClass;
 		String message;
-		String prefix;
-		String[] names;
+		List<String> names;
 		Method method;
 		Field field;
 		boolean isMethod;
 
 		isMethod = false;
 		instanceClass = getInstanceClass();
-		names = new String[2];
-		prefix = "get";
-		if (getterClass.equals(Boolean.class))
-			prefix = "is";
-		names[0] = prefix + getterName;
-		names[1] = getterName;
-		for (int i = 0; i < names.length; i++) {
+		names = new ArrayList<String>();
+		names.add("get" + getterName);
+		names.add("is" + getterName);
+		names.add(getterName);
+		for (String name : names) {
 			try {
-				method = instanceClass.getMethod(names[i]);
+				method = instanceClass.getMethod(name);
+				getterClass = method.getReturnType();
 				isMethod = true;
 				return invoke(obj, method);
 
@@ -57,6 +53,7 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 		try {
 			field = instanceClass.getField(getterName);
 			result = field.get(getInstanceClass());
+			getterClass = field.getType();
 			return getterClass.cast(result);
 		} catch (NoSuchFieldException e) {
 		}
@@ -75,7 +72,7 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 
 	}
 
-	private EGetter invoke(E obj, Method method)
+	private Object invoke(E obj, Method method)
 			throws ReflectiveOperationException {
 		Object result;
 		if (obj == null)
@@ -90,11 +87,15 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 
 	@Override
 	public final Iterable<Evaluation> evaluateInstance(E obj) throws Exception {
-		EGetter value;
+		Object value;
 		value = getValue(obj);
 		return emptyIfNull(evaluateGetter(obj, value));
 	}
 
 	protected abstract Iterable<Evaluation> evaluateGetter(E scopeInstance,
-			EGetter getterValue) throws Exception;
+			Object getterValue) throws Exception;
+
+	protected Class<?> getGetterClass() {
+		return getterClass;
+	}
 }

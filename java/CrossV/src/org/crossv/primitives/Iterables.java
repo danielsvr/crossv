@@ -88,9 +88,11 @@ public final class Iterables {
 
 		Iterator<E> iterator = iterable.iterator();
 		int count = 0;
-		while (iterator.hasNext())
-			if (predicate == null || predicate.eval(iterator.next()))
+		while (iterator.hasNext()) {
+			E next = iterator.next();
+			if (predicate == null || predicate.eval(next))
 				count++;
+		}
 		return count;
 	}
 
@@ -111,6 +113,13 @@ public final class Iterables {
 			return ((List<E>) iterable).size();
 
 		return countInternal(iterable, null);
+	}
+
+	public static <E> int count(Enumeration<E> iterable) {
+		if (iterable == null)
+			throw new ArgumentNullException("iterable");
+
+		return countInternal(toIterable(iterable), null);
 	}
 
 	public static <E> E firstOrDefault(Iterable<E> iterable) {
@@ -169,7 +178,7 @@ public final class Iterables {
 	}
 
 	public static <E> Iterable<E> toIterable(Enumeration<E> obj) {
-		return new EnumerationIterable<E>(obj);
+		return new EnumerationToIterable<E>(obj);
 	}
 
 	public static <E> Iterable<E> toIterable(E[] objs) {
@@ -221,5 +230,13 @@ public final class Iterables {
 
 	public static <E, ER> Iterable<ER> cast(Iterable<E> iterable) {
 		return new LazyCastIterable<E, ER>(iterable);
+	}
+
+	public static <E> Iterable<E> repeatDefault(int max) {
+		return new CreateItemIterable<E>(null, max);
+	}
+
+	public static <E> Enumeration<E> toEnumeration(Iterable<E> monkeys) {
+		return new IterableToEnumeration<E>(monkeys);
 	}
 }
