@@ -9,6 +9,7 @@ import java.text.MessageFormat;
 import org.crossv.BasicEvaluator;
 import org.crossv.Evaluation;
 import org.crossv.primitives.ArgumentNullException;
+import org.crossv.primitives.Strings;
 
 public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 	private final String getterName;
@@ -19,7 +20,7 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 		super(objClass);
 		if (getterClass == null)
 			throw new ArgumentNullException("getterClass");
-		if (getterName == null)
+		if (Strings.isNullOrWhitespace(getterName))
 			throw new ArgumentNullException("getterName");
 		this.getterClass = getterClass;
 		this.getterName = getterName;
@@ -29,25 +30,28 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 		Object result;
 		Class<E> instanceClass;
 		String message;
+		String prefix;
+		String[] names;
 		Method method;
 		Field field;
 		boolean isMethod;
 
 		isMethod = false;
 		instanceClass = getInstanceClass();
-		try {
-			method = instanceClass.getMethod("get" + getterName);
-			isMethod = true;
-			return invoke(obj, method);
+		names = new String[2];
+		prefix = "get";
+		if (getterClass.equals(Boolean.class))
+			prefix = "is";
+		names[0] = prefix + getterName;
+		names[1] = getterName;
+		for (int i = 0; i < names.length; i++) {
+			try {
+				method = instanceClass.getMethod(names[i]);
+				isMethod = true;
+				return invoke(obj, method);
 
-		} catch (NoSuchMethodException e) {
-		}
-
-		try {
-			method = instanceClass.getMethod(getterName);
-			isMethod = true;
-			return invoke(obj, method);
-		} catch (NoSuchMethodException e) {
+			} catch (NoSuchMethodException e) {
+			}
 		}
 
 		try {
@@ -71,8 +75,11 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 
 	}
 
-	private EGetter invoke(E obj, Method method) throws ReflectiveOperationException {
+	private EGetter invoke(E obj, Method method)
+			throws ReflectiveOperationException {
 		Object result;
+		if (obj == null)
+			return null;
 		result = method.invoke(obj);
 		return getterClass.cast(result);
 	}

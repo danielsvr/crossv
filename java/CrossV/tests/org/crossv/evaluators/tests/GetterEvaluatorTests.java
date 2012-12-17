@@ -56,4 +56,16 @@ public class GetterEvaluatorTests {
 
 		assertThat(evaluations, isEmpty());
 	}
+	
+	@Test
+	public void evaluate_NameGetterOnNullMokeyInstance_NoExceptionsAreThrown() {
+		Monkey monkey;
+
+		evalutor = TestObjectFactory.createTestableGetterEvaluator(
+				Monkey.class, String.class, "Name");
+		monkey = null;
+		evaluations = evalutor.evaluate(monkey);
+
+		assertThat(evaluations, isEmpty());
+	}
 }

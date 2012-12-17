@@ -1,5 +1,7 @@
 package org.crossv;
 
+import org.crossv.primitives.Strings;
+
 /**
  * The class that describes a faulted evaluation result of an {@link Evaluator}.
  * 
@@ -31,10 +33,13 @@ public class EvaluationFault extends Evaluation {
 	@Override
 	public String toString() {
 		String message;
-		
+		String stack = "";
+
 		message = getMessage();
-		if (cause != null)
+		if (cause != null) {
 			message = cause.toString();
-		return getClass().getSimpleName() + "<" + message + ">";
+			stack = "\n" + Strings.getStacktraceOf(cause);
+		}
+		return getClass().getSimpleName() + "<" + message + ">" + stack;
 	}
 }
