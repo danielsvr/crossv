@@ -1,5 +1,7 @@
 package org.crossv.evaluators.getters;
 
+import static org.crossv.primitives.Iterables.*;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
@@ -36,7 +38,7 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 		try {
 			method = instanceClass.getMethod("get" + getterName);
 			isMethod = true;
-			return invoke(method);
+			return invoke(obj, method);
 
 		} catch (NoSuchMethodException e) {
 		}
@@ -44,7 +46,7 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 		try {
 			method = instanceClass.getMethod(getterName);
 			isMethod = true;
-			return invoke(method);
+			return invoke(obj, method);
 		} catch (NoSuchMethodException e) {
 		}
 
@@ -69,9 +71,9 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 
 	}
 
-	private EGetter invoke(Method method) throws ReflectiveOperationException {
+	private EGetter invoke(E obj, Method method) throws ReflectiveOperationException {
 		Object result;
-		result = method.invoke(getInstanceClass());
+		result = method.invoke(obj);
 		return getterClass.cast(result);
 	}
 
@@ -83,7 +85,7 @@ public abstract class GetterEvaluator<E, EGetter> extends BasicEvaluator<E> {
 	public final Iterable<Evaluation> evaluateInstance(E obj) throws Exception {
 		EGetter value;
 		value = getValue(obj);
-		return evaluateGetter(obj, value);
+		return emptyIfNull(evaluateGetter(obj, value));
 	}
 
 	protected abstract Iterable<Evaluation> evaluateGetter(E scopeInstance,

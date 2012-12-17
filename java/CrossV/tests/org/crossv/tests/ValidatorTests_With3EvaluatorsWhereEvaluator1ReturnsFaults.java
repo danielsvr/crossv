@@ -8,6 +8,8 @@ import static org.hamcrest.CoreMatchers.is;
 
 import org.crossv.Evaluation;
 import org.crossv.BasicEvaluatorRegistry;
+import org.crossv.EvaluationFault;
+import org.crossv.EvaluationSuccess;
 import org.crossv.Validation;
 import org.crossv.Validator;
 import org.crossv.tests.subjects.ExtendedContext1;
@@ -21,10 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
-	static Evaluation superContextError = Evaluation.fault("Error");
-	static Evaluation extendedContextSuccess = Evaluation.success("Success");
-	static Evaluation independentContext1Success = Evaluation
-			.success("Success");
+	static Evaluation superContextError = new EvaluationFault("Error");
+	static Evaluation extendedContextSuccess = new EvaluationSuccess("Success");
+	static Evaluation independentContext1Success = new EvaluationSuccess("Success");
 
 	BasicEvaluatorRegistry registry;
 	Validator validator;

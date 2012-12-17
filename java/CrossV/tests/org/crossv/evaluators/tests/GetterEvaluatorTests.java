@@ -1,41 +1,59 @@
 package org.crossv.evaluators.tests;
 
+import static org.crossv.tests.helpers.Matchers.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluation;
 import org.crossv.EvaluationFault;
-import org.crossv.Evaluator;
-import org.crossv.NoContext;
+import org.crossv.evaluators.getters.GetterEvaluator;
 import org.crossv.evaluators.getters.NoSuchMemberException;
 import org.crossv.primitives.Iterables;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
-import org.crossv.tests.subjects.TestableGetterEvaluator;
 import org.junit.Test;
 
 public class GetterEvaluatorTests {
+	GetterEvaluator<Monkey, ?> evalutor;
+	Iterable<Evaluation> evaluations;
+
 	@Test
 	public void evaluate_NonExistingGetterOnMokeyInstance_OneEvaluationFaultIsReturned() {
-		Evaluator evalutor;
 		Evaluation evaluation;
-		
-		evalutor = new TestableGetterEvaluator<Monkey, Object>(Monkey.class,
-				Object.class, "NonExistingGetter");
-		evaluation = Iterables.firstOrDefault(evalutor.evaluate(new Monkey(),
-				NoContext.instance));
+		Monkey monkey;
+
+		evalutor = TestObjectFactory.createTestableGetterEvaluator(
+				Monkey.class, Object.class, "NonExistingGetterName");
+		monkey = new Monkey();
+		evaluations = evalutor.evaluate(monkey);
+
+		evaluation = Iterables.firstOrDefault(evaluations);
 		assertThat(evaluation, is(EvaluationFault.class));
 	}
 
 	@Test
 	public void evaluate_NonExistingGetterOnMokeyInstance_EvaluationFaultCauseIsNoSuchMemberException() {
-		Evaluator evalutor;
 		EvaluationFault evaluation;
-		
-		evalutor = new TestableGetterEvaluator<Monkey, Object>(Monkey.class,
-				Object.class, "NonExistingGetter");
-		evaluation = (EvaluationFault) Iterables.firstOrDefault(evalutor.evaluate(
-				new Monkey(), NoContext.instance));
+		Monkey monkey;
+
+		evalutor = TestObjectFactory.createTestableGetterEvaluator(
+				Monkey.class, Object.class, "NonExistingGetterName");
+		monkey = new Monkey();
+		evaluations = evalutor.evaluate(monkey);
+
+		evaluation = (EvaluationFault) Iterables.firstOrDefault(evaluations);
 		assertThat(evaluation.getCause(), is(NoSuchMemberException.class));
 	}
 
+	@Test
+	public void evaluate_NameGetterOnMokeyInstance_NoExceptionsAreThrown() {
+		Monkey monkey;
+
+		evalutor = TestObjectFactory.createTestableGetterEvaluator(
+				Monkey.class, String.class, "Name");
+		monkey = new Monkey();
+		evaluations = evalutor.evaluate(monkey);
+
+		assertThat(evaluations, isEmpty());
+	}
 }

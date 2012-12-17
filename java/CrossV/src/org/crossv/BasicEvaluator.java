@@ -38,6 +38,10 @@ public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
 		return evaluateInstance(obj);
 	}
 
+	public final Iterable<Evaluation> evaluate(E obj) {
+		return evaluate(obj, NoContext.instance);
+	}
+
 	/**
 	 * When overridden it evaluates an instance of the object {@link Class},
 	 * {@link Class} that was earlier provided in constructor.

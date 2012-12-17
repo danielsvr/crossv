@@ -1,5 +1,10 @@
 package org.crossv;
 
+import static org.crossv.primitives.Iterables.any;
+
+import org.crossv.primitives.Iterables;
+import org.crossv.primitives.Predicate;
+
 /**
  * The base class that describes the result of an {@link Evaluator}. <br/>
  * The build-in results are: {@link EvaluationFault}, {@link EvaluationSuccess}
@@ -31,59 +36,49 @@ public abstract class Evaluation {
 		return getClass().getSimpleName() + "<" + getMessage() + ">";
 	}
 
-	/**
-	 * Creates an instance of {@link EvaluationSuccess} that holds the provided
-	 * message.
-	 * 
-	 * @param message
-	 *            The message that will be stored as detail.
-	 * @return an instance of {@link EvaluationSuccess} that holds the provided
-	 *         message.
-	 **/
-	public static Evaluation success(String message) {
-		return new EvaluationSuccess(message);
-	}
-
-	/**
-	 * Creates an instance of {@link EvaluationWarning} that holds the provided
-	 * message.
-	 * 
-	 * @param message
-	 *            The message that will be stored as detail.
-	 * @return an instance of {@link EvaluationWarning} that holds the provided
-	 *         message.
-	 **/
-	public static Evaluation warning(String message) {
-		return new EvaluationWarning(message);
-	}
-
-	/**
-	 * Creates an instance of {@link EvaluationFault} that holds the provided
-	 * message.
-	 * 
-	 * @param message
-	 *            The message that will be stored as detail.
-	 * @return an instance of {@link EvaluationFault} that holds the provided
-	 *         message.
-	 **/
-	public static Evaluation fault(String message) {
-		return new EvaluationFault(message);
-	}
-
-	/**
-	 * Creates an instance of {@link EvaluationDetails} that holds the provided
-	 * message.
-	 * 
-	 * @param message
-	 *            The message that will be stored as detail.
-	 * @return an instance of {@link EvaluationDetails} that holds the provided
-	 *         message.
-	 **/
-	protected static EvaluationDetails createDetails(String message) {
+	protected static EvaluationDetails createDetails(String message){
 		return new EvaluationDetails(message);
 	}
+	
+	/**
+	 * Evaluates if the provided results contains any fault.
+	 * 
+	 * @param results
+	 *            An sequence of evaluations that needs to be checked.
+	 * @return {@code true} if the provided results contains any fault.
+	 *         {@code false} otherwise.
+	 */
+	public static boolean containsAnyFault(Iterable<Evaluation> results) {
+		return any(results, IsEvaluationFault.instance);
+	}
 
-	public static Evaluation fault(Throwable e) {
-		return new EvaluationFault(e);
+	private static class IsEvaluationFault implements Predicate<Evaluation> {
+		public static IsEvaluationFault instance = new IsEvaluationFault();
+
+		@Override
+		public boolean eval(Evaluation value) {
+			boolean isFault;
+
+			isFault = value instanceof EvaluationFault;
+			return isFault;
+		}
+	}
+
+	public static Iterable<Evaluation> success(String message) {
+		return Iterables
+				.<Evaluation> toIterable(new EvaluationSuccess(message));
+	}
+
+	public static Iterable<Evaluation> warning(String message) {
+		return Iterables
+				.<Evaluation> toIterable(new EvaluationWarning(message));
+	}
+
+	public static Iterable<Evaluation> fault(String message) {
+		return Iterables.<Evaluation> toIterable(new EvaluationFault(message));
+	}
+
+	public static Iterable<Evaluation> fault(Throwable e) {
+		return Iterables.<Evaluation> toIterable(new EvaluationFault(e));
 	}
 }

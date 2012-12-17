@@ -10,6 +10,7 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluation;
 import org.crossv.BasicEvaluatorRegistry;
+import org.crossv.EvaluationSuccess;
 import org.crossv.Validation;
 import org.crossv.Validator;
 import org.crossv.tests.subjects.ExtendedContext1;
@@ -28,10 +29,9 @@ public class ValidatorTests_With5EvaluatorsWhereEvaluator1And5ThrowsException {
 
 	static RuntimeException exception1 = new RuntimeException("my first bad.");
 	static RuntimeException exception2 = new RuntimeException("my second bad.");
-	static Evaluation superContext2Success = Evaluation.success("Success");
-	static Evaluation extendedContext1Success = Evaluation.success("Success");
-	static Evaluation independentContext1Success = Evaluation
-			.success("Success");
+	static Evaluation superContext2Success = new EvaluationSuccess("Success");
+	static Evaluation extendedContext1Success = new EvaluationSuccess("Success");
+	static Evaluation independentContext1Success = new EvaluationSuccess("Success");
 
 	BasicEvaluatorRegistry registry;
 	Validator validator;

@@ -3,14 +3,15 @@ package org.crossv.tests.helpers;
 import org.crossv.BasicEvaluator;
 import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
-import org.crossv.Evaluations;
 import org.crossv.NoContext;
 import org.crossv.Validator;
+import org.crossv.evaluators.getters.GetterEvaluator;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.strategies.ValidationByCotextStrategy;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
+import org.crossv.tests.subjects.TestableGetterEvaluator;
 import org.crossv.tests.subjects.TestableMonkeyEvaluator;
 import org.crossv.tests.subjects.TestableMouseEvaluator;
 
@@ -51,7 +52,7 @@ public class TestObjectFactory {
 	public static <E> TestableMouseEvaluator<E> createMouseEvaluator(
 			Class<E> clazz, String ruleName) {
 		TestableMouseEvaluator<E> eval = createMouseEvaluator(clazz);
-		eval.results = Evaluations.success(ruleName);
+		eval.results = Evaluation.success(ruleName);
 		return eval;
 	}
 
@@ -74,6 +75,12 @@ public class TestObjectFactory {
 
 	public static ExceptionBasedValidationByCotextStrategy createExceptionBasedValidationByCotextStrategy() {
 		return new ExceptionBasedValidationByCotextStrategy();
+	}
+
+	public static <E, EGetter> GetterEvaluator<E, EGetter> createTestableGetterEvaluator(
+			Class<E> objClass, Class<EGetter> getterClass, String getterName) {
+		return new TestableGetterEvaluator<E, EGetter>(objClass, getterClass,
+				getterName);
 	}
 
 }
