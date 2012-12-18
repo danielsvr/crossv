@@ -1,6 +1,7 @@
-package org.crossv.getters.descriptors;
+package org.crossv.getters;
 
 import java.text.MessageFormat;
+
 
 public abstract class LengthGetterDescriptor<E, EGetter> extends
 		GetterDescriptor<E> {
@@ -14,23 +15,27 @@ public abstract class LengthGetterDescriptor<E, EGetter> extends
 
 	@Override
 	public final Object getValue(E obj) throws Exception {
-		String message;
-
 		Object getterValue = super.getValue(obj);
 		if (canGetValue())
 			return getLength(getterClass.cast(getterValue));
-
-		message = "Could not apply lenght evaluation on {0}";
+		String message;
+		message = "Could not get lenght from an instance of {0}";
 		message = MessageFormat.format(message, getterClass.getSimpleName());
 		throw new MalformedMemberException(message);
 	}
 
 	@Override
-	public Class<?> getReturnClass() {
-		return getterClass;
+	public Class<?> getReturnClass() throws GetterValidationException {
+		if (getterClass.isAssignableFrom(super.getReturnClass()))
+			return getterClass;
+		String message;
+		message = "The getter for \"{0}\" does not return expected type ({1})";
+		message = MessageFormat.format(message, getName(),
+				getterClass.getSimpleName());
+		throw new NoSuchMemberException(message);
 	}
 
-	protected abstract boolean canGetValue();
+	protected abstract boolean canGetValue() throws GetterValidationException;
 
 	protected abstract int getLength(EGetter getterValue);
 }

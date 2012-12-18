@@ -1,5 +1,7 @@
-package org.crossv.getters.descriptors;
+package org.crossv.getters.iterators;
 
+import org.crossv.getters.GetterValidationException;
+import org.crossv.getters.LengthGetterDescriptor;
 import org.crossv.primitives.Iterables;
 
 @SuppressWarnings("rawtypes")
@@ -10,7 +12,7 @@ public class IterableLengthGetter<E> extends
 	}
 
 	@Override
-	protected boolean canGetValue() {
+	protected boolean canGetValue() throws GetterValidationException {
 		return Iterable.class.isAssignableFrom(getReturnClass());
 	}
 

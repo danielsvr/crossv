@@ -8,6 +8,8 @@ package org.crossv;
  */
 public class EvaluationWarning extends Evaluation {
 
+	private Throwable cause;
+
 	/**
 	 * Creates an instance of {@link EvaluationWarning};
 	 * 
@@ -16,5 +18,14 @@ public class EvaluationWarning extends Evaluation {
 	 */
 	public EvaluationWarning(String message) {
 		super(createDetails(message));
+	}
+
+	public EvaluationWarning(Throwable cause) {
+		super(createDetails(cause.getMessage()));
+		this.cause = cause;
+	}
+
+	public Throwable getCause() {
+		return cause;
 	}
 }

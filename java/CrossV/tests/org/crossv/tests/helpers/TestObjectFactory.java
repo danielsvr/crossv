@@ -5,14 +5,11 @@ import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
 import org.crossv.NoContext;
 import org.crossv.Validator;
-import org.crossv.getters.GetterEvaluator;
-import org.crossv.getters.descriptors.LengthGreaterThan;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.strategies.ValidationByCotextStrategy;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
-import org.crossv.tests.subjects.TestableGetterEvaluator;
 import org.crossv.tests.subjects.TestableMonkeyEvaluator;
 import org.crossv.tests.subjects.TestableMouseEvaluator;
 

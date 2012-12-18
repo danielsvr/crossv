@@ -1,8 +1,8 @@
 package org.crossv.tests.subjects;
 
 import org.crossv.Evaluation;
+import org.crossv.getters.GetterDescriptor;
 import org.crossv.getters.GetterEvaluator;
-import org.crossv.getters.descriptors.GetterDescriptor;
 import org.crossv.primitives.Iterables;
 
 public class TestableGetterEvaluator<E> extends GetterEvaluator<E> implements

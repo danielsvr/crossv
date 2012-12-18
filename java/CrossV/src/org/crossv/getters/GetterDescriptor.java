@@ -1,4 +1,4 @@
-package org.crossv.getters.descriptors;
+package org.crossv.getters;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,7 +30,7 @@ public class GetterDescriptor<E> {
 	public String getName() {
 		return getterName;
 	}
-	
+
 	public Object getValue(E obj) throws Exception {
 		Object result;
 		String message;
@@ -88,7 +88,7 @@ public class GetterDescriptor<E> {
 		return scopeClass.cast(obj);
 	}
 
-	public Class<?> getReturnClass(){
+	public Class<?> getReturnClass() throws GetterValidationException {
 		return getterClass;
 	}
 }

@@ -1,7 +1,9 @@
-package org.crossv.getters.descriptors;
+package org.crossv.getters.enumerations;
 
 import java.util.Enumeration;
 
+import org.crossv.getters.GetterValidationException;
+import org.crossv.getters.LengthGetterDescriptor;
 import org.crossv.primitives.Iterables;
 
 @SuppressWarnings("rawtypes")
@@ -13,7 +15,7 @@ public class EnumerationLengthGetter<E> extends
 	}
 
 	@Override
-	protected boolean canGetValue() {
+	protected boolean canGetValue() throws GetterValidationException {
 		return Enumeration.class.isAssignableFrom(getReturnClass());
 	}
 

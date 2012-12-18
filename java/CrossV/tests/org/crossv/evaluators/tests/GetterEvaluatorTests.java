@@ -6,9 +6,9 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluation;
 import org.crossv.EvaluationFault;
+import org.crossv.getters.GetterDescriptor;
 import org.crossv.getters.GetterEvaluator;
-import org.crossv.getters.descriptors.GetterDescriptor;
-import org.crossv.getters.descriptors.NoSuchMemberException;
+import org.crossv.getters.NoSuchMemberException;
 import org.crossv.primitives.Iterables;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.TestableGetterEvaluator;

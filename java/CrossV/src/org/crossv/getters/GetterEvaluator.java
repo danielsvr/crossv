@@ -4,7 +4,6 @@ import static org.crossv.primitives.Iterables.emptyIfNull;
 
 import org.crossv.Evaluation;
 import org.crossv.Evaluator;
-import org.crossv.getters.descriptors.GetterDescriptor;
 import org.crossv.primitives.ArgumentNullException;
 
 public abstract class GetterEvaluator<E> implements Evaluator {
@@ -16,17 +15,13 @@ public abstract class GetterEvaluator<E> implements Evaluator {
 			throw new ArgumentNullException("getter");
 		this.getter = getter;
 	}
-	
+
 	protected String getGetterName() {
 		return getter.getName();
 	}
 
 	protected abstract Iterable<Evaluation> evaluateGetter(E scopeInstance,
 			Object getterValue) throws Exception;
-
-	protected Class<?> getGetterClass() {
-		return getter.getReturnClass();
-	}
 
 	@Override
 	public final Iterable<Evaluation> evaluate(Object obj, Object context) {

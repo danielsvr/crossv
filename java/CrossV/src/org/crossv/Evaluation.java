@@ -73,6 +73,11 @@ public abstract class Evaluation {
 		return Iterables
 				.<Evaluation> toIterable(new EvaluationWarning(message));
 	}
+	
+	public static Iterable<Evaluation> warning(Throwable e) {
+		return Iterables
+				.<Evaluation> toIterable(new EvaluationWarning(e));
+	}
 
 	public static Iterable<Evaluation> fault(String message) {
 		return Iterables.<Evaluation> toIterable(new EvaluationFault(message));

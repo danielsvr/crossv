@@ -26,7 +26,7 @@ public class CreateItemIterable<E> implements Iterable<E> {
 
 		@Override
 		public boolean hasNext() {
-			return itemsCount <= max;
+			return itemsCount < max;
 		}
 
 		@Override

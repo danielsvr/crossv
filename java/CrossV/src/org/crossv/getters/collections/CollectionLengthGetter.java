@@ -1,6 +1,9 @@
-package org.crossv.getters.descriptors;
+package org.crossv.getters.collections;
 
 import java.util.Collection;
+
+import org.crossv.getters.GetterValidationException;
+import org.crossv.getters.LengthGetterDescriptor;
 
 @SuppressWarnings("rawtypes")
 public class CollectionLengthGetter<E> extends
@@ -11,7 +14,7 @@ public class CollectionLengthGetter<E> extends
 	}
 
 	@Override
-	protected boolean canGetValue() {
+	protected boolean canGetValue() throws GetterValidationException {
 		return Collection.class.isAssignableFrom(getReturnClass());
 	}
 
