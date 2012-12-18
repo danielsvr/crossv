@@ -9,7 +9,9 @@ package org.crossv;
  * 
  * @author yochanan.miykael
  */
-public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
+public abstract class BasicEvaluator<E> extends TypeSafeEvaluator<E, NoContext> {
+
+	private Class<E> objCalss;
 
 	/**
 	 * Constructs a new {@link BasicEvaluator} object.
@@ -19,7 +21,7 @@ public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
 	 *            This {@link Class} serves as meta-data of the evaluator.
 	 */
 	protected BasicEvaluator(Class<E> objCalss) {
-		super(objCalss, NoContext.class);
+		this.objCalss = objCalss;
 	}
 
 	/**
@@ -52,4 +54,14 @@ public abstract class BasicEvaluator<E> extends ContextEvaluator<E, NoContext> {
 	 */
 	public abstract Iterable<Evaluation> evaluateInstance(E obj)
 			throws Exception;
+
+	@Override
+	public Class<NoContext> getContextClass() {
+		return NoContext.class;
+	}
+
+	@Override
+	public Class<E> getInstanceClass() {
+		return objCalss;
+	}
 }

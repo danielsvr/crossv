@@ -1,6 +1,4 @@
-package org.crossv.evaluators.getters;
-
-import static org.crossv.primitives.Iterables.*;
+package org.crossv.getters.descriptors;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -8,25 +6,33 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.crossv.BasicEvaluator;
-import org.crossv.Evaluation;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.Strings;
 
-public abstract class GetterEvaluator<E> extends BasicEvaluator<E> {
-	private final String getterName;
+public class GetterDescriptor<E> {
+	private String getterName;
+	private Class<E> scopeClass;
 	private Class<?> getterClass;
 
-	public GetterEvaluator(Class<E> objClass, String getterName) {
-		super(objClass);
+	public GetterDescriptor(Class<E> scopeClass, String getterName) {
+		if (scopeClass == null)
+			throw new ArgumentNullException("scopeClass");
 		if (Strings.isNullOrWhitespace(getterName))
 			throw new ArgumentNullException("getterName");
+		this.scopeClass = scopeClass;
 		this.getterName = getterName;
 	}
 
-	protected Object getValue(E obj) throws ReflectiveOperationException {
+	public Class<E> getScopeClass() {
+		return scopeClass;
+	}
+
+	public String getName() {
+		return getterName;
+	}
+	
+	public Object getValue(E obj) throws Exception {
 		Object result;
-		Class<E> instanceClass;
 		String message;
 		List<String> names;
 		Method method;
@@ -34,14 +40,13 @@ public abstract class GetterEvaluator<E> extends BasicEvaluator<E> {
 		boolean isMethod;
 
 		isMethod = false;
-		instanceClass = getInstanceClass();
 		names = new ArrayList<String>();
 		names.add("get" + getterName);
 		names.add("is" + getterName);
 		names.add(getterName);
 		for (String name : names) {
 			try {
-				method = instanceClass.getMethod(name);
+				method = scopeClass.getMethod(name);
 				getterClass = method.getReturnType();
 				isMethod = true;
 				return invoke(obj, method);
@@ -51,8 +56,8 @@ public abstract class GetterEvaluator<E> extends BasicEvaluator<E> {
 		}
 
 		try {
-			field = instanceClass.getField(getterName);
-			result = field.get(getInstanceClass());
+			field = scopeClass.getField(getterName);
+			result = field.get(scopeClass);
 			getterClass = field.getType();
 			return getterClass.cast(result);
 		} catch (NoSuchFieldException e) {
@@ -69,11 +74,9 @@ public abstract class GetterEvaluator<E> extends BasicEvaluator<E> {
 				+ "maches \"get{0}\" or \"{0}\".";
 		message = MessageFormat.format(message, getterName);
 		throw new NoSuchMemberException(message);
-
 	}
 
-	private Object invoke(E obj, Method method)
-			throws ReflectiveOperationException {
+	private Object invoke(E obj, Method method) throws Exception {
 		Object result;
 		if (obj == null)
 			return null;
@@ -81,21 +84,11 @@ public abstract class GetterEvaluator<E> extends BasicEvaluator<E> {
 		return getterClass.cast(result);
 	}
 
-	protected String getGetterName() {
-		return getterName;
+	public E castScopeObject(Object obj) {
+		return scopeClass.cast(obj);
 	}
 
-	@Override
-	public final Iterable<Evaluation> evaluateInstance(E obj) throws Exception {
-		Object value;
-		value = getValue(obj);
-		return emptyIfNull(evaluateGetter(obj, value));
-	}
-
-	protected abstract Iterable<Evaluation> evaluateGetter(E scopeInstance,
-			Object getterValue) throws Exception;
-
-	protected Class<?> getGetterClass() {
+	public Class<?> getReturnClass(){
 		return getterClass;
 	}
 }

@@ -7,10 +7,15 @@ import org.crossv.Evaluation;
 import org.crossv.EvaluationFault;
 import org.crossv.EvaluationSuccess;
 import org.crossv.EvaluationWarning;
-import org.crossv.evaluators.getters.LengthGreaterThan;
+import org.crossv.getters.descriptors.ArrayLengthGetter;
+import org.crossv.getters.descriptors.CollectionLengthGetter;
+import org.crossv.getters.descriptors.IterableLengthGetter;
+import org.crossv.getters.descriptors.LengthGreaterThan;
+import org.crossv.getters.descriptors.StringLengthGetter;
 import org.crossv.primitives.Iterables;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
+import org.crossv.tests.subjects.TestableGetterEvaluator;
 import org.junit.Test;
 
 public class GetterLengthGtEvaluatorTests {
@@ -22,8 +27,8 @@ public class GetterLengthGtEvaluatorTests {
 		Evaluation evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "Name", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new StringLengthGetter<Monkey>(Monkey.class, "Name"), 10);
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -36,8 +41,8 @@ public class GetterLengthGtEvaluatorTests {
 		Evaluation evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "Name", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new StringLengthGetter<Monkey>(Monkey.class, "Name"), 10);
 		monkey = new Monkey();
 		monkey.setName("123456789");
 		evaluations = evalutor.evaluate(monkey);
@@ -51,8 +56,8 @@ public class GetterLengthGtEvaluatorTests {
 		Evaluation evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "Name", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new StringLengthGetter<Monkey>(Monkey.class, "Name"), 10);
 		monkey = new Monkey();
 		monkey.setName("12345678901");
 		evaluations = evalutor.evaluate(monkey);
@@ -66,8 +71,8 @@ public class GetterLengthGtEvaluatorTests {
 		Evaluation evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "Mother", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new StringLengthGetter<Monkey>(Monkey.class, "Mother"), 10);
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -80,8 +85,8 @@ public class GetterLengthGtEvaluatorTests {
 		Evaluation evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "RelativesAsArray", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new ArrayLengthGetter<Monkey>(Monkey.class, "RelativesAsArray"), 10);
 		monkey = new Monkey();
 		monkey.setRelativesAsArray(new Monkey[11]);
 		evaluations = evalutor.evaluate(monkey);
@@ -96,8 +101,8 @@ public class GetterLengthGtEvaluatorTests {
 		Monkey monkey;
 		Iterable<Monkey> monkeys;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "RelativesAsList", 10);
+		evalutor =new LengthGreaterThan<Monkey>(
+				new CollectionLengthGetter<Monkey>(Monkey.class, "RelativesAsList"), 10);
 		monkeys = Iterables.repeatDefault(11);
 		monkey = new Monkey();
 		monkey.setRelativesAsList(Iterables.toList(monkeys));
@@ -113,8 +118,9 @@ public class GetterLengthGtEvaluatorTests {
 		Monkey monkey;
 		Iterable<Monkey> monkeys;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "RelativesAsIterable", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new IterableLengthGetter<Monkey>(Monkey.class, "RelativesAsIterable"), 10);
+		
 		monkeys = Iterables.repeatDefault(11);
 		monkey = new Monkey();
 		monkey.setRelativesAsIterable(monkeys);
@@ -130,8 +136,8 @@ public class GetterLengthGtEvaluatorTests {
 		Monkey monkey;
 		Iterable<Monkey> monkeys;
 
-		evalutor = TestObjectFactory.createGetterLengthGtEvaluator(
-				Monkey.class, "RelativesAsEnumeration", 10);
+		evalutor = new LengthGreaterThan<Monkey>(
+				new IterableLengthGetter<Monkey>(Monkey.class, "RelativesAsEnumeration"), 10);
 		monkeys = Iterables.repeatDefault(11);
 		monkey = new Monkey();
 		monkey.setRelativesAsEnumeration(Iterables.toEnumeration(monkeys));

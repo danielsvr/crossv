@@ -1,7 +1,8 @@
 package org.crossv.tests.subjects;
 
 import org.crossv.Evaluation;
-import org.crossv.evaluators.getters.GetterEvaluator;
+import org.crossv.getters.GetterEvaluator;
+import org.crossv.getters.descriptors.GetterDescriptor;
 import org.crossv.primitives.Iterables;
 
 public class TestableGetterEvaluator<E> extends GetterEvaluator<E> implements
@@ -10,8 +11,8 @@ public class TestableGetterEvaluator<E> extends GetterEvaluator<E> implements
 	private Iterable<Evaluation> results;
 	private RuntimeException exception;
 
-	public TestableGetterEvaluator(Class<E> objClass, String getterName) {
-		super(objClass, getterName);
+	public TestableGetterEvaluator(GetterDescriptor<E> getter) {
+		super(getter);
 	}
 
 	@Override

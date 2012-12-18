@@ -6,11 +6,12 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.Evaluation;
 import org.crossv.EvaluationFault;
-import org.crossv.evaluators.getters.GetterEvaluator;
-import org.crossv.evaluators.getters.NoSuchMemberException;
+import org.crossv.getters.GetterEvaluator;
+import org.crossv.getters.descriptors.GetterDescriptor;
+import org.crossv.getters.descriptors.NoSuchMemberException;
 import org.crossv.primitives.Iterables;
-import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
+import org.crossv.tests.subjects.TestableGetterEvaluator;
 import org.junit.Test;
 
 public class GetterEvaluatorTests {
@@ -22,8 +23,9 @@ public class GetterEvaluatorTests {
 		Evaluation evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, "NonExistingGetterName");
+		evalutor = new TestableGetterEvaluator<Monkey>(
+				new GetterDescriptor<Monkey>(Monkey.class,
+						"NonExistingGetterName"));
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -36,8 +38,9 @@ public class GetterEvaluatorTests {
 		EvaluationFault evaluation;
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, "NonExistingGetterName");
+		evalutor = new TestableGetterEvaluator<Monkey>(
+				new GetterDescriptor<Monkey>(Monkey.class,
+						"NonExistingGetterName"));
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -49,8 +52,8 @@ public class GetterEvaluatorTests {
 	public void evaluate_NameGetterOnMokeyInstance_NoExceptionsAreThrown() {
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, "Name");
+		evalutor = new TestableGetterEvaluator<Monkey>(
+				new GetterDescriptor<Monkey>(Monkey.class, "Name"));
 		monkey = new Monkey();
 		evaluations = evalutor.evaluate(monkey);
 
@@ -61,8 +64,8 @@ public class GetterEvaluatorTests {
 	public void evaluate_NameGetterOnNullMokeyInstance_NoExceptionsAreThrown() {
 		Monkey monkey;
 
-		evalutor = TestObjectFactory.createTestableGetterEvaluator(
-				Monkey.class, "Name");
+		evalutor = new TestableGetterEvaluator<Monkey>(
+				new GetterDescriptor<Monkey>(Monkey.class, "Name"));
 		monkey = null;
 		evaluations = evalutor.evaluate(monkey);
 

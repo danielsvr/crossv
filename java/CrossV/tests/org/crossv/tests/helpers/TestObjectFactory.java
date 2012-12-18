@@ -5,8 +5,8 @@ import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
 import org.crossv.NoContext;
 import org.crossv.Validator;
-import org.crossv.evaluators.getters.GetterEvaluator;
-import org.crossv.evaluators.getters.LengthGreaterThan;
+import org.crossv.getters.GetterEvaluator;
+import org.crossv.getters.descriptors.LengthGreaterThan;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.strategies.ValidationByCotextStrategy;
@@ -78,15 +78,4 @@ public class TestObjectFactory {
 	public static ExceptionBasedValidationByCotextStrategy createExceptionBasedValidationByCotextStrategy() {
 		return new ExceptionBasedValidationByCotextStrategy();
 	}
-
-	public static <E> GetterEvaluator<E> createTestableGetterEvaluator(
-			Class<E> objClass, String getterName) {
-		return new TestableGetterEvaluator<E>(objClass, getterName);
-	}
-
-	public static <E> LengthGreaterThan<E> createGetterLengthGtEvaluator(
-			Class<E> objClass, String getterName, int length) {
-		return new LengthGreaterThan<E>(objClass, getterName, length);
-	}
-
 }

@@ -11,7 +11,8 @@ import org.crossv.primitives.ArgumentNullException;
  * 
  * @author yochanan.miykael
  */
-public abstract class ContextEvaluator<E, EContext> implements Evaluator {
+public abstract class ContextEvaluator<E, EContext> extends
+		TypeSafeEvaluator<E, EContext> {
 
 	private final Class<E> objClass;
 	private final Class<EContext> contextClass;
@@ -35,51 +36,6 @@ public abstract class ContextEvaluator<E, EContext> implements Evaluator {
 
 		this.objClass = objCalss;
 		this.contextClass = contextClass;
-	}
-
-	/**
-	 * Evaluates an instance of the object {@link Class} on specific instance of
-	 * the context class. The object {@link Class} and context {@link Class} was
-	 * earlier provided in constructor.
-	 * 
-	 * @param obj
-	 *            the instance of the object {@link Class} that will be
-	 *            evaluated.
-	 * @param context
-	 *            an instance of the context {@link Class} on which the object
-	 *            will be evaluated.
-	 */
-	public abstract Iterable<Evaluation> evaluateInstance(E obj,
-			EContext context) throws Exception;
-
-	/**
-	 * Evaluates an instance of the object {@link Class} on specific instance of
-	 * the context class. The object {@link Class} and context {@link Class} was
-	 * earlier provided in constructor.
-	 * 
-	 * @param obj
-	 *            the instance of the object {@link Class} that will be
-	 *            evaluated.
-	 * @param context
-	 *            an instance of the context {@link Class} on which the object
-	 *            will be evaluated.
-	 */
-	public final Iterable<Evaluation> evaluate(Object obj, Object context) {
-		EContext actualContext;
-		E actualObj = null;
-
-		try {
-			if (context == null)
-				return Evaluation.fault(new ArgumentNullException("context"));
-
-			if (obj != null)
-				actualObj = objClass.cast(obj);
-			actualContext = contextClass.cast(context);
-
-			return evaluateInstance(actualObj, actualContext);
-		} catch (Throwable e) {
-			return Evaluation.fault(e);
-		}
 	}
 
 	/**

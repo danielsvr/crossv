@@ -1,7 +1,6 @@
 package org.crossv.strategies;
 
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Properties;
 
 import org.crossv.Evaluator;
@@ -19,11 +18,11 @@ public abstract class ValidationStrategy {
 	public static ValidationStrategy getDefault() {
 		return getDefault(null);
 	}
-	
+
 	public static ValidationStrategy getDefault(InputStream resourceStream) {
-		if(resourceStream == null)
+		if (resourceStream == null)
 			return createValidationByContext();
-		
+
 		Class<ValidationStrategy> thisClass;
 		Class<?> strategyClass;
 		ValidationStrategy strategy = null;
@@ -40,23 +39,20 @@ public abstract class ValidationStrategy {
 			strategyProperty = strategyProperty == null ? properties
 					.get("strategy") : strategyProperty;
 			strategyName = strategyProperty != null ? strategyProperty
-					.toString() : "bycontext";
+					.toString().toUpperCase() : "BYCONTEXT";
 
-			switch (strategyName.toLowerCase(Locale.ENGLISH)) {
-			case "bycontext":
-			case "by_context":
+			if (strategyName.equals("BYCONTEXT")
+					|| strategyName.equals("BY_CONTEXT"))
 				return createValidationByContext();
-			case "exception":
-			case "validationexception":
-			case "exceptionbycontext":
-			case "exception_by_context":
+			if (strategyName.equals("EXCEPTION")
+					|| strategyName.equals("VALIDATIONEXCEPTION")
+					|| strategyName.equals("EXCEPTIONBYCONTEXT")
+					|| strategyName.equals("EXCEPTION_BY_CONTEXT"))
 				return createExceptionExceptionBasedValidationStrategy();
-			default: {
-				strategyClass = Class.forName(strategyName);
-				strategy = thisClass.cast(strategyClass.newInstance());
-				return strategy;
-			}
-			}
+			strategyClass = Class.forName(strategyName);
+			strategy = thisClass.cast(strategyClass.newInstance());
+			return strategy;
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return createValidationByContext();
