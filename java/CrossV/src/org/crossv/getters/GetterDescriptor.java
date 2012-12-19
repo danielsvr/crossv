@@ -1,18 +1,21 @@
 package org.crossv.getters;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import static org.crossv.primitives.ValueGetterUtil.tryGetFieldValue;
+import static org.crossv.primitives.ValueGetterUtil.tryGetMethodValue;
+import static org.crossv.primitives.ValueGetterUtil.tryGetPropertyValue;
+
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.crossv.primitives.ArgumentNullException;
+import org.crossv.primitives.GetterValue;
 import org.crossv.primitives.Strings;
+import org.crossv.primitives.TryResult;
 
 public class GetterDescriptor<E> {
 	private String getterName;
 	private Class<E> scopeClass;
 	private Class<?> getterClass;
+	boolean isMethod;
 
 	public GetterDescriptor(Class<E> scopeClass, String getterName) {
 		if (scopeClass == null)
@@ -32,56 +35,29 @@ public class GetterDescriptor<E> {
 	}
 
 	public Object getValue(E obj) throws Exception {
-		Object result;
 		String message;
-		List<String> names;
-		Method method;
-		Field field;
-		boolean isMethod;
-
 		isMethod = false;
-		names = new ArrayList<String>();
-		names.add("get" + getterName);
-		names.add("is" + getterName);
-		names.add(getterName);
-		for (String name : names) {
-			try {
-				method = scopeClass.getMethod(name);
-				getterClass = method.getReturnType();
-				isMethod = true;
-				return invoke(obj, method);
+		TryResult<GetterValue> posibleValue;
 
-			} catch (NoSuchMethodException e) {
+		posibleValue = tryGetPropertyValue(scopeClass, obj, getterName);
+		if (!posibleValue.isSuccessful()) {
+			posibleValue = tryGetMethodValue(scopeClass, obj, getterName);
+			if (!posibleValue.isSuccessful()) {
+				posibleValue = tryGetFieldValue(scopeClass, obj, getterName);
+				if (!posibleValue.isSuccessful()) {
+					message = "There is no public, parameterless, property "
+							+ "getter or field that maches \"{0}\".";
+					message = MessageFormat.format(message, getterName);
+					throw new NoSuchMemberException(message);
+				}
 			}
 		}
+		if (!posibleValue.isSuccessful() && posibleValue.getCause() != null)
+			throw posibleValue.getCause();
 
-		try {
-			field = scopeClass.getField(getterName);
-			result = field.get(scopeClass);
-			getterClass = field.getType();
-			return getterClass.cast(result);
-		} catch (NoSuchFieldException e) {
-		}
-
-		if (isMethod) {
-			message = "There is no public, parameterless method that "
-					+ "maches get\"{0}\" or \"{0}\".";
-			message = MessageFormat.format(message, getterName);
-			throw new MalformedMemberException(message);
-		}
-
-		message = "There is no public method or field that "
-				+ "maches \"get{0}\" or \"{0}\".";
-		message = MessageFormat.format(message, getterName);
-		throw new NoSuchMemberException(message);
-	}
-
-	private Object invoke(E obj, Method method) throws Exception {
-		Object result;
-		if (obj == null)
-			return null;
-		result = method.invoke(obj);
-		return getterClass.cast(result);
+		GetterValue result = posibleValue.getResult();
+		getterClass = result.getGetterClass();
+		return result.getValue();
 	}
 
 	public E castScopeObject(Object obj) {

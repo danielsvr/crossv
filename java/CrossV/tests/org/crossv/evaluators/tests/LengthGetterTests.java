@@ -20,7 +20,8 @@ public class LengthGetterTests {
 	Object length;
 
 	@Test
-	public void getValue_OfAnEmptyName_ZeroIsReturned() throws Exception {
+	public void getValue_OfAnEmptyNameProperty_ZeroIsReturned()
+			throws Exception {
 		Monkey monkey;
 
 		descriptor = new StringLengthGetter<Monkey>(Monkey.class, "Name");
@@ -31,7 +32,7 @@ public class LengthGetterTests {
 	}
 
 	@Test
-	public void getValue_Of11CharsName_11IsReturned() throws Exception {
+	public void getValue_Of11CharsNameProperty_11IsReturned() throws Exception {
 		Monkey monkey;
 
 		descriptor = new StringLengthGetter<Monkey>(Monkey.class, "Name");
@@ -43,7 +44,20 @@ public class LengthGetterTests {
 	}
 
 	@Test
-	public void getValue_OfAMemberThatDoesNotHaveLegth_NoSuchMemberExceptionIsThrown()
+	public void getValue_Of11CharsNicknameFieldIsReturned() throws Exception {
+		Monkey monkey;
+
+		descriptor = new StringLengthGetter<Monkey>(Monkey.class, "Nickname");
+
+		monkey = new Monkey();
+		monkey.nickname = "12345678901";
+		length = descriptor.getValue(monkey);
+
+		assertThat(length, is((Object) 11));
+	}
+	
+	@Test
+	public void getValue_OfAPropertyThatDoesNotHaveLegth_NoSuchMemberExceptionIsThrown()
 			throws Exception {
 		Monkey monkey;
 
@@ -57,7 +71,8 @@ public class LengthGetterTests {
 	}
 
 	@Test
-	public void getValue_Of11RelativesAsArray_11IsReturned() throws Exception {
+	public void getValue_Of11RelativesAsArrayProperty_11IsReturned()
+			throws Exception {
 		Monkey monkey;
 
 		descriptor = new ArrayLengthGetter<Monkey>(Monkey.class,
@@ -70,7 +85,8 @@ public class LengthGetterTests {
 	}
 
 	@Test
-	public void getValue_Of11RelativesAsList_11IsReturned() throws Exception {
+	public void getValue_Of11RelativesAsListProperty_11IsReturned()
+			throws Exception {
 		Monkey monkey;
 		Iterable<Monkey> monkeys;
 
@@ -85,7 +101,7 @@ public class LengthGetterTests {
 	}
 
 	@Test
-	public void getValue_Of11RelativesAsIterable_11IsReturned()
+	public void getValue_Of11RelativesAsIterableProperty_11IsReturned()
 			throws Exception {
 		Monkey monkey;
 		Iterable<Monkey> monkeys;
@@ -102,7 +118,7 @@ public class LengthGetterTests {
 	}
 
 	@Test
-	public void getValue_Of11RelativesAsEnumeration_11IsReturned()
+	public void getValue_Of11RelativesAsEnumerationProperty_11IsReturned()
 			throws Exception {
 		Monkey monkey;
 		Iterable<Monkey> monkeys;

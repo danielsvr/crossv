@@ -10,6 +10,7 @@ public class Monkey {
 	private List<Monkey> relativesAsList;
 	private Iterable<Monkey> relativesAsIteravle;
 	private Enumeration<Monkey> relativesAsEnumeration;
+	public String nickname;
 	
 	public List<Monkey> getRelativesAsList() {
 		return relativesAsList;

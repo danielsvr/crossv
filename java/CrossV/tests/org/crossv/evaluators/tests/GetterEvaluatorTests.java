@@ -71,4 +71,16 @@ public class GetterEvaluatorTests {
 
 		assertThat(evaluations, isEmpty());
 	}
+	
+	@Test
+	public void evaluate_NicknameGetterOnNullMokeyInstance_NoExceptionsAreThrown() {
+		Monkey monkey;
+		
+		evalutor = new TestableGetterEvaluator<Monkey>(
+				new GetterDescriptor<Monkey>(Monkey.class, "Nickname"));
+		monkey = null;
+		evaluations = evalutor.evaluate(monkey);
+		
+		assertThat(evaluations, isEmpty());
+	}
 }
