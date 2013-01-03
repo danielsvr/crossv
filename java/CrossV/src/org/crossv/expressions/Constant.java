@@ -10,9 +10,9 @@ public class Constant extends Expression {
 	public Object getValue() {
 		return value;
 	}
-	
+
 	@Override
-	public ExpressionType getType() {
-		return ExpressionType.CONSTANT;
+	public String toString() {
+		return value != null ? value.toString() : "null";
 	}
 }

@@ -1,10 +1,10 @@
 package org.crossv.expressions;
 
-public abstract class BinaryOperation extends Expression {
+public abstract class BinaryExpression extends Expression {
 	private final Expression left;
 	private final Expression right;
 
-	public BinaryOperation(Expression left, Expression right) {
+	public BinaryExpression(Expression left, Expression right) {
 		this.left = left;
 		this.right = right;
 	}
