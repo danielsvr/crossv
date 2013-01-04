@@ -8,6 +8,6 @@ public class InstanceOf extends BooleanExpression {
 
 	@Override
 	public String toString() {
-		return getLeft().toString() + " instanceof " + getRight().toString();
+		return getExpressionString(left) + " instanceof " + getExpressionString(right);
 	}
 }

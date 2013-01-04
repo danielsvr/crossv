@@ -1,10 +1,16 @@
 package org.crossv.expressions;
 
+import org.crossv.primitives.ArgumentNullException;
+
 public abstract class BinaryExpression extends Expression {
-	private final Expression left;
-	private final Expression right;
+	protected final Expression left;
+	protected final Expression right;
 
 	public BinaryExpression(Expression left, Expression right) {
+		if (left == null)
+			throw new ArgumentNullException("left");
+		if (right == null)
+			throw new ArgumentNullException("right");
 		this.left = left;
 		this.right = right;
 	}

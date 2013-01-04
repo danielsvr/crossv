@@ -15,4 +15,9 @@ public class Constant extends Expression {
 	public String toString() {
 		return value != null ? value.toString() : "null";
 	}
+
+	@Override
+	public Class<?> getResultClass() {
+		return value != null ? value.getClass() : Object.class;
+	}
 }
