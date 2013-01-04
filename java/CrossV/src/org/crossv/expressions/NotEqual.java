@@ -8,6 +8,7 @@ public class NotEqual extends BooleanExpression {
 
 	@Override
 	public String toString() {
-		return getExpressionString(left) + " != " + getExpressionString(right);
+		return "(" + getExpressionString(left) + " != "
+				+ getExpressionString(right) + ")";
 	}
 }

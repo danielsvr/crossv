@@ -8,6 +8,7 @@ public class InstanceOf extends BooleanExpression {
 
 	@Override
 	public String toString() {
-		return getExpressionString(left) + " instanceof " + getExpressionString(right);
+		return "(" + getExpressionString(left) + " instanceof "
+				+ getExpressionString(right) + ")";
 	}
 }

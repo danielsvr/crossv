@@ -5,9 +5,10 @@ public class Equal extends BooleanExpression {
 		super(left, right);
 		checkOperandClass(left, right.getResultClass());
 	}
-	
+
 	@Override
 	public String toString() {
-		return getExpressionString(left) + " == " + getExpressionString(right);
+		return "(" + getExpressionString(left) + " == "
+				+ getExpressionString(right) + ")";
 	}
 }
