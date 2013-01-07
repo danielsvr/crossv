@@ -3,7 +3,9 @@ package org.crossv.expressions;
 public class LessThan extends BooleanExpression {
 	public LessThan(Expression left, Expression right) {
 		super(left, right);
-		checkOperandClass(left, right.getResultClass());
+		checkOperandClass(left, right);
+		checkIfReturnsPrimitive(left);
+		checkIfReturnsPrimitive(left);
 	}
 
 	@Override

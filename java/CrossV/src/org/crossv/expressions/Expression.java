@@ -2,11 +2,12 @@ package org.crossv.expressions;
 
 public abstract class Expression {
 
+	@Override
 	public abstract String toString();
 
 	public abstract Class<?> getResultClass();
 
-	public boolean isPrimitive() {
+	public boolean returnsPrimitiveType() {
 		Class<?> resultClass = getResultClass();
 
 		if ((resultClass.isPrimitive() && !resultClass.equals(Void.TYPE))
@@ -22,18 +23,19 @@ public abstract class Expression {
 		return false;
 	}
 
-	protected static void checkOperandClass(Expression ex, Class<?> clazz) {
-		if (!clazz.isAssignableFrom(ex.getResultClass()))
+	protected static void checkOperandClass(Expression expressin, Class<?> clazz) {
+		Class<?> resultClass = expressin.getResultClass();
+		if (!clazz.isAssignableFrom(resultClass))
 			throw new IllegalOperandException();
 	}
 
-	protected static void checkIfReturnsPrimitive(Expression ex) {
-		if (!ex.isPrimitive())
+	protected static void checkIfReturnsPrimitive(Expression expressin) {
+		if (!expressin.returnsPrimitiveType())
 			throw new IllegalOperandException();
 	}
 	
-	protected static void checkIfReturnsReference(Expression ex) {
-		if (ex.isPrimitive())
+	protected static void checkIfReturnsReference(Expression expressin) {
+		if (expressin.returnsPrimitiveType())
 			throw new IllegalOperandException();
 	}
 
@@ -45,15 +47,15 @@ public abstract class Expression {
 		return new AndAlso(left, right);
 	}
 
-	public static Expression and(Object left, Object right) {
+	public static Expression and(Boolean left, Boolean right) {
 		return and(constant(left), constant(right));
 	}
 
-	public static Expression and(Object left, Expression right) {
+	public static Expression and(Boolean left, Expression right) {
 		return and(constant(left), right);
 	}
 
-	public static Expression and(Expression left, Object right) {
+	public static Expression and(Expression left, Boolean right) {
 		return and(left, constant(right));
 	}
 
@@ -73,36 +75,36 @@ public abstract class Expression {
 		return equal(constant(left), right);
 	}
 
-	public static Expression gt(Expression left, Expression right) {
+	public static Expression greaterThan(Expression left, Expression right) {
 		return new GreaterThan(left, right);
 	}
 
-	public static Expression gt(Object left, Object right) {
-		return gt(constant(left), constant(right));
+	public static Expression greaterThan(Object left, Object right) {
+		return greaterThan(constant(left), constant(right));
 	}
 
-	public static Expression gt(Expression left, Object right) {
-		return gt(left, constant(right));
+	public static Expression greaterThan(Expression left, Object right) {
+		return greaterThan(left, constant(right));
 	}
 
-	public static Expression gt(Object left, Expression right) {
-		return gt(constant(left), right);
+	public static Expression greaterThan(Object left, Expression right) {
+		return greaterThan(constant(left), right);
 	}
 
-	public static Expression ge(Expression left, Expression right) {
+	public static Expression greaterThanOrEqual(Expression left, Expression right) {
 		return new GreaterThanOrEqual(left, right);
 	}
 
-	public static Expression ge(Object left, Object right) {
-		return ge(constant(left), constant(right));
+	public static Expression greaterThanOrEqual(Object left, Object right) {
+		return greaterThanOrEqual(constant(left), constant(right));
 	}
 
-	public static Expression ge(Expression left, Object right) {
-		return ge(left, constant(right));
+	public static Expression greaterThanOrEqual(Expression left, Object right) {
+		return greaterThanOrEqual(left, constant(right));
 	}
 
-	public static Expression ge(Object left, Expression right) {
-		return ge(constant(left), right);
+	public static Expression greaterThanOrEqual(Object left, Expression right) {
+		return greaterThanOrEqual(constant(left), right);
 	}
 
 	public static Expression instanceOf(Expression left, Expression right) {
@@ -119,5 +121,73 @@ public abstract class Expression {
 
 	public static Expression instanceOf(Object left, Expression right) {
 		return instanceOf(constant(left), right);
+	}
+
+	public static Expression lessThan(Expression left, Expression right) {
+		return new LessThan(left, right);
+	}
+
+	public static Expression lessThan(Object left, Object right) {
+		return lessThan(constant(left), constant(right));
+	}
+
+	public static Expression lessThan(Expression left, Object right) {
+		return lessThan(left, constant(right));
+	}
+
+	public static Expression lessThan(Object left, Expression right) {
+		return lessThan(constant(left), right);
+	}
+
+	public static Expression lessThanOrEqual(Expression left, Expression right) {
+		return new LessThanOrEqual(left, right);
+	}
+
+	public static Expression lessThanOrEqual(Object left, Object right) {
+		return lessThanOrEqual(constant(left), constant(right));
+	}
+
+	public static Expression lessThanOrEqual(Expression left, Object right) {
+		return lessThanOrEqual(left, constant(right));
+	}
+
+	public static Expression lessThanOrEqual(Object left, Expression right) {
+		return lessThanOrEqual(constant(left), right);
+	}
+	
+	public static Expression notEqual(Expression left, Expression right) {
+		return new NotEqual(left, right);
+	}
+
+	public static Expression notEqual(Object left, Object right) {
+		return notEqual(constant(left), constant(right));
+	}
+
+	public static Expression notEqual(Expression left, Object right) {
+		return notEqual(left, constant(right));
+	}
+
+	public static Expression notEqual(Object left, Expression right) {
+		return notEqual(constant(left), right);
+	}
+	
+
+	public static Expression or(Expression left, Expression right) {
+		return new OrElse(left, right);
+	}
+	
+
+	public static Expression or(Boolean left, Boolean right) {
+		return or(constant(left), constant(right));
+	}
+	
+
+	public static Expression or(Boolean left, Expression right) {
+		return or(constant(left), right);
+	}
+	
+
+	public static Expression or(Expression left, Boolean right) {
+		return or(left, constant(right));
 	}
 }

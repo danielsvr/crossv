@@ -1,4 +1,4 @@
-package org.crossv.expressions.tests;
+package org.crossv.tests;
 
 import static org.crossv.expressions.Expression.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -12,7 +12,7 @@ public class ExpressionTests {
 
 	@Test(expected = IllegalOperandException.class)
 	public void createAndExpression_nonBooleanOperands_IllegalOperandExceptionIsThrown() {
-		and(1, 2);
+		and(constant(1), constant(2));
 	}
 
 	@Test
@@ -32,42 +32,35 @@ public class ExpressionTests {
 		assertThat(e.toString(), is("(1 == 2)"));
 	}
 
-	@Test
-	public void combiningAndAndEqualExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = and(false, and(equal(1, 2), equal("a", "b")));
-		assertThat(e.toString(),
-				is("(false && ((1 == 2) && (\"a\" == \"b\")))"));
-	}
-
 	@Test(expected = IllegalOperandException.class)
 	public void createGraterThanExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
-		gt(1, "2");
+		greaterThan(1, "2");
 	}
 
 	@Test(expected = IllegalOperandException.class)
 	public void createGraterThanExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
-		gt(new Object(), new Object());
+		greaterThan(new Object(), new Object());
 	}
 
 	@Test
 	public void createGraterThanExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = gt(1, 2);
+		Expression e = greaterThan(1, 2);
 		assertThat(e.toString(), is("(1 > 2)"));
 	}
 
 	@Test(expected = IllegalOperandException.class)
 	public void createGraterThanOrEqualExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
-		ge(1, "2");
+		greaterThanOrEqual(1, "2");
 	}
 
 	@Test(expected = IllegalOperandException.class)
 	public void createGraterThanOrEqualExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
-		ge(new Object(), new Object());
+		greaterThanOrEqual(new Object(), new Object());
 	}
 
 	@Test
 	public void createGraterThanOrEqualExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = ge(1, 2);
+		Expression e = greaterThanOrEqual(1, 2);
 		assertThat(e.toString(), is("(1 >= 2)"));
 	}
 
@@ -80,5 +73,59 @@ public class ExpressionTests {
 	public void createInstanceOfExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = instanceOf("1", Integer.class);
 		assertThat(e.toString(), is("(\"1\" instanceof java.lang.Integer)"));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createLessThanExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+		lessThan(1, "2");
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createLessThanExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
+		lessThan(new Object(), new Object());
+	}
+
+	@Test
+	public void createLessThanExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = lessThan(1, 2);
+		assertThat(e.toString(), is("(1 < 2)"));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createLessThanOrEqualExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+		lessThanOrEqual(1, "2");
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createLessThanOrEqualExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
+		lessThanOrEqual(new Object(), new Object());
+	}
+
+	@Test
+	public void createLessThanOrEqualExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = lessThanOrEqual(1, 2);
+		assertThat(e.toString(), is("(1 <= 2)"));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createNotEqualExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+		notEqual(1, "2");
+	}
+
+	@Test
+	public void createNotEqualExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = notEqual(1, 2);
+		assertThat(e.toString(), is("(1 != 2)"));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createOrExpression_nonBooleanOperands_IllegalOperandExceptionIsThrown() {
+		or(constant(1), constant(2));
+	}
+
+	@Test
+	public void createOrExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = or(true, false);
+		assertThat(e.toString(), is("(true || false)"));
 	}
 }
