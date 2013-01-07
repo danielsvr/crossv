@@ -1,7 +1,7 @@
 ADD 				// An addition operation, such as (a + b)
 AND 				// A bitwise or logical AND operation, such as (a & b)
-ARRAY_LENGTH		// An operation that obtains the length of a one-dimensional array, such as array.Length
-ARRAY_INDEX 		// An indexing operation in a one-dimensional array, such as array[index]
+SEQ	_LENGTH			// An operation that obtains the length of a one-dimensional sequence, such as array.Length
+SEQ_INDEX 			// An indexing operation in a one-dimensional sequence, such as array[index]
 CALL 				// A method call, such as in the obj.sampleMethod() expression
 COALESCE			// A node that represents a null coalescing operation, such as (a ?? b) in C#
 TERNARY				// A conditional operation, such as a > b ? a : b
