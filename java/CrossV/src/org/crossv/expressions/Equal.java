@@ -7,8 +7,8 @@ public class Equal extends BooleanExpression {
 	}
 
 	@Override
-	public String toString() {
-		return "(" + getExpressionString(left) + " == "
-				+ getExpressionString(right) + ")";
+	protected String getOperatorString() {
+		return "==";
 	}
+
 }

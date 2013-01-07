@@ -38,4 +38,47 @@ public class ExpressionTests {
 		assertThat(e.toString(),
 				is("(false && ((1 == 2) && (\"a\" == \"b\")))"));
 	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createGraterThanExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+		gt(1, "2");
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createGraterThanExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
+		gt(new Object(), new Object());
+	}
+
+	@Test
+	public void createGraterThanExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = gt(1, 2);
+		assertThat(e.toString(), is("(1 > 2)"));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createGraterThanOrEqualExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+		ge(1, "2");
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createGraterThanOrEqualExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
+		ge(new Object(), new Object());
+	}
+
+	@Test
+	public void createGraterThanOrEqualExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = ge(1, 2);
+		assertThat(e.toString(), is("(1 >= 2)"));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createInstanceOfExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+		instanceOf(1, constant(2));
+	}
+
+	@Test
+	public void createInstanceOfExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = instanceOf("1", Integer.class);
+		assertThat(e.toString(), is("(\"1\" instanceof java.lang.Integer)"));
+	}
 }

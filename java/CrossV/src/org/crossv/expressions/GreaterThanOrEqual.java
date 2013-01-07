@@ -4,11 +4,12 @@ public class GreaterThanOrEqual extends BooleanExpression {
 	public GreaterThanOrEqual(Expression left, Expression right) {
 		super(left, right);
 		checkOperandClass(left, right.getResultClass());
+		checkIfReturnsPrimitive(left);
+		checkIfReturnsPrimitive(right);
 	}
 
 	@Override
-	public String toString() {
-		return "(" + getExpressionString(left) + " >= "
-				+ getExpressionString(right) + ")";
-	}
+	protected String getOperatorString() {
+		return ">=";
+	}	
 }

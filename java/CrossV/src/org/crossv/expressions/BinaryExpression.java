@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static java.text.MessageFormat.format;
+
 import org.crossv.primitives.ArgumentNullException;
 
 public abstract class BinaryExpression extends Expression {
@@ -21,5 +23,18 @@ public abstract class BinaryExpression extends Expression {
 
 	public Expression getRight() {
 		return right;
+	}
+	
+	@Override
+	public String toString() {
+		return format("({0} {1} {2})", left, getOperatorString(), right);
+	}
+
+	protected abstract String getOperatorString();
+	
+	protected static void checkOperandClass(Expression left, Expression right) {
+		if(!right.getResultClass().isAssignableFrom(left.getResultClass())
+				&& !left.getResultClass().isAssignableFrom(right.getResultClass()))
+			throw new IllegalOperandException();
 	}
 }

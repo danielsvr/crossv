@@ -18,4 +18,4 @@ RIGHT_SHIFT			// A bitwise right-shift operation, such as (a >> b)
 SUBTRACT			// A subtraction operation, such as (a - b)
 IS_TRUE				// A true condition value
 IS_FALSE			// A false condition value
-PROVIDING_MESSAGE	// custom operator for (providing message "failed" if IS_FALSE [else "ok"])
+....

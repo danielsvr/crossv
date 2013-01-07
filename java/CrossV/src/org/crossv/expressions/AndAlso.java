@@ -1,5 +1,6 @@
 package org.crossv.expressions;
 
+
 public class AndAlso extends BooleanExpression {
 
 	public AndAlso(Expression left, Expression right) {
@@ -9,8 +10,7 @@ public class AndAlso extends BooleanExpression {
 	}
 
 	@Override
-	public String toString() {
-		return "(" + getExpressionString(left) + " && "
-				+ getExpressionString(right) + ")";
+	protected String getOperatorString() {
+		return "&&";
 	}
 }

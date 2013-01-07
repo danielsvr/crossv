@@ -13,7 +13,24 @@ public class Constant extends Expression {
 
 	@Override
 	public String toString() {
-		return value != null ? value.toString() : "null";
+		if (value == null)
+			return "null";
+
+		if (value instanceof String)
+			return valueAsString();
+
+		if (value instanceof Class)
+			return valueAsClass();
+
+		return value.toString();
+	}
+
+	private String valueAsClass() {
+		return ((Class<?>) value).getName();
+	}
+
+	private String valueAsString() {
+		return "\"" + value.toString() + "\"";
 	}
 
 	@Override
