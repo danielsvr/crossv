@@ -2,6 +2,7 @@ package org.crossv.expressions;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 public abstract class Expression {
 
@@ -47,7 +48,7 @@ public abstract class Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visit(this);
 	}
-	
+
 	protected static void checkOperandClass(Expression expressin, Class<?> clazz) {
 		Class<?> resultClass = expressin.getResultClass();
 		if (!clazz.isAssignableFrom(resultClass))
@@ -66,6 +67,14 @@ public abstract class Expression {
 
 	public static Expression constant(Object value) {
 		return new Constant(value);
+	}
+
+	public static Expression cast(Class<?> clazz, Object value) {
+		return cast(clazz, new Constant(value));
+	}
+
+	public static Expression cast(Class<?> clazz, Expression value) {
+		return new Cast(clazz, value);
 	}
 
 	public static Expression and(Expression left, Expression right) {
@@ -211,5 +220,38 @@ public abstract class Expression {
 
 	public static Expression or(Expression left, Boolean right) {
 		return or(left, constant(right));
+	}
+
+	public static Expression instance() {
+		return new Instance();
+	}
+
+	public static Expression context() {
+		return new Context();
+	}
+
+	public static Expression call(Object instance, String methodName,
+			Object... parameters) throws NoSuchMethodException {
+		Expression[] params = new Expression[parameters.length];
+		for (int i = 0; i < params.length; i++) {
+			params[i] = constant(parameters[i]);
+		}
+		return call(constant(instance), methodName, params);
+	}
+	
+	public static Expression call(Object instance, String methodName,
+			Expression... parameters) throws NoSuchMethodException {
+		return call(constant(instance), methodName, parameters);
+	}
+	
+	public static Expression call(Expression instance, String methodName,
+			Expression... parameters) throws NoSuchMethodException {
+		Class<?>[] paramTypes = new Class<?>[parameters.length];
+		for (int i = 0; i < parameters.length; i++) {
+			paramTypes[i] = parameters[i].getResultClass();
+		}
+		Method method;
+		method = instance.getResultClass().getMethod(methodName, paramTypes);
+		return new Call(instance, method, parameters);
 	}
 }

@@ -46,6 +46,14 @@ public class ExpressionWriter {
 		out.print(value.toString());
 	}
 
+	protected void printContext(Context expression) {
+		out.print("context");
+	}
+
+	protected void printInstance(Instance expression) {
+		out.print("obj");
+	}
+
 	protected void printBinaryExpression(BinaryExpression expression) {
 		Expression left = expression.getLeft();
 		Expression right = expression.getRight();
@@ -57,6 +65,25 @@ public class ExpressionWriter {
 		print(")");
 	}
 
+	protected void printCall(Call expression) {
+		print(expression.getInstance());
+		print("." + expression.getMethod().getName() + "(");
+		boolean anyParameter = false;
+		for (Expression parameter : expression.getParameters()) {
+			if (anyParameter)
+				print(", ");
+			print(parameter);
+			anyParameter = true;
+		}
+		print(")");
+	}
+
+	protected void printCast(Cast expression) {
+		print("((" + expression.getResultClass().getName() + ")");
+		print(expression.getValue());
+		print(")");
+	}
+
 	private String getOperatorString(BinaryExpression expression) {
 		if (expression instanceof AndAlso)
 			return "&&";
@@ -64,8 +91,6 @@ public class ExpressionWriter {
 			return "==";
 		if (expression instanceof GreaterThan)
 			return ">";
-		if (expression instanceof GreaterThanOrEqual)
-			return ">=";
 		if (expression instanceof GreaterThanOrEqual)
 			return ">=";
 		if (expression instanceof InstanceOf)
@@ -92,12 +117,29 @@ public class ExpressionWriter {
 
 		@Override
 		public void visit(Expression expression) {
+			if (expression instanceof Context) {
+				printer.printContext((Context) expression);
+				return;
+			}
+			if (expression instanceof Instance) {
+				printer.printInstance((Instance) expression);
+				return;
+			}
 			if (expression instanceof Constant) {
 				printer.printConstant((Constant) expression);
 				return;
 			}
 			if (expression instanceof BinaryExpression) {
 				printer.printBinaryExpression((BinaryExpression) expression);
+				return;
+			}
+			if (expression instanceof Call) {
+				printer.printCall((Call) expression);
+				return;
+			}
+
+			if (expression instanceof Cast) {
+				printer.printCast((Cast) expression);
 				return;
 			}
 		}

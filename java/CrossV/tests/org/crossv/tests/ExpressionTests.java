@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
 public class ExpressionTests {
@@ -127,5 +128,43 @@ public class ExpressionTests {
 	public void createOrExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = or(true, false);
 		assertThat(e.toString(), is("(true || false)"));
+	}
+
+	@Test
+	public void createContextInstanceOfExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = instanceOf(context(), String.class);
+		assertThat(e.toString(), is("(context instanceof java.lang.String)"));
+	}
+
+	@Test
+	public void createInstanceInstanceOfExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = instanceOf(instance(), String.class);
+		assertThat(e.toString(), is("(obj instanceof java.lang.String)"));
+	}
+
+	@Test
+	public void createConstantWithNullValueExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = constant(null);
+		assertThat(e.toString(), is("null"));
+	}
+
+	@Test
+	public void createCallHashCodeExpressionForString_callingToString_getsJavaLikeExpression()
+			throws Exception {
+		Expression e = call("123", "hashCode");
+		assertThat(e.toString(), is("\"123\".hashCode()"));
+	}
+
+	@Test
+	public void createCallEqualsExpressionForString_callingToString_getsJavaLikeExpression()
+			throws Exception {
+		Expression e = call("123", "equals", cast(Object.class, 321));
+		assertThat(e.toString(), is("\"123\".equals(((java.lang.Object)321))"));
+	}
+
+	@Test
+	public void monkey() throws Exception {
+		Expression e = equal(call(cast(Monkey.class, context()),"getName"), "name");
+		assertThat(e.toString(), is("(((org.crossv.tests.subjects.Monkey)context).getName() == \"name\")"));
 	}
 }
