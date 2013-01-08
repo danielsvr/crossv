@@ -1,9 +1,30 @@
 package org.crossv.expressions;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public abstract class Expression {
 
 	@Override
-	public abstract String toString();
+	public final String toString() {
+		StringWriter stringWriter = new StringWriter();
+		PrintWriter writer = new PrintWriter(stringWriter);
+		print(writer);
+		return stringWriter.toString();
+	}
+
+	public void print() {
+		PrintWriter writer = new PrintWriter(System.out);
+		print(writer);
+	}
+
+	public void print(PrintWriter writer) {
+		print(new ExpressionWriter(writer));
+	}
+
+	public void print(ExpressionWriter writer) {
+		writer.print(this);
+	}
 
 	public abstract Class<?> getResultClass();
 
@@ -23,6 +44,10 @@ public abstract class Expression {
 		return false;
 	}
 
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visit(this);
+	}
+	
 	protected static void checkOperandClass(Expression expressin, Class<?> clazz) {
 		Class<?> resultClass = expressin.getResultClass();
 		if (!clazz.isAssignableFrom(resultClass))
@@ -33,7 +58,7 @@ public abstract class Expression {
 		if (!expressin.returnsPrimitiveType())
 			throw new IllegalOperandException();
 	}
-	
+
 	protected static void checkIfReturnsReference(Expression expressin) {
 		if (expressin.returnsPrimitiveType())
 			throw new IllegalOperandException();
@@ -91,7 +116,8 @@ public abstract class Expression {
 		return greaterThan(constant(left), right);
 	}
 
-	public static Expression greaterThanOrEqual(Expression left, Expression right) {
+	public static Expression greaterThanOrEqual(Expression left,
+			Expression right) {
 		return new GreaterThanOrEqual(left, right);
 	}
 
@@ -154,7 +180,7 @@ public abstract class Expression {
 	public static Expression lessThanOrEqual(Object left, Expression right) {
 		return lessThanOrEqual(constant(left), right);
 	}
-	
+
 	public static Expression notEqual(Expression left, Expression right) {
 		return new NotEqual(left, right);
 	}
@@ -170,22 +196,18 @@ public abstract class Expression {
 	public static Expression notEqual(Object left, Expression right) {
 		return notEqual(constant(left), right);
 	}
-	
 
 	public static Expression or(Expression left, Expression right) {
 		return new OrElse(left, right);
 	}
-	
 
 	public static Expression or(Boolean left, Boolean right) {
 		return or(constant(left), constant(right));
 	}
-	
 
 	public static Expression or(Boolean left, Expression right) {
 		return or(constant(left), right);
 	}
-	
 
 	public static Expression or(Expression left, Boolean right) {
 		return or(left, constant(right));

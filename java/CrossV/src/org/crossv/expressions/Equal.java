@@ -5,10 +5,4 @@ public class Equal extends BooleanExpression {
 		super(left, right);
 		checkOperandClass(left, right);
 	}
-
-	@Override
-	protected String getOperatorString() {
-		return "==";
-	}
-
 }

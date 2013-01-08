@@ -7,9 +7,4 @@ public class GreaterThanOrEqual extends BooleanExpression {
 		checkIfReturnsPrimitive(left);
 		checkIfReturnsPrimitive(right);
 	}
-
-	@Override
-	protected String getOperatorString() {
-		return ">=";
-	}	
 }

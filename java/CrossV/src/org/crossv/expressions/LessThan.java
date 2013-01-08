@@ -7,9 +7,4 @@ public class LessThan extends BooleanExpression {
 		checkIfReturnsPrimitive(left);
 		checkIfReturnsPrimitive(left);
 	}
-
-	@Override
-	protected String getOperatorString() {
-		return "<";
-	}	
 }

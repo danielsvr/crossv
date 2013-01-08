@@ -12,28 +12,6 @@ public class Constant extends Expression {
 	}
 
 	@Override
-	public String toString() {
-		if (value == null)
-			return "null";
-
-		if (value instanceof String)
-			return valueAsString();
-
-		if (value instanceof Class)
-			return valueAsClass();
-
-		return value.toString();
-	}
-
-	private String valueAsClass() {
-		return ((Class<?>) value).getName();
-	}
-
-	private String valueAsString() {
-		return "\"" + value.toString() + "\"";
-	}
-
-	@Override
 	public Class<?> getResultClass() {
 		return value != null ? value.getClass() : Object.class;
 	}
