@@ -230,6 +230,10 @@ public abstract class Expression {
 		return new Context();
 	}
 
+	public static Expression context(Class<?> clazz) {
+		return new Context(clazz);
+	}
+
 	public static Expression call(Object instance, String methodName,
 			Object... parameters) throws NoSuchMethodException {
 		Expression[] params = new Expression[parameters.length];
@@ -238,12 +242,12 @@ public abstract class Expression {
 		}
 		return call(constant(instance), methodName, params);
 	}
-	
+
 	public static Expression call(Object instance, String methodName,
 			Expression... parameters) throws NoSuchMethodException {
 		return call(constant(instance), methodName, parameters);
 	}
-	
+
 	public static Expression call(Expression instance, String methodName,
 			Expression... parameters) throws NoSuchMethodException {
 		Class<?>[] paramTypes = new Class<?>[parameters.length];

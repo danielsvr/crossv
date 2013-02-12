@@ -158,13 +158,13 @@ public class ExpressionTests {
 	@Test
 	public void createCallEqualsExpressionForString_callingToString_getsJavaLikeExpression()
 			throws Exception {
-		Expression e = call("123", "equals", cast(Object.class, 321));
-		assertThat(e.toString(), is("\"123\".equals(((java.lang.Object)321))"));
+		Expression e = call("123", "equals", 321);
+		assertThat(e.toString(), is("\"123\".equals(321)"));
 	}
 
 	@Test
 	public void monkey() throws Exception {
-		Expression e = equal(call(cast(Monkey.class, context()),"getName"), "name");
-		assertThat(e.toString(), is("(((org.crossv.tests.subjects.Monkey)context).getName() == \"name\")"));
+		Expression e = equal(call(context(Monkey.class), "getName"), "name");
+		assertThat(e.toString(), is("(context.getName() == \"name\")"));
 	}
 }
