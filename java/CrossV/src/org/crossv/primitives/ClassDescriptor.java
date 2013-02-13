@@ -5,18 +5,16 @@ import static java.text.MessageFormat.format;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class ClassDescriptor<E> {
-	private final Class<E> clazz;
+public class ClassDescriptor {
 	private Method[] methods;
 
-	public ClassDescriptor(Class<E> clazz) {
+	public ClassDescriptor(Class<?> clazz) {
 		if (clazz == null)
 			throw new ArgumentNullException("clazz");
-		this.clazz = clazz;
 		this.methods = clazz.getMethods();
 	}
 
-	public Object execute(E obj, Method method, Object... parameters)
+	public Object execute(Object obj, Method method, Object... parameters)
 			throws IllegalAccessException, InvocationTargetException {
 		Object result = method.invoke(obj, parameters);
 		if (!method.getReturnType().equals(Void.class))
@@ -24,33 +22,32 @@ public class ClassDescriptor<E> {
 		return null;
 	}
 
-	public Object execute(E obj, String method, Object... parameters)
+	public Object execute(Object obj, String method, Object... parameters)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException {
 
-		Method bestOverload = findBestOverload(method, parameters);
+		Class<?>[] paramTypes = new Class<?>[parameters.length];
+		for (int i = 0; i < parameters.length; i++)
+			paramTypes[i] = parameters[i] != null ? parameters[i].getClass()
+					: Object.class;
+
+		Method bestOverload = findBestOverload(method, paramTypes);
 		return execute(obj, bestOverload, parameters);
 	}
 
-	private Method findBestOverload(String method, Object[] parameters)
+	public Method findBestOverload(String method, Class<?>[] paramTypes)
 			throws NoSuchMethodException {
 		for (Method m : methods) {
 			if (!m.getName().equals(method))
 				continue;
 			Class<?>[] methodParameterTypes = m.getParameterTypes();
-			if (methodParameterTypes.length == parameters.length) {
+			if (methodParameterTypes.length == paramTypes.length) {
 				Class<?> methodParameterType;
 				Class<?> parameterType;
 				boolean isOk = true;
 				for (int i = 0; i < methodParameterTypes.length; i++) {
 					methodParameterType = methodParameterTypes[i];
-					if (methodParameterType.isPrimitive()
-							&& parameters[i] == null) {
-						isOk = false;
-						break;
-					}
-					parameterType = parameters[i] != null ? parameters[i]
-							.getClass() : Object.class;
+					parameterType = paramTypes[i];
 					if (!methodParameterType.isAssignableFrom(parameterType)) {
 						isOk = false;
 						break;

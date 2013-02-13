@@ -2,7 +2,6 @@ package org.crossv.expressions;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.Method;
 
 public abstract class Expression {
 
@@ -237,9 +236,9 @@ public abstract class Expression {
 	public static Expression call(Object instance, String methodName,
 			Object... parameters) throws NoSuchMethodException {
 		Expression[] params = new Expression[parameters.length];
-		for (int i = 0; i < params.length; i++) {
+		for (int i = 0; i < params.length; i++)
 			params[i] = constant(parameters[i]);
-		}
+
 		return call(constant(instance), methodName, params);
 	}
 
@@ -250,12 +249,6 @@ public abstract class Expression {
 
 	public static Expression call(Expression instance, String methodName,
 			Expression... parameters) throws NoSuchMethodException {
-		Class<?>[] paramTypes = new Class<?>[parameters.length];
-		for (int i = 0; i < parameters.length; i++) {
-			paramTypes[i] = parameters[i].getResultClass();
-		}
-		Method method;
-		method = instance.getResultClass().getMethod(methodName, paramTypes);
-		return new Call(instance, method, parameters);
+		return new Call(instance, methodName, parameters);
 	}
 }

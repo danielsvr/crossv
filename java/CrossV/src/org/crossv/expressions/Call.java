@@ -3,6 +3,7 @@ package org.crossv.expressions;
 import java.lang.reflect.Method;
 
 import org.crossv.primitives.ArgumentNullException;
+import org.crossv.primitives.ClassDescriptor;
 
 public class Call extends Expression {
 	private Expression instance;
@@ -11,6 +12,11 @@ public class Call extends Expression {
 
 	public Call(Expression instance, Method method) {
 		this(instance, method, new Expression[0]);
+	}
+
+	public Call(Expression instance, String method, Expression[] parameters)
+			throws SecurityException, NoSuchMethodException {
+		this(instance, findMethod(instance, method, parameters), parameters);
 	}
 
 	public Call(Expression instance, Method method, Expression[] parameters) {
@@ -35,6 +41,21 @@ public class Call extends Expression {
 		this.instance = instance;
 		this.method = method;
 		this.parameters = parameters;
+	}
+
+	private static Method findMethod(Expression instance, String method,
+			Expression[] parameters) throws SecurityException,
+			NoSuchMethodException {
+		ClassDescriptor descriptor;
+		Class<?>[] paramTypes;
+		Class<?> instanceClass = instance.getResultClass();
+		descriptor = new ClassDescriptor(instanceClass);
+
+		paramTypes = new Class<?>[parameters.length];
+		for (int i = 0; i < parameters.length; i++)
+			paramTypes[i] = parameters[i].getResultClass();
+
+		return descriptor.findBestOverload(method, paramTypes);
 	}
 
 	public Expression getInstance() {
