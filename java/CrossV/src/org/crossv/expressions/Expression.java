@@ -251,4 +251,32 @@ public abstract class Expression {
 			Expression... parameters) throws NoSuchMethodException {
 		return new Call(instance, methodName, parameters);
 	}
+
+	public static Expression negate(Expression instance) {
+		return new Negate(instance);
+	}
+	
+	public static Expression negate(byte instance) {
+		return negate(constant(instance));
+	}
+
+	public static Expression negate(short instance) {
+		return negate(constant(instance));
+	}
+	
+	public static Expression negate(int instance) {
+		return negate(constant(instance));
+	}
+	
+	public static Expression negate(long instance) {
+		return negate(constant(instance));
+	}
+	
+	public static Expression negate(float instance) {
+		return negate(constant(instance));
+	}
+	
+	public static Expression negate(double instance) {
+		return negate(constant(instance));
+	}
 }

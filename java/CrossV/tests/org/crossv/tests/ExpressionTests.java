@@ -163,8 +163,44 @@ public class ExpressionTests {
 	}
 
 	@Test
-	public void monkey() throws Exception {
+	public void createCallGetNameExpressionForMonkeyContext_callingToString_getsJavaLikeExpression() throws Exception  {
 		Expression e = equal(call(context(Monkey.class), "getName"), "name");
 		assertThat(e.toString(), is("(context.getName() == \"name\")"));
+	}
+
+	@Test
+	public void createNegatedByteExpressionForPositiveValue_callingToString_getsJavaLikeExpression() {
+		Expression e = negate((byte)1);
+		assertThat(e.toString(), is("-1"));
+	}
+	
+	@Test
+	public void createNegatedByteExpressionForNegativeValue_callingToString_getsJavaLikeExpression() {
+		Expression e = negate((byte)-1);
+		assertThat(e.toString(), is("-(-1)"));
+	}
+
+	@Test
+	public void createNegatedShortExpressionForPositiveValue_callingToString_getsJavaLikeExpression() {
+		Expression e = negate((short)1);
+		assertThat(e.toString(), is("-1"));
+	}
+	
+	@Test
+	public void createNegatedShortExpressionForNegativeValue_callingToString_getsJavaLikeExpression() {
+		Expression e = negate((short)-1);
+		assertThat(e.toString(), is("-(-1)"));
+	}
+	
+	@Test
+	public void createNegatedIntExpressionForPositiveValue_callingToString_getsJavaLikeExpression() {
+		Expression e = negate((int)1);
+		assertThat(e.toString(), is("-1"));
+	}
+	
+	@Test
+	public void createNegatedIntExpressionForNegativeValue_callingToString_getsJavaLikeExpression() {
+		Expression e = negate((int)-1);
+		assertThat(e.toString(), is("-(-1)"));
 	}
 }

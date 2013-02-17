@@ -1,22 +1,21 @@
-ADD 				// An addition operation, such as (a + b)
-AND 				// A bitwise or logical AND operation, such as (a & b)
-SEQ	_LENGTH			// An operation that obtains the length of a one-dimensional sequence, such as array.Length
-SEQ_INDEX 			// An indexing operation in a one-dimensional sequence, such as array[index]
-CALL 				// A method call, such as in the obj.sampleMethod() expression
-COALESCE			// A node that represents a null coalescing operation, such as (a ?? b) in C#
-TERNARY				// A conditional operation, such as a > b ? a : b
-DIVIDE				// A division operation, such as (a / b), for numeric operands
-EXCLUSIVE_OR		// A bitwise or logical XOR operation, such as (a ^ b)
-LEFT_SHIFT			// A bitwise left-shift operation, such as (a << b)
-MEMBER_ACCESS		// An operation that reads from a field or getter, such as obj.SampleProperty
-MODULO				// An arithmetic remainder operation, such as (a % b)
-MULTIPLY			// A multiplication operation, such as (a * b)
 NEGATE				// An arithmetic negation operation, such as (-a)
 UNARY_PLUS			// A unary plus operation, such as (+a)
 NOT					// A bitwise complement or logical negation operation. It is (!a) for Boolean values
+ADD 				// An addition operation, such as (a + b)
+AND 				// A bitwise or logical AND operation, such as (a & b)
+DIVIDE				// A division operation, such as (a / b), for numeric operands
+EXCLUSIVE_OR		// A bitwise or logical XOR operation, such as (a ^ b)
+LEFT_SHIFT			// A bitwise left-shift operation, such as (a << b)
+MODULO				// An arithmetic remainder operation, such as (a % b)
+MULTIPLY			// A multiplication operation, such as (a * b)
 OR					// A bitwise or logical OR operation, such as (a | b)
 RIGHT_SHIFT			// A bitwise right-shift operation, such as (a >> b)
 SUBTRACT			// A subtraction operation, such as (a - b)
+COALESCE			// A node that represents a null coalescing operation, such as (a ?? b) in C#
+TERNARY				// A conditional operation, such as a > b ? a : b
+SEQ	_LENGTH			// An operation that obtains the length of a one-dimensional sequence, such as array.Length
+SEQ_INDEX 			// An indexing operation in a one-dimensional sequence, such as array[index]
+MEMBER_ACCESS		// An operation that reads from a field or getter, such as obj.SampleProperty
 IS_TRUE				// A true condition value
 IS_FALSE			// A false condition value
 ....

@@ -22,8 +22,16 @@ public class ExpressionWriter {
 		expression.accept(visitor);
 	}
 
+	protected void printError(Expression expression) {
+		print("ERROR printing instance of {0}", expression.getClass());
+	}
+
 	protected void print(String expression) {
 		out.print(expression);
+	}
+
+	protected void print(String expression, Object... formatArgs) {
+		out.print(format(expression, formatArgs));
 	}
 
 	protected void printConstant(Constant expression) {
@@ -35,6 +43,16 @@ public class ExpressionWriter {
 
 		if (value instanceof String) {
 			out.print("\"" + value.toString() + "\"");
+			return;
+		}
+
+		Number number;
+		if (value instanceof Number
+				&& ((number = (Number) value).byteValue() < 0
+						|| number.shortValue() < 0 || number.intValue() < 0
+						|| number.longValue() < 0 || number.floatValue() < 0
+						|| number.doubleValue() < 0)) {
+			out.print("(" + value.toString() + ")");
 			return;
 		}
 
@@ -80,7 +98,7 @@ public class ExpressionWriter {
 
 	protected void printCast(Cast expression) {
 		print("((" + expression.getResultClass().getName() + ")");
-		print(expression.getValue());
+		print(expression.getOperand());
 		print(")");
 	}
 
@@ -106,6 +124,11 @@ public class ExpressionWriter {
 
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));
+	}
+
+	protected void printNegate(Negate expression) {
+		print("-");
+		print(expression.getOperand());
 	}
 
 	private static class PrivateExpressionVisitor implements ExpressionVisitor {
@@ -142,6 +165,12 @@ public class ExpressionWriter {
 				printer.printCast((Cast) expression);
 				return;
 			}
+
+			if (expression instanceof Negate) {
+				printer.printNegate((Negate) expression);
+				return;
+			}
+			printer.printError(expression);
 		}
 	}
 }
