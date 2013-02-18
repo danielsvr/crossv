@@ -1,6 +1,3 @@
-NEGATE				// An arithmetic negation operation, such as (-a)
-UNARY_PLUS			// A unary plus operation, such as (+a)
-NOT					// A bitwise complement or logical negation operation. It is (!a) for Boolean values
 ADD 				// An addition operation, such as (a + b)
 AND 				// A bitwise or logical AND operation, such as (a & b)
 DIVIDE				// A division operation, such as (a / b), for numeric operands

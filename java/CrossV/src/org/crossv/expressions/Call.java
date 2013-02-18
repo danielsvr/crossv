@@ -10,16 +10,12 @@ public class Call extends Expression {
 	private Method method;
 	private Expression[] parameters;
 
-	public Call(Expression instance, Method method) {
-		this(instance, method, new Expression[0]);
-	}
-
-	public Call(Expression instance, String method, Expression[] parameters)
+	public Call(Expression instance, String method, Expression... parameters)
 			throws SecurityException, NoSuchMethodException {
 		this(instance, findMethod(instance, method, parameters), parameters);
 	}
 
-	public Call(Expression instance, Method method, Expression[] parameters) {
+	public Call(Expression instance, Method method, Expression... parameters) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
 		if (method == null)

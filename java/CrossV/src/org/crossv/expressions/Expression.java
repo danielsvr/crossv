@@ -279,4 +279,40 @@ public abstract class Expression {
 	public static Expression negate(double instance) {
 		return negate(constant(instance));
 	}
+
+	public static Expression plus(Expression instance) {
+		return new UnaryPlus(instance);
+	}
+	
+	public static Expression plus(byte instance) {
+		return plus(constant(instance));
+	}
+
+	public static Expression plus(short instance) {
+		return plus(constant(instance));
+	}
+	
+	public static Expression plus(int instance) {
+		return plus(constant(instance));
+	}
+	
+	public static Expression plus(long instance) {
+		return plus(constant(instance));
+	}
+	
+	public static Expression plus(float instance) {
+		return plus(constant(instance));
+	}
+	
+	public static Expression plus(double instance) {
+		return plus(constant(instance));
+	}
+
+	public static Expression not(Expression operand) {
+		return new Not(operand);
+	}
+
+	public static Expression not(Boolean operand) {
+		return not(constant(operand));
+	}
 }

@@ -96,12 +96,6 @@ public class ExpressionWriter {
 		print(")");
 	}
 
-	protected void printCast(Cast expression) {
-		print("((" + expression.getResultClass().getName() + ")");
-		print(expression.getOperand());
-		print(")");
-	}
-
 	private String getOperatorString(BinaryExpression expression) {
 		if (expression instanceof AndAlso)
 			return "&&";
@@ -125,9 +119,23 @@ public class ExpressionWriter {
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));
 	}
+	
+	private String getOperatorString(UnaryExpression expression) {
+		if (expression instanceof Cast)
+			return "(" + expression.getResultClass().getName() + ")";
+		if (expression instanceof Negate)
+			return "-";
+		if (expression instanceof UnaryPlus)
+			return "+";
+		if (expression instanceof Not)
+			return "!";
+		
+		throw new ArgumentException("expression", format(
+				"Unknown expression type {0}", expression.getClass().getName()));
+	}
 
-	protected void printNegate(Negate expression) {
-		print("-");
+	protected void printUnary(UnaryExpression expression) {
+		print(getOperatorString(expression));
 		print(expression.getOperand());
 	}
 
@@ -160,16 +168,12 @@ public class ExpressionWriter {
 				printer.printCall((Call) expression);
 				return;
 			}
-
-			if (expression instanceof Cast) {
-				printer.printCast((Cast) expression);
+			
+			if (expression instanceof UnaryExpression) {
+				printer.printUnary((UnaryExpression) expression);
 				return;
 			}
-
-			if (expression instanceof Negate) {
-				printer.printNegate((Negate) expression);
-				return;
-			}
+			
 			printer.printError(expression);
 		}
 	}
