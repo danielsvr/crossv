@@ -18,6 +18,6 @@ public class NotEqualExpressionTests {
 	@Test
 	public void createNotEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = notEqual(1, 2);
-		assertThat(e.toString(), is("(1 != 2)"));
+		assertThat(e.toString(), is("1 != 2"));
 	}
 }

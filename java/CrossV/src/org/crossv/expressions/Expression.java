@@ -315,4 +315,20 @@ public abstract class Expression {
 	public static Expression not(Boolean operand) {
 		return not(constant(operand));
 	}
+	
+	public static Expression add(Expression left, Expression right) {
+		return new Add(left, right);
+	}
+
+	public static Expression add(Object left, Object right) {
+		return add(constant(left), constant(right));
+	}
+
+	public static Expression add(Expression left, Object right) {
+		return add(left, constant(right));
+	}
+
+	public static Expression add(Object left, Expression right) {
+		return add(constant(left), right);
+	}
 }

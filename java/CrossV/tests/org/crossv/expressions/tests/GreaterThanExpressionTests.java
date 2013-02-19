@@ -23,6 +23,6 @@ public class GreaterThanExpressionTests {
 	@Test
 	public void createGraterThanExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = greaterThan(1, 2);
-		assertThat(e.toString(), is("(1 > 2)"));
+		assertThat(e.toString(), is("1 > 2"));
 	}
 }

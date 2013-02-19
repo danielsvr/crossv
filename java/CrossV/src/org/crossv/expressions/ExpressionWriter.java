@@ -76,11 +76,9 @@ public class ExpressionWriter {
 		Expression left = expression.getLeft();
 		Expression right = expression.getRight();
 
-		print("(");
 		print(left);
 		print(" " + getOperatorString(expression) + " ");
 		print(right);
-		print(")");
 	}
 
 	protected void printCall(Call expression) {
@@ -115,6 +113,8 @@ public class ExpressionWriter {
 			return "!=";
 		if (expression instanceof OrElse)
 			return "||";
+		if (expression instanceof Add)
+			return "+";
 
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));

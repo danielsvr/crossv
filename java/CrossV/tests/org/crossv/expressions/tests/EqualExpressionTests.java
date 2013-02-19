@@ -18,6 +18,6 @@ public class EqualExpressionTests {
 	@Test
 	public void createEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = equal(1, 2);
-		assertThat(e.toString(), is("(1 == 2)"));
+		assertThat(e.toString(), is("1 == 2"));
 	}
 }

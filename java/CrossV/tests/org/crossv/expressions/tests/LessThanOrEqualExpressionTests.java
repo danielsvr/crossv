@@ -23,6 +23,6 @@ public class LessThanOrEqualExpressionTests {
 	@Test
 	public void createLessThanOrEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = lessThanOrEqual(1, 2);
-		assertThat(e.toString(), is("(1 <= 2)"));
+		assertThat(e.toString(), is("1 <= 2"));
 	}
 }

@@ -21,18 +21,18 @@ public class InstanceOfExpressionTests {
 	@Test
 	public void createInstanceOfExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = instanceOf("1", Integer.class);
-		assertThat(e.toString(), is("(\"1\" instanceof java.lang.Integer)"));
+		assertThat(e.toString(), is("\"1\" instanceof java.lang.Integer"));
 	}
 	
 	@Test
 	public void createContextInstanceOfExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = instanceOf(context(), String.class);
-		assertThat(e.toString(), is("(context instanceof java.lang.String)"));
+		assertThat(e.toString(), is("context instanceof java.lang.String"));
 	}
 
 	@Test
 	public void createInstanceInstanceOfExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = instanceOf(instance(), String.class);
-		assertThat(e.toString(), is("(obj instanceof java.lang.String)"));
+		assertThat(e.toString(), is("obj instanceof java.lang.String"));
 	}
 }

@@ -27,6 +27,6 @@ public class CallExpressionTests {
 	@Test
 	public void createCallGetNameExpressionForMonkeyContext_callingToString_getsJavaLikeExpression() throws Exception  {
 		Expression e = equal(call(context(Monkey.class), "getName"), "name");
-		assertThat(e.toString(), is("(context.getName() == \"name\")"));
+		assertThat(e.toString(), is("context.getName() == \"name\""));
 	}
 }

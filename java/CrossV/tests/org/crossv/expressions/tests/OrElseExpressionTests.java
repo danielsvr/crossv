@@ -19,6 +19,6 @@ public class OrElseExpressionTests {
 	@Test
 	public void createOrExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = or(true, false);
-		assertThat(e.toString(), is("(true || false)"));
+		assertThat(e.toString(), is("true || false"));
 	}
 }

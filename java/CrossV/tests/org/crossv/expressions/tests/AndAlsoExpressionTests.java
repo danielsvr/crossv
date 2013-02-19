@@ -19,6 +19,6 @@ public class AndAlsoExpressionTests {
 	@Test
 	public void createAndExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = and(true, false);
-		assertThat(e.toString(), is("(true && false)"));
+		assertThat(e.toString(), is("true && false"));
 	}
 }

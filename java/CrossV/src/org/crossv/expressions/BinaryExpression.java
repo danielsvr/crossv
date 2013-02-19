@@ -22,10 +22,14 @@ public abstract class BinaryExpression extends Expression {
 	public Expression getRight() {
 		return right;
 	}
-	
+
 	protected static void checkOperandClass(Expression left, Expression right) {
-		if(!right.getResultClass().isAssignableFrom(left.getResultClass())
-				&& !left.getResultClass().isAssignableFrom(right.getResultClass()))
+		if (Number.class.isAssignableFrom(right.getResultClass())
+				&& Number.class.isAssignableFrom(left.getResultClass()))
+			return;
+		if (!right.getResultClass().isAssignableFrom(left.getResultClass())
+				&& !left.getResultClass().isAssignableFrom(
+						right.getResultClass()))
 			throw new IllegalOperandException();
 	}
 }
