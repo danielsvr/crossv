@@ -1,54 +1,57 @@
 package org.crossv.expressions;
 
 public class Add extends BinaryExpression {
+	private Class<?> resultClass;
+	private Class<?> leftClass;
+	private Class<?> rightClass;
+
 	public Add(Expression left, Expression right) {
 		super(left, right);
-		checkOperandClass(left, right);
+
+		this.leftClass = left.getResultClass();
+		this.rightClass = right.getResultClass();
+
+		if (String.class.isAssignableFrom(leftClass))
+			checkOperandClass(right, Number.class);
+		else if (String.class.isAssignableFrom(rightClass))
+			checkOperandClass(left, Number.class);
+		else
+			checkOperandClass(left, right);
+
+		this.resultClass = computeResultClass();
+	}
+
+	private Class<?> computeResultClass() {
+		if (String.class.isAssignableFrom(leftClass)
+				|| String.class.isAssignableFrom(rightClass))
+			return String.class;
+
+		if (leftClass.equals(rightClass))
+			return leftClass;
+
+		if (Byte.class.isAssignableFrom(leftClass))
+			return rightClass;
+		if (Byte.class.isAssignableFrom(rightClass))
+			return leftClass;
+		if (Short.class.isAssignableFrom(leftClass))
+			return rightClass;
+		if (Short.class.isAssignableFrom(rightClass))
+			return leftClass;
+		if (Integer.class.isAssignableFrom(leftClass))
+			return rightClass;
+		if (Integer.class.isAssignableFrom(rightClass))
+			return leftClass;
+		if (Long.class.isAssignableFrom(leftClass))
+			return rightClass;
+		if (Long.class.isAssignableFrom(rightClass))
+			return leftClass;
+		if (Float.class.isAssignableFrom(leftClass))
+			return rightClass;
+		return leftClass;
 	}
 
 	@Override
 	public Class<?> getResultClass() {
-		Class<?> leftClass = left.getResultClass();
-		Class<?> rightClass = right.getResultClass();
-
-		if (isFirtsParameterByte(leftClass, rightClass))
-			return rightClass;
-		if (isFirtsParameterByte(rightClass, leftClass))
-			return leftClass;
-		if (isFirtsParameterShort(leftClass, rightClass))
-			return rightClass;
-		if (isFirtsParameterShort(rightClass, leftClass))
-			return leftClass;
-		if (isFirtsParameterInteger(leftClass, rightClass))
-			return rightClass;
-		if (isFirtsParameterInteger(rightClass, leftClass))
-			return leftClass;
-
-
-		// if (String.class.isAssignableFrom(leftClass)
-		// || String.class.isAssignableFrom(rightClass))
-		// return String.class;
-		return Object.class;
-	}
-
-	private boolean isFirtsParameterByte(Class<?> first, Class<?> second) {
-		return Byte.class.isAssignableFrom(first)
-				&& Number.class.isAssignableFrom(second) 
-				&& !Byte.class.isAssignableFrom(second);
-	}
-
-	private boolean isFirtsParameterShort(Class<?> first, Class<?> second) {
-		return Byte.class.isAssignableFrom(first)
-				&& Number.class.isAssignableFrom(second) 
-				&& !Byte.class.isAssignableFrom(second)
-				&& !Short.class.isAssignableFrom(second);
-	}
-
-	private boolean isFirtsParameterInteger(Class<?> first, Class<?> second) {
-		return Byte.class.isAssignableFrom(first)
-				&& Number.class.isAssignableFrom(second) 
-				&& !Byte.class.isAssignableFrom(second)
-				&& !Short.class.isAssignableFrom(second) 
-				&& !Integer.class.isAssignableFrom(second);
+		return resultClass;
 	}
 }
