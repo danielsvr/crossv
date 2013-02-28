@@ -11,40 +11,51 @@ public class Add extends BinaryExpression {
 		this.leftClass = left.getResultClass();
 		this.rightClass = right.getResultClass();
 
-		if (!String.class.isAssignableFrom(leftClass)
-				&& !String.class.isAssignableFrom(rightClass))
-			checkOperandClass(left, right);
-
-		this.resultClass = computeResultClass();
-	}
-
-	private Class<?> computeResultClass() {
 		if (String.class.isAssignableFrom(leftClass)
-				|| String.class.isAssignableFrom(rightClass))
-			return String.class;
-
-		if (leftClass.equals(rightClass))
-			return leftClass;
-
-		if (Byte.class.isAssignableFrom(leftClass))
-			return rightClass;
-		if (Byte.class.isAssignableFrom(rightClass))
-			return leftClass;
-		if (Short.class.isAssignableFrom(leftClass))
-			return rightClass;
-		if (Short.class.isAssignableFrom(rightClass))
-			return leftClass;
-		if (Integer.class.isAssignableFrom(leftClass))
-			return rightClass;
-		if (Integer.class.isAssignableFrom(rightClass))
-			return leftClass;
-		if (Long.class.isAssignableFrom(leftClass))
-			return rightClass;
-		if (Long.class.isAssignableFrom(rightClass))
-			return leftClass;
-		if (Float.class.isAssignableFrom(leftClass))
-			return rightClass;
-		return leftClass;
+				|| String.class.isAssignableFrom(rightClass)) {
+			resultClass = String.class;
+			return;
+		} else if (Byte.class.isAssignableFrom(leftClass)
+				|| Short.class.isAssignableFrom(leftClass)
+				|| Integer.class.isAssignableFrom(leftClass)) {
+			if (Long.class.isAssignableFrom(rightClass)) {
+				resultClass = Long.class;
+				return;
+			} else if (Float.class.isAssignableFrom(rightClass)) {
+				resultClass = Float.class;
+				return;
+			} else if (Double.class.isAssignableFrom(rightClass)) {
+				resultClass = Double.class;
+				return;
+			} else if (Number.class.isAssignableFrom(rightClass)) {
+				resultClass = Integer.class;
+				return;
+			}
+		} else if (Long.class.isAssignableFrom(leftClass)) {
+			if (Float.class.isAssignableFrom(rightClass)) {
+				resultClass = Float.class;
+				return;
+			} else if (Double.class.isAssignableFrom(rightClass)) {
+				resultClass = Double.class;
+				return;
+			} else if (Number.class.isAssignableFrom(rightClass)) {
+				resultClass = Long.class;
+				return;
+			}
+		} else if (Float.class.isAssignableFrom(leftClass)) {
+			if (Double.class.isAssignableFrom(rightClass)) {
+				resultClass = Double.class;
+				return;
+			} else if (Number.class.isAssignableFrom(rightClass)) {
+				resultClass = Float.class;
+				return;
+			}
+		} else if (Double.class.isAssignableFrom(leftClass)
+				&& Number.class.isAssignableFrom(rightClass)) {
+			resultClass = Double.class;
+			return;
+		}
+		throw new IllegalOperandException();
 	}
 
 	@Override
