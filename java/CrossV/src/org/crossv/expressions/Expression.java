@@ -331,4 +331,32 @@ public abstract class Expression {
 	public static Expression add(Object left, Expression right) {
 		return add(constant(left), right);
 	}
+
+	public static Expression bitwiseAnd(Expression left, Expression right) {
+		return new And(left, right);
+	}
+
+	public static Expression bitwiseAnd(boolean left, boolean right) {
+		return bitwiseAnd(constant(left), constant(right));
+	}
+
+	public static Expression bitwiseAnd(Boolean left, Expression right) {
+		return bitwiseAnd(constant(left), right);
+	}
+
+	public static Expression bitwiseAnd(Expression left, Boolean right) {
+		return bitwiseAnd(left, constant(right));
+	}
+	
+	public static Expression bitwiseAnd(Object left, Object right) {
+		return bitwiseAnd(constant(left), constant(right));
+	}
+
+	public static Expression bitwiseAnd(Object left, Expression right) {
+		return bitwiseAnd(constant(left), right);
+	}
+
+	public static Expression bitwiseAnd(Expression left, Object right) {
+		return bitwiseAnd(left, constant(right));
+	}
 }

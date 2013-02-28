@@ -11,11 +11,8 @@ public class Add extends BinaryExpression {
 		this.leftClass = left.getResultClass();
 		this.rightClass = right.getResultClass();
 
-		if (String.class.isAssignableFrom(leftClass))
-			checkOperandClass(right, Number.class);
-		else if (String.class.isAssignableFrom(rightClass))
-			checkOperandClass(left, Number.class);
-		else
+		if (!String.class.isAssignableFrom(leftClass)
+				&& !String.class.isAssignableFrom(rightClass))
 			checkOperandClass(left, right);
 
 		this.resultClass = computeResultClass();

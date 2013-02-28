@@ -1,5 +1,4 @@
-ADD 				// An addition operation, such as (a + b)
-AND 				// A bitwise or logical AND operation, such as (a & b)
+AND 				// A bitwise or logical AND operation, such as (a & b) (integer -=byte, short, int, long=- and boolean)
 DIVIDE				// A division operation, such as (a / b), for numeric operands
 EXCLUSIVE_OR		// A bitwise or logical XOR operation, such as (a ^ b)
 LEFT_SHIFT			// A bitwise left-shift operation, such as (a << b)

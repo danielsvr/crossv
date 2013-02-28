@@ -16,14 +16,14 @@ public class AddExpressionTests {
 	}
 
 	@Test
-	public void createAddExpression_StringAndIntOperands_ReturnedClassIsString() {
-		Expression e = add("1", (int)1);
+	public void createAddExpression_StringAndObjectOperands_ReturnedClassIsString() {
+		Expression e = add("1", new Object());
 		assertThat("Result is String.class", e.getResultClass().equals(String.class), is(true));
 	}
 
 	@Test
-	public void createAddExpression_IntAndStringOperands_ReturnedClassIsString() {
-		Expression e = add((int)1, "1");
+	public void createAddExpression_ObjectAndStringOperands_ReturnedClassIsString() {
+		Expression e = add(new Object(), "1");
 		assertThat("Result is String.class", e.getResultClass().equals(String.class), is(true));
 	}
 
