@@ -123,6 +123,8 @@ public class ExpressionWriter {
 			return "^";
 		if (expression instanceof LeftShift)
 			return "<<";
+		if (expression instanceof RightShift)
+			return ">>";
 
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));

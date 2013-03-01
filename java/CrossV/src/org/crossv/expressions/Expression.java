@@ -255,7 +255,7 @@ public abstract class Expression {
 	public static Expression negate(Expression instance) {
 		return new Negate(instance);
 	}
-	
+
 	public static Expression negate(byte instance) {
 		return negate(constant(instance));
 	}
@@ -263,19 +263,19 @@ public abstract class Expression {
 	public static Expression negate(short instance) {
 		return negate(constant(instance));
 	}
-	
+
 	public static Expression negate(int instance) {
 		return negate(constant(instance));
 	}
-	
+
 	public static Expression negate(long instance) {
 		return negate(constant(instance));
 	}
-	
+
 	public static Expression negate(float instance) {
 		return negate(constant(instance));
 	}
-	
+
 	public static Expression negate(double instance) {
 		return negate(constant(instance));
 	}
@@ -283,7 +283,7 @@ public abstract class Expression {
 	public static Expression plus(Expression instance) {
 		return new UnaryPlus(instance);
 	}
-	
+
 	public static Expression plus(byte instance) {
 		return plus(constant(instance));
 	}
@@ -291,19 +291,19 @@ public abstract class Expression {
 	public static Expression plus(short instance) {
 		return plus(constant(instance));
 	}
-	
+
 	public static Expression plus(int instance) {
 		return plus(constant(instance));
 	}
-	
+
 	public static Expression plus(long instance) {
 		return plus(constant(instance));
 	}
-	
+
 	public static Expression plus(float instance) {
 		return plus(constant(instance));
 	}
-	
+
 	public static Expression plus(double instance) {
 		return plus(constant(instance));
 	}
@@ -315,7 +315,7 @@ public abstract class Expression {
 	public static Expression not(Boolean operand) {
 		return not(constant(operand));
 	}
-	
+
 	public static Expression add(Expression left, Expression right) {
 		return new Add(left, right);
 	}
@@ -351,7 +351,7 @@ public abstract class Expression {
 	public static Expression devide(Expression left, Expression right) {
 		return new Devide(left, right);
 	}
-	
+
 	public static Expression devide(Object left, Object right) {
 		return devide(constant(left), constant(right));
 	}
@@ -396,4 +396,19 @@ public abstract class Expression {
 		return leftShift(left, constant(right));
 	}
 
+	public static Expression rightShift(Expression left, Expression right) {
+		return new RightShift(left, right);
+	}
+
+	public static Expression rightShift(Object left, Object right) {
+		return rightShift(constant(left), constant(right));
+	}
+
+	public static Expression rightShift(Object left, Expression right) {
+		return rightShift(constant(left), right);
+	}
+
+	public static Expression rightShift(Expression left, Object right) {
+		return rightShift(left, constant(right));
+	}
 }
