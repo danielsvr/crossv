@@ -459,4 +459,20 @@ public abstract class Expression {
 	public static Expression multiply(Object left, Expression right) {
 		return multiply(constant(left), right);
 	}
+	
+	public static Expression modulo(Expression left, Expression right) {
+		return new Modulo(left, right);
+	}
+
+	public static Expression modulo(Object left, Object right) {
+		return modulo(constant(left), constant(right));
+	}
+
+	public static Expression modulo(Expression left, Object right) {
+		return modulo(left, constant(right));
+	}
+
+	public static Expression modulo(Object left, Expression right) {
+		return modulo(constant(left), right);
+	}
 }

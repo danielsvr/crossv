@@ -125,6 +125,8 @@ public class ExpressionWriter {
 			return "^";
 		if (expression instanceof Devide)
 			return "/";
+		if (expression instanceof Modulo)
+			return "%";
 		if (expression instanceof Multiply)
 			return "*";
 		if (expression instanceof LeftShift)
