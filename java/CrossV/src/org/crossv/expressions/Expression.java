@@ -427,4 +427,21 @@ public abstract class Expression {
 	public static Expression bitwiseOr(Expression left, Object right) {
 		return bitwiseOr(left, constant(right));
 	}
+
+
+	public static Expression subtract(Expression left, Expression right) {
+		return new Subtract(left, right);
+	}
+
+	public static Expression subtract(Object left, Object right) {
+		return subtract(constant(left), constant(right));
+	}
+
+	public static Expression subtract(Expression left, Object right) {
+		return subtract(left, constant(right));
+	}
+
+	public static Expression subtract(Object left, Expression right) {
+		return subtract(constant(left), right);
+	}
 }

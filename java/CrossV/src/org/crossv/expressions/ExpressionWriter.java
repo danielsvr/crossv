@@ -115,6 +115,8 @@ public class ExpressionWriter {
 			return "||";
 		if (expression instanceof Add)
 			return "+";
+		if (expression instanceof Subtract)
+			return "-";
 		if (expression instanceof And)
 			return "&";
 		if (expression instanceof Or)
