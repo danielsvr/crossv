@@ -428,7 +428,6 @@ public abstract class Expression {
 		return bitwiseOr(left, constant(right));
 	}
 
-
 	public static Expression subtract(Expression left, Expression right) {
 		return new Subtract(left, right);
 	}
@@ -443,5 +442,21 @@ public abstract class Expression {
 
 	public static Expression subtract(Object left, Expression right) {
 		return subtract(constant(left), right);
+	}
+	
+	public static Expression multiply(Expression left, Expression right) {
+		return new Multiply(left, right);
+	}
+
+	public static Expression multiply(Object left, Object right) {
+		return multiply(constant(left), constant(right));
+	}
+
+	public static Expression multiply(Expression left, Object right) {
+		return multiply(left, constant(right));
+	}
+
+	public static Expression multiply(Object left, Expression right) {
+		return multiply(constant(left), right);
 	}
 }

@@ -1,5 +1,4 @@
 MODULO				// An arithmetic remainder operation, such as (a % b)
-MULTIPLY			// A multiplication operation, such as (a * b)
 COALESCE			// A node that represents a null coalescing operation, such as (a ?? b) in C#
 TERNARY				// A conditional operation, such as a > b ? a : b
 SEQ	_LENGTH			// An operation that obtains the length of a one-dimensional sequence, such as array.Length
