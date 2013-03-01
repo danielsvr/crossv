@@ -50,8 +50,8 @@ public class ExpressionWriter {
 		if (value instanceof Number
 				&& ((number = (Number) value).byteValue() < 0
 						|| number.shortValue() < 0 || number.intValue() < 0
-						|| number.longValue() < 0 || number.floatValue() < 0
-						|| number.doubleValue() < 0)) {
+						|| number.longValue() < 0 || number.floatValue() < 0 || number
+						.doubleValue() < 0)) {
 			out.print("(" + value.toString() + ")");
 			return;
 		}
@@ -121,11 +121,13 @@ public class ExpressionWriter {
 			return "/";
 		if (expression instanceof Xor)
 			return "^";
+		if (expression instanceof LeftShift)
+			return "<<";
 
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));
 	}
-	
+
 	private String getOperatorString(UnaryExpression expression) {
 		if (expression instanceof Cast)
 			return "(" + expression.getResultClass().getName() + ")";
@@ -135,7 +137,7 @@ public class ExpressionWriter {
 			return "+";
 		if (expression instanceof Not)
 			return "!";
-		
+
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));
 	}
@@ -174,12 +176,12 @@ public class ExpressionWriter {
 				printer.printCall((Call) expression);
 				return;
 			}
-			
+
 			if (expression instanceof UnaryExpression) {
 				printer.printUnary((UnaryExpression) expression);
 				return;
 			}
-			
+
 			printer.printError(expression);
 		}
 	}

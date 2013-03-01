@@ -379,4 +379,21 @@ public abstract class Expression {
 	public static Expression bitwiseXor(Expression left, Object right) {
 		return bitwiseXor(left, constant(right));
 	}
+
+	public static Expression leftShift(Expression left, Expression right) {
+		return new LeftShift(left, right);
+	}
+
+	public static Expression leftShift(Object left, Object right) {
+		return leftShift(constant(left), constant(right));
+	}
+
+	public static Expression leftShift(Object left, Expression right) {
+		return leftShift(constant(left), right);
+	}
+
+	public static Expression leftShift(Expression left, Object right) {
+		return leftShift(left, constant(right));
+	}
+
 }
