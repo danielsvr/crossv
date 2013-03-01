@@ -117,10 +117,12 @@ public class ExpressionWriter {
 			return "+";
 		if (expression instanceof And)
 			return "&";
-		if (expression instanceof Devide)
-			return "/";
+		if (expression instanceof Or)
+			return "|";
 		if (expression instanceof Xor)
 			return "^";
+		if (expression instanceof Devide)
+			return "/";
 		if (expression instanceof LeftShift)
 			return "<<";
 		if (expression instanceof RightShift)
