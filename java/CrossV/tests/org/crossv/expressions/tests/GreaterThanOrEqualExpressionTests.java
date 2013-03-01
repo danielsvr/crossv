@@ -1,5 +1,6 @@
 package org.crossv.expressions.tests;
 
+import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.greaterThanOrEqual;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -18,6 +19,14 @@ public class GreaterThanOrEqualExpressionTests {
 	@Test(expected = IllegalOperandException.class)
 	public void createGraterThanOrEqualExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
 		greaterThanOrEqual(new Object(), new Object());
+	}
+
+	@Test
+	public void createGreaterThanOrEqualExpression_IntAndIntOperands_ReturnsSameClassAsJava() {
+		Class<?> expectedClass = ((Object) (1 >= 2)).getClass();
+		Expression e = greaterThanOrEqual(1, 2);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test

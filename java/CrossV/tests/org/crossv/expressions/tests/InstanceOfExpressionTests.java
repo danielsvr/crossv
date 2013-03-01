@@ -1,5 +1,6 @@
 package org.crossv.expressions.tests;
 
+import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.instance;
@@ -23,7 +24,16 @@ public class InstanceOfExpressionTests {
 		Expression e = instanceOf("1", Integer.class);
 		assertThat(e.toString(), is("\"1\" instanceof java.lang.Integer"));
 	}
-	
+
+	@Test
+	public void createInstanceOfExpression_StringValueAndIntegerClassOperands_ReturnsSameClassAsJava() {
+		Class<?> expectedClass = ((Object) (((Object) "1") instanceof Integer))
+				.getClass();
+		Expression e = instanceOf("1", Integer.class);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
 	@Test
 	public void createContextInstanceOfExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = instanceOf(context(), String.class);
