@@ -1,4 +1,3 @@
-SUBTRACT			// A subtraction operation, such as (a - b)
 MODULO				// An arithmetic remainder operation, such as (a % b)
 MULTIPLY			// A multiplication operation, such as (a * b)
 COALESCE			// A node that represents a null coalescing operation, such as (a ?? b) in C#
