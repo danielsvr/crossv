@@ -115,6 +115,10 @@ public class ExpressionWriter {
 			return "||";
 		if (expression instanceof Add)
 			return "+";
+		if (expression instanceof And)
+			return "&";
+		if (expression instanceof Devide)
+			return "/";
 
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));

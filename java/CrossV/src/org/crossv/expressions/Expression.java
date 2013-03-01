@@ -359,4 +359,21 @@ public abstract class Expression {
 	public static Expression bitwiseAnd(Expression left, Object right) {
 		return bitwiseAnd(left, constant(right));
 	}
+
+
+	public static Expression devide(Expression left, Expression right) {
+		return new Devide(left, right);
+	}
+	
+	public static Expression devide(Object left, Object right) {
+		return devide(constant(left), constant(right));
+	}
+
+	public static Expression devide(Object left, Expression right) {
+		return devide(constant(left), right);
+	}
+
+	public static Expression devide(Expression left, Object right) {
+		return devide(left, constant(right));
+	}
 }

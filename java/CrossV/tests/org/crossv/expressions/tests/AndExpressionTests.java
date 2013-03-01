@@ -123,10 +123,17 @@ public class AndExpressionTests {
 		Expression e = bitwiseAnd((long) 1, (int) 1);
 		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
 	}
+	
 	@Test
 	public void createAndExpression_LongAndLongOperands_ReturnsSameClassLikeJava() {
 		Class<?> expectedClass = ((Object)((long) 1 & (long) 1)).getClass();
 		Expression e = bitwiseAnd((long) 1, (long) 1);
 		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createAndExpression_callingToString_getsJavaLikeExpression() {
+		Expression e = bitwiseAnd(1, 2);
+		assertThat(e.toString(), is("1 & 2"));
 	}
 }

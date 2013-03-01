@@ -1,21 +1,17 @@
 package org.crossv.expressions;
 
-public class Add extends BinaryExpression {
+public class Devide extends BinaryExpression {
 	private Class<?> resultClass;
 	private Class<?> leftClass;
 	private Class<?> rightClass;
 
-	public Add(Expression left, Expression right) {
+	public Devide(Expression left, Expression right) {
 		super(left, right);
 
 		this.leftClass = left.getResultClass();
 		this.rightClass = right.getResultClass();
 
-		if (String.class.isAssignableFrom(leftClass)
-				|| String.class.isAssignableFrom(rightClass)) {
-			resultClass = String.class;
-			return;
-		} else if (Long.class.isAssignableFrom(leftClass)) {
+		if (Long.class.isAssignableFrom(leftClass)) {
 			if (Float.class.isAssignableFrom(rightClass)) {
 				resultClass = Float.class;
 				return;
@@ -54,6 +50,7 @@ public class Add extends BinaryExpression {
 				return;
 			}
 		}
+
 		throw new IllegalOperandException();
 	}
 
