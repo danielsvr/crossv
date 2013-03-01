@@ -119,6 +119,8 @@ public class ExpressionWriter {
 			return "&";
 		if (expression instanceof Devide)
 			return "/";
+		if (expression instanceof Xor)
+			return "^";
 
 		throw new ArgumentException("expression", format(
 				"Unknown expression type {0}", expression.getClass().getName()));

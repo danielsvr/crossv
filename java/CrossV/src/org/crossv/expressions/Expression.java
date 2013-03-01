@@ -336,18 +336,6 @@ public abstract class Expression {
 		return new And(left, right);
 	}
 
-	public static Expression bitwiseAnd(boolean left, boolean right) {
-		return bitwiseAnd(constant(left), constant(right));
-	}
-
-	public static Expression bitwiseAnd(Boolean left, Expression right) {
-		return bitwiseAnd(constant(left), right);
-	}
-
-	public static Expression bitwiseAnd(Expression left, Boolean right) {
-		return bitwiseAnd(left, constant(right));
-	}
-	
 	public static Expression bitwiseAnd(Object left, Object right) {
 		return bitwiseAnd(constant(left), constant(right));
 	}
@@ -359,7 +347,6 @@ public abstract class Expression {
 	public static Expression bitwiseAnd(Expression left, Object right) {
 		return bitwiseAnd(left, constant(right));
 	}
-
 
 	public static Expression devide(Expression left, Expression right) {
 		return new Devide(left, right);
@@ -375,5 +362,21 @@ public abstract class Expression {
 
 	public static Expression devide(Expression left, Object right) {
 		return devide(left, constant(right));
+	}
+
+	public static Expression bitwiseXor(Expression left, Expression right) {
+		return new Xor(left, right);
+	}
+
+	public static Expression bitwiseXor(Object left, Object right) {
+		return bitwiseXor(constant(left), constant(right));
+	}
+
+	public static Expression bitwiseXor(Object left, Expression right) {
+		return bitwiseXor(constant(left), right);
+	}
+
+	public static Expression bitwiseXor(Expression left, Object right) {
+		return bitwiseXor(left, constant(right));
 	}
 }
