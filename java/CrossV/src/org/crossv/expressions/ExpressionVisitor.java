@@ -15,4 +15,6 @@ public interface ExpressionVisitor {
 	void visitCall(Call expression);
 
 	void visitUnary(UnaryExpression expression);
+
+	void visitConditional(Conditional expression);
 }

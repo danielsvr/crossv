@@ -473,4 +473,21 @@ public abstract class Expression {
 	public static Expression modulo(Object left, Expression right) {
 		return modulo(constant(left), right);
 	}
+
+	public static Expression conditional(Expression test, Expression ifTrue, Expression ifFalse) {
+		return new Conditional(test, ifTrue, ifFalse);
+	}
+
+	public static Expression conditional(boolean test, Expression ifTrue,
+			Expression ifFalse) {
+		return conditional(constant(test), ifTrue, ifFalse);
+	}
+
+	public static Expression conditional(Expression test, Object ifTrue, Object ifFalse) {
+		return conditional(test, constant(ifTrue), constant(ifFalse));
+	}
+
+	public static Expression conditional(boolean test, Object ifTrue, Object ifFalse) {
+		return conditional(constant(test), constant(ifTrue), constant(ifFalse));
+	}
 }

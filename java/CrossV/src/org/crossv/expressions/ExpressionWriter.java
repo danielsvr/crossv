@@ -98,6 +98,14 @@ public class ExpressionWriter {
 		print(expression.getOperand());
 	}
 
+	protected void printConditional(Conditional expression) {
+		print(expression.getTest());
+		print(" ? ");
+		print(expression.getIfTrue());
+		print(" : ");
+		print(expression.getIfFalse());
+	}
+
 	private static class PrivateExpressionVisitor extends
 			ExpressionVisitorAdapter {
 		private ExpressionWriter printer;
@@ -139,6 +147,11 @@ public class ExpressionWriter {
 		@Override
 		public void visitUnary(UnaryExpression expression) {
 			printer.printUnary(expression);
+		}
+
+		@Override
+		public void visitConditional(Conditional expression) {
+			printer.printConditional(expression);
 		}
 	}
 }
