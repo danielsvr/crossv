@@ -34,6 +34,7 @@ public class Call extends Expression {
 
 		if (parameters == null)
 			parameters = new Expression[0];
+		
 		this.instance = instance;
 		this.method = method;
 		this.parameters = parameters;

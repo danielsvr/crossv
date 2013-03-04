@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotion;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 public class Xor extends BinaryExpression {
@@ -17,7 +17,7 @@ public class Xor extends BinaryExpression {
 		if (Boolean.class.isAssignableFrom(leftClass)
 				&& Boolean.class.isAssignableFrom(rightClass)) {
 			resultClass = Boolean.class;
-		} else if (canPerformNumericPromotionForAll(leftClass, rightClass))
+		} else if (canPerformNumericPromotion(leftClass, rightClass))
 			resultClass = getNumericPromotion(leftClass, rightClass);
 
 		if (resultClass == null || !Integer.class.isAssignableFrom(resultClass)

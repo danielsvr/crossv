@@ -1,23 +1,21 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotion;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 public class And extends BinaryExpression {
 	private Class<?> resultClass;
-	private Class<?> leftClass;
-	private Class<?> rightClass;
 
 	public And(Expression left, Expression right) {
 		super(left, right);
 
-		this.leftClass = left.getResultClass();
-		this.rightClass = right.getResultClass();
+		Class<?> leftClass = left.getResultClass();
+		Class<?> rightClass = right.getResultClass();
 
 		if (Boolean.class.isAssignableFrom(leftClass)
 				&& Boolean.class.isAssignableFrom(rightClass)) {
 			resultClass = Boolean.class;
-		} else if (canPerformNumericPromotionForAll(leftClass, rightClass))
+		} else if (canPerformNumericPromotion(leftClass, rightClass))
 			resultClass = getNumericPromotion(leftClass, rightClass);
 
 		if (resultClass == null || !Integer.class.isAssignableFrom(resultClass)

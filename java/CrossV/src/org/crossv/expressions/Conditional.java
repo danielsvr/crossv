@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotion;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 import org.crossv.primitives.ArgumentNullException;
@@ -42,20 +42,20 @@ public class Conditional extends Expression {
 				resultClass = Byte.class;
 			} else if (Short.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Short.class;
-			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+			} else if (canPerformNumericPromotion(ifTrueClass,
 					ifFalseClass))
 				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 		} else if (Character.class.isAssignableFrom(ifTrueClass)) {
 			if (Integer.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Character.class;
-			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+			} else if (canPerformNumericPromotion(ifTrueClass,
 					ifFalseClass))
 				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 		} else if (Short.class.isAssignableFrom(ifTrueClass)) {
 			if (Integer.class.isAssignableFrom(ifFalseClass)
 					|| Byte.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Short.class;
-			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+			} else if (canPerformNumericPromotion(ifTrueClass,
 					ifFalseClass))
 				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 		} else if (Integer.class.isAssignableFrom(ifTrueClass)) {
@@ -65,10 +65,10 @@ public class Conditional extends Expression {
 				resultClass = Byte.class;
 			} else if (Character.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Character.class;
-			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+			} else if (canPerformNumericPromotion(ifTrueClass,
 					ifFalseClass))
 				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
-		} else if (canPerformNumericPromotionForAll(ifTrueClass, ifFalseClass))
+		} else if (canPerformNumericPromotion(ifTrueClass, ifFalseClass))
 			resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 
 		this.test = test;

@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotion;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 public class Modulo extends BinaryExpression {
@@ -14,7 +14,7 @@ public class Modulo extends BinaryExpression {
 		this.leftClass = left.getResultClass();
 		this.rightClass = right.getResultClass();
 
-		if (!canPerformNumericPromotionForAll(leftClass, rightClass))
+		if (!canPerformNumericPromotion(leftClass, rightClass))
 			throw new IllegalOperandException();
 		resultClass = getNumericPromotion(leftClass, rightClass);
 	}
