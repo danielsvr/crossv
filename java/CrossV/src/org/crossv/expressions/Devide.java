@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+
 public class Devide extends BinaryExpression {
 	private Class<?> resultClass;
 	private Class<?> leftClass;
@@ -11,54 +14,16 @@ public class Devide extends BinaryExpression {
 		this.leftClass = left.getResultClass();
 		this.rightClass = right.getResultClass();
 
-		if (Long.class.isAssignableFrom(leftClass)) {
-			if (Float.class.isAssignableFrom(rightClass)) {
-				resultClass = Float.class;
-				return;
-			} else if (Double.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			} else if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Long.class;
-				return;
-			}
-		} else if (Float.class.isAssignableFrom(leftClass)) {
-			if (Double.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			} else if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Float.class;
-				return;
-			}
-		} else if (Double.class.isAssignableFrom(leftClass)) {
-			if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			}
-		} else if (Number.class.isAssignableFrom(leftClass)) {
-			if (Long.class.isAssignableFrom(rightClass)) {
-				resultClass = Long.class;
-				return;
-			} else if (Float.class.isAssignableFrom(rightClass)) {
-				resultClass = Float.class;
-				return;
-			} else if (Double.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			} else if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Integer.class;
-				return;
-			}
-		}
-
-		throw new IllegalOperandException();
+		if (!canPerformNumericPromotionForAll(leftClass, rightClass))
+			throw new IllegalOperandException();
+		resultClass = getNumericPromotion(leftClass, rightClass);
 	}
 
 	@Override
 	public Class<?> getResultClass() {
 		return resultClass;
 	}
-	
+
 	@Override
 	public String getOperatorString() {
 		return "/";

@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.ExpressionUtil.*;
+
 public class Add extends BinaryExpression {
 	private Class<?> resultClass;
 	private Class<?> leftClass;
@@ -15,44 +17,9 @@ public class Add extends BinaryExpression {
 				|| String.class.isAssignableFrom(rightClass)) {
 			resultClass = String.class;
 			return;
-		} else if (Long.class.isAssignableFrom(leftClass)) {
-			if (Float.class.isAssignableFrom(rightClass)) {
-				resultClass = Float.class;
-				return;
-			} else if (Double.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			} else if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Long.class;
-				return;
-			}
-		} else if (Float.class.isAssignableFrom(leftClass)) {
-			if (Double.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			} else if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Float.class;
-				return;
-			}
-		} else if (Double.class.isAssignableFrom(leftClass)) {
-			if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			}
-		} else if (Number.class.isAssignableFrom(leftClass)) {
-			if (Long.class.isAssignableFrom(rightClass)) {
-				resultClass = Long.class;
-				return;
-			} else if (Float.class.isAssignableFrom(rightClass)) {
-				resultClass = Float.class;
-				return;
-			} else if (Double.class.isAssignableFrom(rightClass)) {
-				resultClass = Double.class;
-				return;
-			} else if (Number.class.isAssignableFrom(rightClass)) {
-				resultClass = Integer.class;
-				return;
-			}
+		} else if (canPerformNumericPromotionForAll(leftClass, rightClass)) {
+			resultClass = getNumericPromotion(leftClass, rightClass);
+			return;
 		}
 		throw new IllegalOperandException();
 	}

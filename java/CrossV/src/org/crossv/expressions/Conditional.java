@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+
 import org.crossv.primitives.ArgumentNullException;
 
 public class Conditional extends Expression {
@@ -28,33 +31,33 @@ public class Conditional extends Expression {
 
 		if (ifTrueClass.equals(ifFalseClass))
 			resultClass = ifTrueClass;
+		else if (ifTrue instanceof Constant
+				&& ((Constant) ifTrue).getValue() == null)
+			resultClass = ifFalseClass;
+		else if (ifFalse instanceof Constant
+				&& ((Constant) ifFalse).getValue() == null)
+			resultClass = ifTrueClass;
 		else if (Byte.class.isAssignableFrom(ifTrueClass)) {
 			if (Integer.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Byte.class;
 			} else if (Short.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Short.class;
-			} else if (Long.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Long.class;
-			} else if (Double.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Double.class;
-			}
+			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+					ifFalseClass))
+				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 		} else if (Character.class.isAssignableFrom(ifTrueClass)) {
 			if (Integer.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Character.class;
-			} else if (Long.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Long.class;
-			} else if (Double.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Double.class;
-			}
+			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+					ifFalseClass))
+				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 		} else if (Short.class.isAssignableFrom(ifTrueClass)) {
 			if (Integer.class.isAssignableFrom(ifFalseClass)
 					|| Byte.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Short.class;
-			} else if (Long.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Long.class;
-			} else if (Double.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Double.class;
-			}
+			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+					ifFalseClass))
+				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
 		} else if (Integer.class.isAssignableFrom(ifTrueClass)) {
 			if (Short.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Short.class;
@@ -62,25 +65,12 @@ public class Conditional extends Expression {
 				resultClass = Byte.class;
 			} else if (Character.class.isAssignableFrom(ifFalseClass)) {
 				resultClass = Character.class;
-			} else if (Long.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Long.class;
-			} else if (Double.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Double.class;
-			}
-		} else if (Double.class.isAssignableFrom(ifTrueClass)) {
-			if (Number.class.isAssignableFrom(ifFalseClass)
-					|| Character.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Double.class;
-			}
-		} else {
-			if (ifTrue instanceof Constant
-					&& ((Constant) ifTrue).getValue() == null)
-				resultClass = ifFalseClass;
-			else if (ifFalse instanceof Constant
-					&& ((Constant) ifFalse).getValue() == null)
-				resultClass = ifTrueClass;
-		}
-		
+			} else if (canPerformNumericPromotionForAll(ifTrueClass,
+					ifFalseClass))
+				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
+		} else if (canPerformNumericPromotionForAll(ifTrueClass, ifFalseClass))
+			resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
+
 		this.test = test;
 		this.ifTrue = ifTrue;
 		this.ifFalse = ifFalse;

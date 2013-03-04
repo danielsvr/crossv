@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotionForAll;
+import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+
 public class And extends BinaryExpression {
 	private Class<?> resultClass;
 	private Class<?> leftClass;
@@ -14,18 +17,14 @@ public class And extends BinaryExpression {
 		if (Boolean.class.isAssignableFrom(leftClass)
 				&& Boolean.class.isAssignableFrom(rightClass)) {
 			resultClass = Boolean.class;
-			return;
+		} else if (canPerformNumericPromotionForAll(leftClass, rightClass))
+			resultClass = getNumericPromotion(leftClass, rightClass);
+
+		if (resultClass == null || !Integer.class.isAssignableFrom(resultClass)
+				&& !Long.class.isAssignableFrom(resultClass)
+				&& !Boolean.class.isAssignableFrom(resultClass)) {
+			throw new IllegalOperandException();
 		}
-		if (Long.class.isAssignableFrom(leftClass)
-				|| Long.class.isAssignableFrom(rightClass)) {
-			resultClass = Long.class;
-			return;
-		} else if (Number.class.isAssignableFrom(leftClass)
-				&& Number.class.isAssignableFrom(rightClass)) {
-			resultClass = Integer.class;
-			return;
-		}
-		throw new IllegalOperandException();
 	}
 
 	@Override
