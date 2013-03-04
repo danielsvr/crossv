@@ -14,4 +14,13 @@ public abstract class UnaryExpression extends Expression {
 	public Expression getOperand() {
 		return operand;
 	}
+
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitUnary(this);
+	}
+
+	public String getOperatorString() {
+		return null;
+	}
 }

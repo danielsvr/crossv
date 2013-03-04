@@ -15,4 +15,9 @@ public class Constant extends Expression {
 	public Class<?> getResultClass() {
 		return value != null ? value.getClass() : Object.class;
 	}
+	
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitConstant(this);
+	}
 }

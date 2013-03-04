@@ -70,4 +70,9 @@ public class Call extends Expression {
 	public Class<?> getResultClass() {
 		return method.getReturnType();
 	}
+
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitCall(this);
+	}
 }

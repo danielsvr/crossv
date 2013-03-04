@@ -5,9 +5,14 @@ public class Not extends UnaryExpression {
 		super(operand);
 		checkOperandClass(operand, Boolean.class);
 	}
-	
+
 	@Override
 	public Class<?> getResultClass() {
 		return Boolean.class;
+	}
+
+	@Override
+	public String getOperatorString() {
+		return "!";
 	}
 }

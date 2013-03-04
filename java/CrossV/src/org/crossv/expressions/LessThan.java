@@ -12,4 +12,9 @@ public class LessThan extends BinaryExpression {
 	public Class<?> getResultClass() {
 		return Boolean.class;
 	}
+	
+	@Override
+	public String getOperatorString() {
+		return "<";
+	}
 }

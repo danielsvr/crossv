@@ -6,9 +6,14 @@ public class InstanceOf extends BinaryExpression {
 		checkIfReturnsReference(left);
 		checkOperandClass(right, Class.class);
 	}
-	
+
 	@Override
 	public Class<?> getResultClass() {
 		return Boolean.class;
+	}
+
+	@Override
+	public String getOperatorString() {
+		return "instanceof";
 	}
 }

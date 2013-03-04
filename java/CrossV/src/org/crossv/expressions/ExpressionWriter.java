@@ -4,7 +4,6 @@ import static java.text.MessageFormat.format;
 
 import java.io.PrintWriter;
 
-import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.ArgumentNullException;
 
 public class ExpressionWriter {
@@ -46,14 +45,13 @@ public class ExpressionWriter {
 			return;
 		}
 
-		Number number;
-		if (value instanceof Number
-				&& ((number = (Number) value).byteValue() < 0
-						|| number.shortValue() < 0 || number.intValue() < 0
-						|| number.longValue() < 0 || number.floatValue() < 0 || number
-						.doubleValue() < 0)) {
-			out.print("(" + value.toString() + ")");
-			return;
+		if (value instanceof Number) {
+			Number number = (Number) value;
+			if (number.intValue() < 0 || number.longValue() < 0
+					|| number.doubleValue() < 0) {
+				out.print("(" + value.toString() + ")");
+				return;
+			}
 		}
 
 		if (value instanceof Class) {
@@ -72,12 +70,12 @@ public class ExpressionWriter {
 		out.print("obj");
 	}
 
-	protected void printBinaryExpression(BinaryExpression expression) {
+	protected void printBinary(BinaryExpression expression) {
 		Expression left = expression.getLeft();
 		Expression right = expression.getRight();
 
 		print(left);
-		print(" " + getOperatorString(expression) + " ");
+		print(" " + expression.getOperatorString() + " ");
 		print(right);
 	}
 
@@ -85,7 +83,8 @@ public class ExpressionWriter {
 		print(expression.getInstance());
 		print("." + expression.getMethod().getName() + "(");
 		boolean anyParameter = false;
-		for (Expression parameter : expression.getParameters()) {
+		Expression[] parameters = expression.getParameters();
+		for (Expression parameter : parameters) {
 			if (anyParameter)
 				print(", ");
 			print(parameter);
@@ -94,70 +93,13 @@ public class ExpressionWriter {
 		print(")");
 	}
 
-	private String getOperatorString(BinaryExpression expression) {
-		if (expression instanceof AndAlso)
-			return "&&";
-		if (expression instanceof Equal)
-			return "==";
-		if (expression instanceof GreaterThan)
-			return ">";
-		if (expression instanceof GreaterThanOrEqual)
-			return ">=";
-		if (expression instanceof InstanceOf)
-			return "instanceof";
-		if (expression instanceof LessThan)
-			return "<";
-		if (expression instanceof LessThanOrEqual)
-			return "<=";
-		if (expression instanceof NotEqual)
-			return "!=";
-		if (expression instanceof OrElse)
-			return "||";
-		if (expression instanceof Add)
-			return "+";
-		if (expression instanceof Subtract)
-			return "-";
-		if (expression instanceof And)
-			return "&";
-		if (expression instanceof Or)
-			return "|";
-		if (expression instanceof Xor)
-			return "^";
-		if (expression instanceof Devide)
-			return "/";
-		if (expression instanceof Modulo)
-			return "%";
-		if (expression instanceof Multiply)
-			return "*";
-		if (expression instanceof LeftShift)
-			return "<<";
-		if (expression instanceof RightShift)
-			return ">>";
-
-		throw new ArgumentException("expression", format(
-				"Unknown expression type {0}", expression.getClass().getName()));
-	}
-
-	private String getOperatorString(UnaryExpression expression) {
-		if (expression instanceof Cast)
-			return "(" + expression.getResultClass().getName() + ")";
-		if (expression instanceof Negate)
-			return "-";
-		if (expression instanceof UnaryPlus)
-			return "+";
-		if (expression instanceof Not)
-			return "!";
-
-		throw new ArgumentException("expression", format(
-				"Unknown expression type {0}", expression.getClass().getName()));
-	}
-
 	protected void printUnary(UnaryExpression expression) {
-		print(getOperatorString(expression));
+		print(expression.getOperatorString());
 		print(expression.getOperand());
 	}
 
-	private static class PrivateExpressionVisitor implements ExpressionVisitor {
+	private static class PrivateExpressionVisitor extends
+			ExpressionVisitorAdapter {
 		private ExpressionWriter printer;
 
 		public PrivateExpressionVisitor(ExpressionWriter printer) {
@@ -166,33 +108,37 @@ public class ExpressionWriter {
 
 		@Override
 		public void visit(Expression expression) {
-			if (expression instanceof Context) {
-				printer.printContext((Context) expression);
-				return;
-			}
-			if (expression instanceof Instance) {
-				printer.printInstance((Instance) expression);
-				return;
-			}
-			if (expression instanceof Constant) {
-				printer.printConstant((Constant) expression);
-				return;
-			}
-			if (expression instanceof BinaryExpression) {
-				printer.printBinaryExpression((BinaryExpression) expression);
-				return;
-			}
-			if (expression instanceof Call) {
-				printer.printCall((Call) expression);
-				return;
-			}
-
-			if (expression instanceof UnaryExpression) {
-				printer.printUnary((UnaryExpression) expression);
-				return;
-			}
-
 			printer.printError(expression);
+		}
+
+		@Override
+		public void visitContext(Context expression) {
+			printer.printContext(expression);
+		}
+
+		@Override
+		public void visitInstance(Instance expression) {
+			printer.printInstance(expression);
+		}
+
+		@Override
+		public void visitConstant(Constant expression) {
+			printer.printConstant(expression);
+		}
+
+		@Override
+		public void visitBinary(BinaryExpression expression) {
+			printer.printBinary(expression);
+		}
+
+		@Override
+		public void visitCall(Call expression) {
+			printer.printCall(expression);
+		}
+
+		@Override
+		public void visitUnary(UnaryExpression expression) {
+			printer.printUnary(expression);
 		}
 	}
 }

@@ -16,4 +16,9 @@ public final class Context extends Expression {
 	public Class<?> getResultClass() {
 		return clazz;
 	}
+	
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitContext(this);
+	}
 }

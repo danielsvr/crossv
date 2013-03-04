@@ -12,4 +12,9 @@ public class Cast extends UnaryExpression {
 	public Class<?> getResultClass() {
 		return clazz;
 	}
+
+	@Override
+	public String getOperatorString() {
+		return "(" + clazz.getName() + ")";
+	}
 }

@@ -28,4 +28,9 @@ public class LeftShift extends BinaryExpression {
 	public Class<?> getResultClass() {
 		return resultClass;
 	}
+	
+	@Override
+	public String getOperatorString() {
+		return "<<";
+	}
 }

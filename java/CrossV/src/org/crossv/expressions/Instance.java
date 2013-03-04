@@ -5,4 +5,9 @@ public final class Instance extends Expression {
 	public Class<?> getResultClass() {
 		return Object.class;
 	}
+	
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitInstance(this);
+	}
 }

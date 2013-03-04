@@ -44,9 +44,7 @@ public abstract class Expression {
 		return false;
 	}
 
-	public void accept(ExpressionVisitor visitor) {
-		visitor.visit(this);
-	}
+	public abstract void accept(ExpressionVisitor visitor);
 
 	protected static void checkOperandClass(Expression expressin, Class<?> clazz) {
 		Class<?> resultClass = expressin.getResultClass();
@@ -443,7 +441,7 @@ public abstract class Expression {
 	public static Expression subtract(Object left, Expression right) {
 		return subtract(constant(left), right);
 	}
-	
+
 	public static Expression multiply(Expression left, Expression right) {
 		return new Multiply(left, right);
 	}
@@ -459,7 +457,7 @@ public abstract class Expression {
 	public static Expression multiply(Object left, Expression right) {
 		return multiply(constant(left), right);
 	}
-	
+
 	public static Expression modulo(Expression left, Expression right) {
 		return new Modulo(left, right);
 	}

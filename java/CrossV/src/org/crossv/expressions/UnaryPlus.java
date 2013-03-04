@@ -22,4 +22,9 @@ public class UnaryPlus extends UnaryExpression {
 	public Class<?> getResultClass() {
 		return operand.getResultClass();
 	}
+
+	@Override
+	public String getOperatorString() {
+		return "+";
+	}
 }

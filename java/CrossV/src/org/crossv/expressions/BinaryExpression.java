@@ -32,4 +32,11 @@ public abstract class BinaryExpression extends Expression {
 						right.getResultClass()))
 			throw new IllegalOperandException();
 	}
+
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitBinary(this);
+	}
+
+	public abstract String getOperatorString();
 }
