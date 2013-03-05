@@ -3,7 +3,12 @@ package org.crossv.expressions;
 public class Not extends UnaryExpression {
 	public Not(Expression operand) {
 		super(operand);
-		checkOperandClass(operand, Boolean.class);
+		verifyOperand();
+	}
+
+	private void verifyOperand() {
+		if (!operand.isAssignableTo(Boolean.class))
+			throw illegalOperand();
 	}
 
 	@Override

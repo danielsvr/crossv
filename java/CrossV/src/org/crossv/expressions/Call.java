@@ -20,24 +20,21 @@ public class Call extends Expression {
 			throw new ArgumentNullException("instance");
 		if (method == null)
 			throw new ArgumentNullException("method");
-		Class<?> declaringClass;
-		Class<?> resultClass;
 
-		declaringClass = method.getDeclaringClass();
-		resultClass = instance.getResultClass();
-
-		if (!declaringClass.isAssignableFrom(resultClass))
-			throw new IllegalOperandException();
-		if (method.getReturnType().equals(Void.class)
-				|| method.getReturnType().equals(Void.TYPE))
-			throw new IllegalOperandException();
-
-		if (parameters == null)
-			parameters = new Expression[0];
-		
 		this.instance = instance;
 		this.method = method;
 		this.parameters = parameters;
+		
+		verifyOperands();
+	}
+
+	private void verifyOperands() {
+		Class<?> declaringClass = method.getDeclaringClass();
+		Class<?> resultClass = instance.getResultClass();
+
+		if (!declaringClass.isAssignableFrom(resultClass)
+				|| method.getReturnType().equals(Void.TYPE))
+			throw illegalOperand();
 	}
 
 	private static Method findMethod(Expression instance, String method,

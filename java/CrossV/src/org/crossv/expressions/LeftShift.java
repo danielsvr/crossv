@@ -2,33 +2,27 @@ package org.crossv.expressions;
 
 public class LeftShift extends BinaryExpression {
 	private Class<?> resultClass;
-	private Class<?> leftClass;
-	private Class<?> rightClass;
 
 	public LeftShift(Expression left, Expression right) {
 		super(left, right);
+		verifyOperands();
+		resultClass = left.isAssignableTo(Long.class) ? Long.class
+				: Integer.class;
+	}
 
-		this.leftClass = left.getResultClass();
-		this.rightClass = right.getResultClass();
-
-		if (Long.class.isAssignableFrom(leftClass)
-				&& Number.class.isAssignableFrom(rightClass)) {
-			resultClass = Long.class;
-			return;
-		} else if (Number.class.isAssignableFrom(leftClass)
-				&& Number.class.isAssignableFrom(rightClass)) {
-			resultClass = Integer.class;
-			return;
-		}
-
-		throw new IllegalOperandException();
+	private void verifyOperands() {
+		if (left.isAssignableToAny(Double.class, Float.class)
+				|| !left.isAssignableTo(Number.class)
+				|| right.isAssignableToAny(Double.class, Float.class)
+				|| !right.isAssignableTo(Number.class))
+			throw illegalOperand();
 	}
 
 	@Override
 	public Class<?> getResultClass() {
 		return resultClass;
 	}
-	
+
 	@Override
 	public String getOperatorString() {
 		return "<<";

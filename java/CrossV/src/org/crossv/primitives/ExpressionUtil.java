@@ -2,7 +2,7 @@ package org.crossv.primitives;
 
 public class ExpressionUtil {
 
-	public static boolean canPerformNumericPromotion(Class<?>... clazzes) {
+	public static boolean canPromoteNumbers(Class<?>... clazzes) {
 		for (Class<?> clazz : clazzes)
 			if (!canPerformNumericPromotion(clazz))
 				return false;

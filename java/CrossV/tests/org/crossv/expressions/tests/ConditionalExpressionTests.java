@@ -20,12 +20,42 @@ public class ConditionalExpressionTests {
 
 	@Test(expected = IllegalOperandException.class)
 	public void createConditionalExpression_BooleanTestAndNullForRestOfOperands_throwsIllegalOperandException() {
-		conditional(constant(new Object()), constant(null), constant(null));
+		conditional(constant(true), constant(null), constant(null));
 	}
 
 	@Test
-	public void createConditionalExpression_BooleanTestAndNotSameTypeForSecondAndThirdExpression_ReturnsMostBaseClass() {
-		Object second = 1;
+	public void createConditionalExpression_SecondIsDoubleAndThirdIsStringExpression_ReturnsMostBaseClass() {
+		Object second = (double) 1;
+		Object third = "2";
+		Class<?> expectedClass = Object.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createConditionalExpression_SecondIsIntAndThirdIsStringExpression_ReturnsMostBaseClass() {
+		Object second = (int) 1;
+		Object third = "2";
+		Class<?> expectedClass = Object.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createConditionalExpression_SecondIsShortAndThirdIsStringExpression_ReturnsMostBaseClass() {
+		Object second = (short) 1;
+		Object third = "2";
+		Class<?> expectedClass = Object.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createConditionalExpression_SecondIsByteAndThirdIsStringExpression_ReturnsMostBaseClass() {
+		Object second = (byte) 1;
 		Object third = "2";
 		Class<?> expectedClass = Object.class;
 		Expression e = conditional(true, second, third);
@@ -64,20 +94,10 @@ public class ConditionalExpressionTests {
 	}
 
 	@Test
-	public void createConditionalExpression_TheSecondIsAReferenceTypeAndThirdIsNull_ReturnsThatReferenceType() {
-		Object second = null;
-		Object third = new Monkey();
+	public void createConditionalExpression_TheSecondIsAReferenceTypeIsAndThirdNull_ReturnsThatReferenceType() {
+		Object second = new Monkey();
+		Object third = null;
 		Class<?> expectedClass = Monkey.class;
-		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createConditionalExpression_TheSecondIsByteAndThirdIsByte_ReturnsByteType() {
-		Object second = (byte) 1;
-		Object third = (byte) 1;
-		Class<?> expectedClass = Byte.class;
 		Expression e = conditional(true, second, third);
 		assertThat(format("Result is {0}", expectedClass.getName()), e
 				.getResultClass().equals(expectedClass), is(true));
@@ -127,17 +147,19 @@ public class ConditionalExpressionTests {
 	public void createConditionalExpression_TheSecondIsCharAndThirdIsIntReturnsByteType() {
 		Object second = (char) 1;
 		Object third = (int) 1;
-		Class<?> expectedClass = Character.class;
+		Class<?> expectedClass = Integer.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(
+				format("Result is {0}, actual {1}", expectedClass.getName(),
+						e.getResultClass()),
+				e.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test
 	public void createConditionalExpression_TheSecondIsIntAndThirdIsCharReturnsByteType() {
 		Object second = (int) 1;
 		Object third = (char) 1;
-		Class<?> expectedClass = Character.class;
+		Class<?> expectedClass = Integer.class;
 		Expression e = conditional(true, second, third);
 		assertThat(format("Result is {0}", expectedClass.getName()), e
 				.getResultClass().equals(expectedClass), is(true));
@@ -164,6 +186,26 @@ public class ConditionalExpressionTests {
 	}
 
 	@Test
+	public void createConditionalExpression_TheSecondIsFloatAndThirdIsByte_ReturnsDoubleType() {
+		Object second = (float) 1;
+		Object third = (byte) 1;
+		Class<?> expectedClass = Float.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createConditionalExpression_TheSecondIsByteAndThirdIsFloat_ReturnsDoubleType() {
+		Object second = (byte) 1;
+		Object third = (float) 1;
+		Class<?> expectedClass = Float.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
 	public void createConditionalExpression_TheSecondIsDoubleAndThirdIsInt_ReturnsDoubleType() {
 		Object second = (double) 1;
 		Object third = (int) 1;
@@ -176,6 +218,26 @@ public class ConditionalExpressionTests {
 	@Test
 	public void createConditionalExpression_TheSecondIsIntAndThirdIsDouble_ReturnsDoubleType() {
 		Object second = (int) 1;
+		Object third = (double) 1;
+		Class<?> expectedClass = Double.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createConditionalExpression_TheSecondIsDoubleAndThirdIsShort_ReturnsDoubleType() {
+		Object second = (double) 1;
+		Object third = (short) 1;
+		Class<?> expectedClass = Double.class;
+		Expression e = conditional(true, second, third);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
+	}
+
+	@Test
+	public void createConditionalExpression_TheSecondIsShortAndThirdIsDouble_ReturnsDoubleType() {
+		Object second = (short) 1;
 		Object third = (double) 1;
 		Class<?> expectedClass = Double.class;
 		Expression e = conditional(true, second, third);

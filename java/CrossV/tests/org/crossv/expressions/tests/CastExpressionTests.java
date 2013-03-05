@@ -10,10 +10,11 @@ import org.junit.Test;
 public class CastExpressionTests {
 
 	@Test
-	public void createCastOfValueExpression_callingToString_getsJavaLikeExpression()
+	public void createCastOfValueExpression_ReturnClassIsSameAsProvided()
 			throws Exception {
-		Expression e = cast(Object.class, 123);
-		assertThat(e.toString(), is("(java.lang.Object)123"));
+		Expression e = cast(Byte.class, 123);
+		assertThat("Return class is Byte", e.getResultClass()
+				.equals(Byte.class), is(true));
 	}
 
 	@Test

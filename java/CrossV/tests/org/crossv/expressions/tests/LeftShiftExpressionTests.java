@@ -60,8 +60,10 @@ public class LeftShiftExpressionTests {
 	public void createLeftShiftExpression_ByteAndLongOperands_ReturnsSameClassAsJava() {
 		Class<?> expectedClass = ((Object) ((byte) 1 << (long) 1)).getClass();
 		Expression e = leftShift((byte) 1, (long) 1);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(
+				format("Result is {0}, actual {1}", expectedClass.getName(),
+						e.getResultClass()),
+				e.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test
@@ -100,8 +102,10 @@ public class LeftShiftExpressionTests {
 	public void createLeftShiftExpression_ShortAndLongOperands_ReturnsSameClassAsJava() {
 		Class<?> expectedClass = ((Object) ((short) 1 << (long) 1)).getClass();
 		Expression e = leftShift((short) 1, (long) 1);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(
+				format("Result is {0}, actual {1}", expectedClass.getName(),
+						e.getResultClass()),
+				e.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test
@@ -124,8 +128,10 @@ public class LeftShiftExpressionTests {
 	public void createLeftShiftExpression_IntAndLongOperands_ReturnsSameClassAsJava() {
 		Class<?> expectedClass = ((Object) ((int) 1 << (long) 1)).getClass();
 		Expression e = leftShift((int) 1, (long) 1);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(
+				format("Result is {0}, actual {1}", expectedClass.getName(),
+						e.getResultClass()),
+				e.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test

@@ -2,6 +2,7 @@ package org.crossv.expressions;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.Method;
 
 public abstract class Expression {
 
@@ -28,39 +29,59 @@ public abstract class Expression {
 
 	public abstract Class<?> getResultClass();
 
-	public boolean returnsPrimitiveType() {
-		Class<?> resultClass = getResultClass();
+	protected boolean isNullConstant() {
+		return false;
+	}
 
-		if ((resultClass.isPrimitive() && !resultClass.equals(Void.TYPE))
-				|| resultClass.equals(Boolean.class)
-				|| resultClass.equals(Character.class)
-				|| resultClass.equals(Byte.class)
-				|| resultClass.equals(Short.class)
-				|| resultClass.equals(Integer.class)
-				|| resultClass.equals(Long.class)
-				|| resultClass.equals(Float.class)
-				|| resultClass.equals(Double.class))
+	protected boolean isContext() {
+		return false;
+	}
+
+	protected boolean isInstance() {
+		return false;
+	}
+
+	protected boolean isAssignableTo(Class<?> clazz) {
+		Class<?> resultClass = getResultClass();
+		return clazz.isAssignableFrom(resultClass);
+	}
+
+	protected boolean isAssignableToAny(Class<?> clazz1, Class<?> clazz2) {
+		if (isAssignableTo(clazz1))
+			return true;
+		if (isAssignableTo(clazz2))
 			return true;
 		return false;
 	}
 
+	protected boolean isAssignableToAny(Class<?> clazz1, Class<?> clazz2,
+			Class<?> clazz3) {
+		if (isAssignableToAny(clazz1, clazz2))
+			return true;
+		if (isAssignableTo(clazz3))
+			return true;
+		return false;
+	}
+
+	protected boolean isAssignableToAny(Class<?> clazz1, Class<?> clazz2,
+			Class<?> clazz3, Class<?> clazz4) {
+		if (isAssignableToAny(clazz1, clazz2, clazz3))
+			return true;
+		if (isAssignableTo(clazz4))
+			return true;
+		return false;
+	}
+
+	protected static IllegalOperandException illegalOperand() {
+		return new IllegalOperandException();
+	}
+
+	protected boolean returnsPrimitiveType() {
+		return isAssignableToAny(Void.TYPE, Number.class, Character.class,
+				Boolean.class);
+	}
+
 	public abstract void accept(ExpressionVisitor visitor);
-
-	protected static void checkOperandClass(Expression expressin, Class<?> clazz) {
-		Class<?> resultClass = expressin.getResultClass();
-		if (!clazz.isAssignableFrom(resultClass))
-			throw new IllegalOperandException();
-	}
-
-	protected static void checkIfReturnsPrimitive(Expression expressin) {
-		if (!expressin.returnsPrimitiveType())
-			throw new IllegalOperandException();
-	}
-
-	protected static void checkIfReturnsReference(Expression expressin) {
-		if (expressin.returnsPrimitiveType())
-			throw new IllegalOperandException();
-	}
 
 	public static Expression constant(Object value) {
 		return new Constant(value);
@@ -248,6 +269,11 @@ public abstract class Expression {
 	public static Expression call(Expression instance, String methodName,
 			Expression... parameters) throws NoSuchMethodException {
 		return new Call(instance, methodName, parameters);
+	}
+
+	public static Expression call(Expression instance, Method method,
+			Expression... parameters) throws NoSuchMethodException {
+		return new Call(instance, method, parameters);
 	}
 
 	public static Expression negate(Expression instance) {
@@ -474,7 +500,8 @@ public abstract class Expression {
 		return modulo(constant(left), right);
 	}
 
-	public static Expression conditional(Expression test, Expression ifTrue, Expression ifFalse) {
+	public static Expression conditional(Expression test, Expression ifTrue,
+			Expression ifFalse) {
 		return new Conditional(test, ifTrue, ifFalse);
 	}
 
@@ -483,11 +510,13 @@ public abstract class Expression {
 		return conditional(constant(test), ifTrue, ifFalse);
 	}
 
-	public static Expression conditional(Expression test, Object ifTrue, Object ifFalse) {
+	public static Expression conditional(Expression test, Object ifTrue,
+			Object ifFalse) {
 		return conditional(test, constant(ifTrue), constant(ifFalse));
 	}
 
-	public static Expression conditional(boolean test, Object ifTrue, Object ifFalse) {
+	public static Expression conditional(boolean test, Object ifTrue,
+			Object ifFalse) {
 		return conditional(constant(test), constant(ifTrue), constant(ifFalse));
 	}
 }

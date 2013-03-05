@@ -1,29 +1,27 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotion;
+import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 public class Modulo extends BinaryExpression {
 	private Class<?> resultClass;
-	private Class<?> leftClass;
-	private Class<?> rightClass;
 
 	public Modulo(Expression left, Expression right) {
 		super(left, right);
-
-		this.leftClass = left.getResultClass();
-		this.rightClass = right.getResultClass();
-
-		if (!canPerformNumericPromotion(leftClass, rightClass))
-			throw new IllegalOperandException();
+		verifyOperands();
 		resultClass = getNumericPromotion(leftClass, rightClass);
+	}
+
+	private void verifyOperands() {
+		if (!canPromoteNumbers(leftClass, rightClass))
+			throw illegalOperand();
 	}
 
 	@Override
 	public Class<?> getResultClass() {
 		return resultClass;
 	}
-	
+
 	@Override
 	public String getOperatorString() {
 		return "%";

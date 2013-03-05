@@ -13,21 +13,30 @@ import org.junit.Test;
 public class AndAlsoExpressionTests {
 
 	@Test(expected = IllegalOperandException.class)
-	public void createAndExpression_nonBooleanOperands_IllegalOperandExceptionIsThrown() {
-		and(constant(1), constant(2));
+	public void createAndExpression_nonBooleanFirstOperands_IllegalOperandExceptionIsThrown() {
+		and(constant(1), constant(true));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createAndExpression_nonBooleanSecondOperands_IllegalOperandExceptionIsThrown() {
+		and(constant(true), constant(2));
 	}
 
 	@Test
-	public void createAndExpression_BooleanAndBooleanOperands_ReturnsSameClassAsJava() {
-		Class<?> expectedClass = ((Object) (true && false)).getClass();
-		Expression e = and(true, false);
+	public void createAndExpression_BooleanAndBooleanOperands_ReturnClassIsBoolean() {
+		Class<?> expectedClass = Boolean.class;
+		boolean left = true;
+		boolean right = false;
+		Expression e = and(left, right);
 		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+				.getResultClass().equals(expectedClass), is(left));
 	}
 
 	@Test
 	public void createAndExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = and(true, false);
+		boolean left = true;
+		boolean right = false;
+		Expression e = and(left, right);
 		assertThat(e.toString(), is("true && false"));
 	}
 }

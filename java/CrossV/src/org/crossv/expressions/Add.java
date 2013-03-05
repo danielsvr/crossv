@@ -7,17 +7,21 @@ public class Add extends BinaryExpression {
 
 	public Add(Expression left, Expression right) {
 		super(left, right);
+		verifyOperands();
+		resultClass = calculateResultClass();
+	}
 
-		Class<?> leftClass = left.getResultClass();
-		Class<?> rightClass = right.getResultClass();
+	private Class<?> calculateResultClass() {
+		if (canPromoteNumbers(leftClass, rightClass))
+			return getNumericPromotion(leftClass, rightClass);
+		return String.class;
+	}
 
-		if (String.class.isAssignableFrom(leftClass)
-				|| String.class.isAssignableFrom(rightClass)) {
-			resultClass = String.class;
-		} else if (canPerformNumericPromotion(leftClass, rightClass)) {
-			resultClass = getNumericPromotion(leftClass, rightClass);
-		} else
-			throw new IllegalOperandException();
+	private void verifyOperands() {
+		if (!left.isAssignableTo(String.class)
+				&& !right.isAssignableTo(String.class)
+				&& !canPromoteNumbers(leftClass, rightClass))
+			throw illegalOperand();
 	}
 
 	@Override

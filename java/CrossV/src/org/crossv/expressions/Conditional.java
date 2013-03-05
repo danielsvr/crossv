@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPerformNumericPromotion;
+import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 import org.crossv.primitives.ArgumentNullException;
@@ -18,62 +18,48 @@ public class Conditional extends Expression {
 			throw new ArgumentNullException("ifTrue");
 		if (ifFalse == null)
 			throw new ArgumentNullException("ifFalse");
-
-		checkOperandClass(test, Boolean.class);
-		if (ifTrue instanceof Constant && ifFalse instanceof Constant
-				&& ((Constant) ifTrue).getValue() == null
-				&& ((Constant) ifFalse).getValue() == null)
-			throw new IllegalOperandException();
-
-		this.resultClass = Object.class;
-		Class<?> ifTrueClass = ifTrue.getResultClass();
-		Class<?> ifFalseClass = ifFalse.getResultClass();
-
-		if (ifTrueClass.equals(ifFalseClass))
-			resultClass = ifTrueClass;
-		else if (ifTrue instanceof Constant
-				&& ((Constant) ifTrue).getValue() == null)
-			resultClass = ifFalseClass;
-		else if (ifFalse instanceof Constant
-				&& ((Constant) ifFalse).getValue() == null)
-			resultClass = ifTrueClass;
-		else if (Byte.class.isAssignableFrom(ifTrueClass)) {
-			if (Integer.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Byte.class;
-			} else if (Short.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Short.class;
-			} else if (canPerformNumericPromotion(ifTrueClass,
-					ifFalseClass))
-				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
-		} else if (Character.class.isAssignableFrom(ifTrueClass)) {
-			if (Integer.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Character.class;
-			} else if (canPerformNumericPromotion(ifTrueClass,
-					ifFalseClass))
-				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
-		} else if (Short.class.isAssignableFrom(ifTrueClass)) {
-			if (Integer.class.isAssignableFrom(ifFalseClass)
-					|| Byte.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Short.class;
-			} else if (canPerformNumericPromotion(ifTrueClass,
-					ifFalseClass))
-				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
-		} else if (Integer.class.isAssignableFrom(ifTrueClass)) {
-			if (Short.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Short.class;
-			} else if (Byte.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Byte.class;
-			} else if (Character.class.isAssignableFrom(ifFalseClass)) {
-				resultClass = Character.class;
-			} else if (canPerformNumericPromotion(ifTrueClass,
-					ifFalseClass))
-				resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
-		} else if (canPerformNumericPromotion(ifTrueClass, ifFalseClass))
-			resultClass = getNumericPromotion(ifTrueClass, ifFalseClass);
-
 		this.test = test;
 		this.ifTrue = ifTrue;
 		this.ifFalse = ifFalse;
+		
+		verifyOperands();
+		resultClass = calculateResultClass();
+	}
+
+	private void verifyOperands() {
+		// @formatter:off
+		if (!test.isAssignableTo(Boolean.class) 
+			 || ifTrue.isNullConstant() && ifFalse.isNullConstant())
+			throw illegalOperand();
+		// @formatter:on
+	}
+
+	private Class<?> calculateResultClass() {
+		Class<?> ifTrueClass = ifTrue.getResultClass();
+		Class<?> ifFalseClass = ifFalse.getResultClass();
+
+		if (ifTrue.isNullConstant())
+			return ifFalseClass;
+		if (ifFalse.isNullConstant())
+			return ifTrueClass;
+
+		// @formatter:off
+		
+		if (ifTrueClass.equals(ifFalseClass)
+			|| (ifTrue.isAssignableToAny(Byte.class, Short.class) && ifFalse.isAssignableTo(Integer.class))
+			|| (ifTrue.isAssignableTo(Short.class) && ifFalse.isAssignableTo(Byte.class)))			
+			return ifTrueClass;
+
+		if ((ifTrue.isAssignableTo(Integer.class) && ifFalse.isAssignableToAny(Byte.class, Short.class))
+			|| (ifTrue.isAssignableTo(Byte.class) && ifFalse.isAssignableTo(Short.class)))			
+			return ifFalseClass;
+		
+		// @formatter:on
+
+		if (canPromoteNumbers(ifTrueClass, ifFalseClass))
+			return getNumericPromotion(ifTrueClass, ifFalseClass);
+
+		return Object.class;
 	}
 
 	@Override

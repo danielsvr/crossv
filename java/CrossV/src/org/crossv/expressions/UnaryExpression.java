@@ -20,7 +20,5 @@ public abstract class UnaryExpression extends Expression {
 		visitor.visitUnary(this);
 	}
 
-	public String getOperatorString() {
-		return null;
-	}
+	public abstract String getOperatorString();
 }
