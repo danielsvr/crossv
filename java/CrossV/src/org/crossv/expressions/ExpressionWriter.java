@@ -47,8 +47,7 @@ public class ExpressionWriter {
 
 		if (value instanceof Number) {
 			Number number = (Number) value;
-			if (number.intValue() < 0 || number.longValue() < 0
-					|| number.doubleValue() < 0) {
+			if (number.doubleValue() < 0) {
 				out.print("(" + value.toString() + ")");
 				return;
 			}
