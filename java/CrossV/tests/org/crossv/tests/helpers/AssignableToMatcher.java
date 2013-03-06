@@ -21,5 +21,6 @@ public class AssignableToMatcher extends BaseMatcher<Object> {
 
 	@Override
 	public void describeTo(Description arg0) {
+		arg0.appendText("assignable to ").appendValue(clazz);
 	}
 }

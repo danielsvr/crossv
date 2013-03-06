@@ -519,4 +519,20 @@ public abstract class Expression {
 			Object ifFalse) {
 		return conditional(constant(test), constant(ifTrue), constant(ifFalse));
 	}
+
+	public static Expression coalesce(Expression left, Expression right) {
+		return new Coalesce(left, right);
+	}
+
+	public static Expression coalesce(Object left, Object right) {
+		return coalesce(constant(left), constant(right));
+	}
+
+	public static Expression coalesce(Expression left, Object right) {
+		return coalesce(left, constant(right));
+	}
+
+	public static Expression coalesce(Object left, Expression right) {
+		return coalesce(constant(left), right);
+	}
 }
