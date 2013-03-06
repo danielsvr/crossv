@@ -16,15 +16,12 @@ public class GreaterThanOrEqualExpressionTests {
 		greaterThanOrEqual(1, "2");
 	}
 
-	@Test(expected = IllegalOperandException.class)
-	public void createGraterThanOrEqualExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
-		greaterThanOrEqual(new Object(), new Object());
-	}
-
 	@Test
-	public void createGreaterThanOrEqualExpression_IntAndIntOperands_ReturnsSameClassAsJava() {
-		Class<?> expectedClass = ((Object) (1 >= 2)).getClass();
-		Expression e = greaterThanOrEqual(1, 2);
+	public void createGreaterThanOrEqualExpression_IntAndIntOperands_ReturnClassIsBoolean() {
+		Class<?> expectedClass = Boolean.class;
+		Object left = 1;
+		Object right = 2;
+		Expression e = greaterThanOrEqual(left, right);
 		assertThat(format("Result is {0}", expectedClass.getName()), e
 				.getResultClass().equals(expectedClass), is(true));
 	}

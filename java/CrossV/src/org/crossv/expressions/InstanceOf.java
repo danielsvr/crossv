@@ -7,10 +7,7 @@ public class InstanceOf extends BinaryExpression {
 	}
 
 	private void verifyOperands() {
-		boolean isLeftPrimitive = left.returnsPrimitiveType();
-		boolean isRightClass = right.isAssignableTo(Class.class);
-
-		if (isLeftPrimitive && !isRightClass)
+		if (left.returnsPrimitiveType() || !right.isAssignableTo(Class.class))
 			throw illegalOperand();
 	}
 
