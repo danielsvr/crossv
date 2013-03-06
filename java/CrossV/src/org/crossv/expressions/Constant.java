@@ -4,6 +4,8 @@ public class Constant extends Expression {
 	private final Object value;
 
 	public Constant(Object value) {
+		if (value instanceof Expression)
+			throw new IllegalOperandException();
 		this.value = value;
 	}
 

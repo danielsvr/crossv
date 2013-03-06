@@ -7,6 +7,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
+import org.crossv.expressions.IllegalOperandException;
 import org.junit.Test;
 
 public class ConstantExpressionTests {
@@ -16,7 +17,7 @@ public class ConstantExpressionTests {
 		Expression e = constant(null);
 		assertThat(e.toString(), is("null"));
 	}
-	
+
 	@Test
 	public void createConstantWithStringValueExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = constant("abc");
@@ -25,25 +26,30 @@ public class ConstantExpressionTests {
 
 	@Test
 	public void createConstantWithNegativeByteValueExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = constant((byte)-1);
+		Expression e = constant((byte) -1);
 		assertThat(e.toString(), is("(-1)"));
 	}
 
 	@Test
 	public void createConstantWithPositiveFloatValueExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = constant((float)1);
+		Expression e = constant((float) 1);
 		assertThat(e.toString(), is("1.0"));
 	}
-	
-	@Test
-	public void createConstantWithContextValueExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = constant(context());
-		assertThat(e.toString(), is("context"));
+
+	@Test(expected = IllegalOperandException.class)
+	public void createConstantExpression_WithContextValue_IllegalOperandExceptionIsThrown() {
+		constant(context());
 	}
-	
+
+	@Test(expected = IllegalOperandException.class)
+	public void createConstantExpression_WithInstanceExpressionAsValue_IllegalOperandExceptionIsThrown() {
+		constant(instance());
+	}
+
 	@Test
-	public void createConstantWithInstanceValueExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = constant(instance());
-		assertThat(e.toString(), is("obj"));
+	public void evaluateConstantExpression_WithObjectValue_ReturnsTheObject() {
+		Object value = new Object();
+		Expression e = constant(value);
+		assertThat(e.evaluate(), is(value));
 	}
 }

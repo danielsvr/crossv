@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionEvaluator.NO_CONTEXT;
+import static org.crossv.expressions.ExpressionEvaluator.NO_INSTANCE;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -25,6 +28,26 @@ public abstract class Expression {
 
 	public void print(ExpressionWriter writer) {
 		writer.print(this);
+	}
+
+	public Object evaluate() {
+		return evaluate(NO_INSTANCE);
+	}
+
+	public Object evaluate(Object instance) {
+		return evaluate(instance, NO_CONTEXT);
+	}
+
+	public Object evaluate(Object instance, Object context) {
+		ExpressionEvaluator evaluator;
+		instance = instance != null ? instance : NO_INSTANCE;
+		evaluator = new ExpressionEvaluator(instance, context);
+		evaluateWith(evaluator);
+		return evaluator.getValue();
+	}
+
+	public void evaluateWith(ExpressionEvaluator evaluator) {
+		evaluator.evaluate(this);
 	}
 
 	public abstract Class<?> getResultClass();
