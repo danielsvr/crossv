@@ -1,9 +1,10 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
 import static java.text.MessageFormat.format;
+import static org.crossv.expressions.Expression.bitwiseXor;
+import static org.crossv.expressions.Expression.constant;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
@@ -12,123 +13,50 @@ import org.junit.Test;
 public class XorExpressionTests {
 
 	@Test(expected = IllegalOperandException.class)
-	public void createXorExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
-		bitwiseXor(1, constant(false));
+	public void createXorExpression_BooleanAndIntOperands_ThrowsIllegalOperandException() {
+		bitwiseXor(constant(false), 1);
 	}
 
 	@Test(expected = IllegalOperandException.class)
-	public void createXorExpression_ObjectAndBooleanOperands_ThrowsIllegalOperandException() {
-		bitwiseXor(constant("1"), false);
+	public void createXorExpression_DoubleAndBooleanOperands_ThrowsIllegalOperandException() {
+		bitwiseXor((double) 1, constant(false));
 	}
 
 	@Test(expected = IllegalOperandException.class)
-	public void createXorExpression_ObjectAndIntegerOperands_ThrowsIllegalOperandException() {
-		bitwiseXor(constant("1"), 1);
+	public void createXorExpression_DoubleAndByteOperands_ThrowsIllegalOperandException() {
+		bitwiseXor((double) 1, (byte) 1);
 	}
 
 	@Test
-	public void createXorExpression_BooleanAndBooleanOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)(false & true)).getClass();
-		Expression e = bitwiseXor(false, true);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
+	public void createXorExpression_BooleanOperands_ReturnClassIsBoolean() {
+		Class<?> expectedClass = Boolean.class;
+		boolean left = false;
+		boolean right = true;
+		Expression e = bitwiseXor(left, right);
+		assertThat(format("Result class is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test
-	public void createXorExpression_ByteAndByteOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((byte) 1 & (byte) 1)).getClass();
-		Expression e = bitwiseXor((byte) 1, (byte) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
+	public void createXorExpression_NumericOperandsPromotedToLong_ReturnClassIsLong() {
+		Class<?> expectedClass = Long.class;
+		Object left = (byte) 1;
+		Object right = (long) 1;
+		Expression e = bitwiseXor(left, right);
+		String message = format("Result class should be {0}, actual {1}",
+				expectedClass, e.getResultClass());
+		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test
-	public void createXorExpression_ByteAndShortOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((byte) 1 & (short) 1)).getClass();
-		Expression e = bitwiseXor((byte) 1, (short) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_ShortAndByteOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((short) 1 & (byte) 1)).getClass();
-		Expression e = bitwiseXor((short) 1, (byte) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-	
-	@Test
-	public void createXorExpression_ByteAndLongOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((byte) 1 & (long) 1)).getClass();
-		Expression e = bitwiseXor((byte) 1, (long) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_LongAndByteOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((long) 1 & (byte) 1)).getClass();
-		Expression e = bitwiseXor((long) 1, (byte) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_ShortAndShortOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((short) 1 & (short) 1)).getClass();
-		Expression e = bitwiseXor((short) 1, (short) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_ShortAndIntOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((short) 1 & (int) 1)).getClass();
-		Expression e = bitwiseXor((short) 1, (int) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_IntAndShortOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((int) 1 & (short) 1)).getClass();
-		Expression e = bitwiseXor((int) 1, (short) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-	
-	@Test
-	public void createXorExpression_ShortAndLongOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((short) 1 & (long) 1)).getClass();
-		Expression e = bitwiseXor((byte) 1, (long) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_LongAndShortOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((long) 1 & (short) 1)).getClass();
-		Expression e = bitwiseXor((long) 1, (byte) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_IntAndIntOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((int) 1 & (int) 1)).getClass();
-		Expression e = bitwiseXor((int) 1, (int) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_IntAndLongOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((int) 1 & (long) 1)).getClass();
-		Expression e = bitwiseXor((int) 1, (long) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-
-	@Test
-	public void createXorExpression_LongAndIntOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((long) 1 & (int) 1)).getClass();
-		Expression e = bitwiseXor((long) 1, (int) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
-	}
-	
-	@Test
-	public void createXorExpression_LongAndLongOperands_ReturnsSameClassLikeJava() {
-		Class<?> expectedClass = ((Object)((long) 1 & (long) 1)).getClass();
-		Expression e = bitwiseXor((long) 1, (long) 1);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e.getResultClass().equals(expectedClass), is(true));
+	public void createXorExpression_NumericOperandsPromotedToInt_ReturnClassIsInt() {
+		Class<?> expectedClass = Integer.class;
+		Object left = (byte) 1;
+		Object right = (int) 1;
+		Expression e = bitwiseXor(left, right);
+		String message = format("Result class should be {0}, actual {1}",
+				expectedClass, e.getResultClass());
+		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
 	}
 
 	@Test

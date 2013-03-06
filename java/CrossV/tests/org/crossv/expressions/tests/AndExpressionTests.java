@@ -17,7 +17,7 @@ public class AndExpressionTests {
 	}
 
 	@Test(expected = IllegalOperandException.class)
-	public void createAndExpression_LongAndBooleanOperands_ThrowsIllegalOperandException() {
+	public void createAndExpression_DoubleAndBooleanOperands_ThrowsIllegalOperandException() {
 		bitwiseAnd((double) 1, constant(false));
 	}
 

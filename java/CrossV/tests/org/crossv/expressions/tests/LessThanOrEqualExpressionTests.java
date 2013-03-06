@@ -16,15 +16,12 @@ public class LessThanOrEqualExpressionTests {
 		lessThanOrEqual(1, "2");
 	}
 
-	@Test(expected = IllegalOperandException.class)
-	public void createLessThanOrEqualExpression_TowReferecesOperands_IllegalOperandExceptionIsThrown() {
-		lessThanOrEqual(new Object(), new Object());
-	}
-
 	@Test
-	public void createLessThanOrEqualExpression_IntAndIntOperands_ReturnsSameClassAsJava() {
-		Class<?> expectedClass = ((Object) (1 <= 2)).getClass();
-		Expression e = lessThanOrEqual(1, 2);
+	public void createLessThanOrEqualExpression_IntAndIntOperands_ReturnClassIsBoolean() {
+		Class<?> expectedClass = Boolean.class;
+		int left = 1;
+		int right = 2;
+		Expression e = lessThanOrEqual(left, right);
 		assertThat(format("Result is {0}", expectedClass.getName()), e
 				.getResultClass().equals(expectedClass), is(true));
 	}

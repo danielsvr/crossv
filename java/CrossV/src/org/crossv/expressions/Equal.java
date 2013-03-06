@@ -9,10 +9,10 @@ public class Equal extends BinaryExpression {
 	}
 
 	private void verifyOperands() {
-		if (!canPromoteNumbers(leftClass, rightClass)
-				&& !left.isAssignableTo(right.getResultClass())
-				&& !right.isAssignableTo(left.getResultClass()))
-			throw illegalOperand();
+		if (!canPromoteNumbers(leftClass, rightClass))
+			if (!left.isAssignableTo(right.getResultClass()))
+				if (!right.isAssignableTo(left.getResultClass()))
+					throw illegalOperand();
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.subjects.Mouse;
 import org.crossv.tests.subjects.Rat;
 import org.crossv.tests.subjects.WhiteMouse;
 import org.junit.Test;
@@ -16,6 +17,16 @@ public class EqualExpressionTests {
 	@Test(expected = IllegalOperandException.class)
 	public void createEqualExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
 		equal(new WhiteMouse(), new Rat());
+	}
+	
+	@Test
+	public void createEqualExpression_SuperAndSubClassOperands_IllegalOperandExceptionIsNotThrown() {
+		equal(new Mouse(), new Rat());
+	}
+
+	@Test
+	public void createEqualExpression_SubAndSuperClassOperands_IllegalOperandExceptionIsNotThrown() {
+		equal(new Rat(), new Mouse());
 	}
 
 	@Test

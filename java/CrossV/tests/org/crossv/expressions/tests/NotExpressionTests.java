@@ -1,5 +1,6 @@
 package org.crossv.expressions.tests;
 
+import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.not;
 import static org.hamcrest.CoreMatchers.is;
@@ -20,5 +21,14 @@ public class NotExpressionTests {
 	@Test(expected = IllegalOperandException.class)
 	public void createNotExpressionForNonBooleanValue_ThrowsIllegalOperandException() {
 		not(constant(123));
+	}
+	
+	@Test
+	public void createNotExpression_BooleanOperands_ReturnClassIsBoolean() {
+		Class<?> expectedClass = Boolean.class;
+		boolean operand = true;
+		Expression e = not(operand);
+		assertThat(format("Result is {0}", expectedClass.getName()), e
+				.getResultClass().equals(expectedClass), is(true));
 	}
 }
