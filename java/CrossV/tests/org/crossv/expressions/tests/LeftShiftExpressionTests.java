@@ -1,9 +1,9 @@
 package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.leftShift;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static java.text.MessageFormat.format;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
@@ -37,8 +37,7 @@ public class LeftShiftExpressionTests {
 		Object left = (byte) 1;
 		Object right = (int) 1;
 		Expression e = leftShift(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -47,8 +46,7 @@ public class LeftShiftExpressionTests {
 		Object left = (long) 1;
 		Object right = (int) 1;
 		Expression e = leftShift(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -57,8 +55,7 @@ public class LeftShiftExpressionTests {
 		Object left = (int) 1;
 		Object right = (long) 1;
 		Expression e = leftShift(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

@@ -1,9 +1,10 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.*;
+import static org.crossv.expressions.Expression.conditional;
+import static org.crossv.expressions.Expression.constant;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static java.text.MessageFormat.format;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
@@ -29,8 +30,7 @@ public class ConditionalExpressionTests {
 		Object third = "2";
 		Class<?> expectedClass = Object.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -39,8 +39,7 @@ public class ConditionalExpressionTests {
 		Object third = "2";
 		Class<?> expectedClass = Object.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -49,8 +48,7 @@ public class ConditionalExpressionTests {
 		Object third = "2";
 		Class<?> expectedClass = Object.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -59,8 +57,7 @@ public class ConditionalExpressionTests {
 		Object third = "2";
 		Class<?> expectedClass = Object.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -69,8 +66,7 @@ public class ConditionalExpressionTests {
 		Object third = new Monkey();
 		Class<?> expectedClass = Monkey.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -79,8 +75,7 @@ public class ConditionalExpressionTests {
 		Object third = false;
 		Class<?> expectedClass = Boolean.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -89,8 +84,7 @@ public class ConditionalExpressionTests {
 		Object third = new Monkey();
 		Class<?> expectedClass = Monkey.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -99,8 +93,7 @@ public class ConditionalExpressionTests {
 		Object third = null;
 		Class<?> expectedClass = Monkey.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -109,8 +102,7 @@ public class ConditionalExpressionTests {
 		Object third = (int) 1;
 		Class<?> expectedClass = Short.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -119,8 +111,7 @@ public class ConditionalExpressionTests {
 		Object third = (short) 1;
 		Class<?> expectedClass = Short.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -129,8 +120,7 @@ public class ConditionalExpressionTests {
 		Object third = (byte) 1;
 		Class<?> expectedClass = Short.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -139,8 +129,7 @@ public class ConditionalExpressionTests {
 		Object third = (short) 1;
 		Class<?> expectedClass = Short.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -149,10 +138,7 @@ public class ConditionalExpressionTests {
 		Object third = (int) 1;
 		Class<?> expectedClass = Integer.class;
 		Expression e = conditional(true, second, third);
-		assertThat(
-				format("Result is {0}, actual {1}", expectedClass.getName(),
-						e.getResultClass()),
-				e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -161,8 +147,7 @@ public class ConditionalExpressionTests {
 		Object third = (char) 1;
 		Class<?> expectedClass = Integer.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -171,8 +156,7 @@ public class ConditionalExpressionTests {
 		Object third = (int) 1;
 		Class<?> expectedClass = Byte.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -181,8 +165,7 @@ public class ConditionalExpressionTests {
 		Object third = (byte) 1;
 		Class<?> expectedClass = Byte.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -191,8 +174,7 @@ public class ConditionalExpressionTests {
 		Object third = (byte) 1;
 		Class<?> expectedClass = Float.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -201,8 +183,7 @@ public class ConditionalExpressionTests {
 		Object third = (float) 1;
 		Class<?> expectedClass = Float.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -211,8 +192,7 @@ public class ConditionalExpressionTests {
 		Object third = (int) 1;
 		Class<?> expectedClass = Double.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -221,8 +201,7 @@ public class ConditionalExpressionTests {
 		Object third = (double) 1;
 		Class<?> expectedClass = Double.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -231,8 +210,7 @@ public class ConditionalExpressionTests {
 		Object third = (short) 1;
 		Class<?> expectedClass = Double.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -241,8 +219,7 @@ public class ConditionalExpressionTests {
 		Object third = (double) 1;
 		Class<?> expectedClass = Double.class;
 		Expression e = conditional(true, second, third);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

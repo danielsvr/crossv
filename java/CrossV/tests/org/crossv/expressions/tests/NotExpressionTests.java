@@ -1,8 +1,8 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.not;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,7 +28,6 @@ public class NotExpressionTests {
 		Class<?> expectedClass = Boolean.class;
 		boolean operand = true;
 		Expression e = not(operand);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 }

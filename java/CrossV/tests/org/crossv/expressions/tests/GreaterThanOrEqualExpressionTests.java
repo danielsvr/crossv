@@ -1,7 +1,7 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.greaterThanOrEqual;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -22,8 +22,7 @@ public class GreaterThanOrEqualExpressionTests {
 		Object left = 1;
 		Object right = 2;
 		Expression e = greaterThanOrEqual(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

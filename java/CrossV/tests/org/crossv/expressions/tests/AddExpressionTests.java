@@ -1,9 +1,9 @@
 package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.add;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static java.text.MessageFormat.format;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
@@ -22,8 +22,7 @@ public class AddExpressionTests {
 		Object left = "1";
 		Object right = new Object();
 		Expression e = add(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -32,8 +31,7 @@ public class AddExpressionTests {
 		Object left = new Object();
 		Object right = "1";
 		Expression e = add(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -42,8 +40,7 @@ public class AddExpressionTests {
 		Object left = (int) 1;
 		Object right = (byte) 1;
 		Expression e = add(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()),
-				expectedClass.isAssignableFrom(e.getResultClass()), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

@@ -1,6 +1,6 @@
 package org.crossv.tests;
 
-import static org.crossv.tests.helpers.Matchers.equalToObject;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -68,7 +68,7 @@ public class ExceptionBasedValidationByCotextStrategyTests {
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 0);
 		contextClass = element.getContextClass();
-		assertThat(contextClass, equalToObject(SuperContext1.class));
+		assertThat(contextClass, equalTo(SuperContext1.class));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class ExceptionBasedValidationByCotextStrategyTests {
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 1);
 		contextClass = element.getContextClass();
-		assertThat(contextClass, equalToObject(IndependentContext1.class));
+		assertThat(contextClass, equalTo(IndependentContext1.class));
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class ExceptionBasedValidationByCotextStrategyTests {
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 2);
 		contextClass = element.getContextClass();
-		assertThat(contextClass, equalToObject(ExtendedContext1.class));
+		assertThat(contextClass, equalTo(ExtendedContext1.class));
 	}
 
 	@Test
@@ -98,7 +98,7 @@ public class ExceptionBasedValidationByCotextStrategyTests {
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 3);
 		contextClass = element.getContextClass();
-		assertThat(contextClass, equalToObject(ExtraExtendedConext1.class));
+		assertThat(contextClass, equalTo(ExtraExtendedConext1.class));
 	}
 
 	@Test

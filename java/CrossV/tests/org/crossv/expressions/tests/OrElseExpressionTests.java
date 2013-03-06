@@ -1,8 +1,8 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.or;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +28,7 @@ public class OrElseExpressionTests {
 		boolean left = true;
 		boolean right = false;
 		Expression e = or(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(left));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

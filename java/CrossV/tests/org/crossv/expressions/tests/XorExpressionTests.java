@@ -1,8 +1,8 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.bitwiseXor;
 import static org.crossv.expressions.Expression.constant;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -33,8 +33,7 @@ public class XorExpressionTests {
 		boolean left = false;
 		boolean right = true;
 		Expression e = bitwiseXor(left, right);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -43,9 +42,7 @@ public class XorExpressionTests {
 		Object left = (byte) 1;
 		Object right = (long) 1;
 		Expression e = bitwiseXor(left, right);
-		String message = format("Result class should be {0}, actual {1}",
-				expectedClass, e.getResultClass());
-		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -54,9 +51,7 @@ public class XorExpressionTests {
 		Object left = (byte) 1;
 		Object right = (int) 1;
 		Expression e = bitwiseXor(left, right);
-		String message = format("Result class should be {0}, actual {1}",
-				expectedClass, e.getResultClass());
-		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

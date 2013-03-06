@@ -1,7 +1,7 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.rightShift;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -37,8 +37,7 @@ public class RightShiftExpressionTests {
 		Object left = (byte) 1;
 		Object right = (int) 1;
 		Expression e = rightShift(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -47,8 +46,7 @@ public class RightShiftExpressionTests {
 		Object left = (long) 1;
 		Object right = (int) 1;
 		Expression e = rightShift(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -57,8 +55,7 @@ public class RightShiftExpressionTests {
 		Object left = (int) 1;
 		Object right = (long) 1;
 		Expression e = rightShift(left, right);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

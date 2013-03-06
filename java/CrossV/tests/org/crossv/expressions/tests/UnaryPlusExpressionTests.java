@@ -1,9 +1,9 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.plus;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +28,7 @@ public class UnaryPlusExpressionTests {
 	public void createPlusExpression_NumberValue_PreservesTheReturnClass() {
 		Class<?> expectedClass = Float.class;
 		Expression e = plus((float) 1);
-		assertThat(format("Result is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

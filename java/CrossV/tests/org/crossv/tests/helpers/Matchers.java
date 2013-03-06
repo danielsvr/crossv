@@ -36,11 +36,11 @@ public class Matchers {
 		return new HasFaultsWith(exception);
 	}
 
-//	public static <E> Matcher<Iterable<E>> doesntHaveAny(E... objs) {
-//		return org.hamcrest.CoreMatchers.not(hasAll(objs));
-//	}
-
-	public static Matcher<Object> equalToObject(Object obj) {
+	public static Matcher<Object> equalTo(Object obj) {
 		return org.hamcrest.CoreMatchers.equalTo(obj);
+	}
+
+	public static Matcher<Object> assignableTo(Class<?> clazz) {
+		return new AssignableToMatcher(clazz);
 	}
 }

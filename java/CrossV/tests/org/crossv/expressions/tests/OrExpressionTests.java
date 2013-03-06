@@ -1,8 +1,8 @@
 package org.crossv.expressions.tests;
 
-import static java.text.MessageFormat.format;
 import static org.crossv.expressions.Expression.bitwiseOr;
 import static org.crossv.expressions.Expression.constant;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -33,10 +33,8 @@ public class OrExpressionTests {
 		boolean left = false;
 		boolean right = true;
 		Expression e = bitwiseOr(left, right);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
-	
 
 	@Test
 	public void createAndExpression_NumericOperandsPromotedToLong_ReturnClassIsLong() {
@@ -44,9 +42,7 @@ public class OrExpressionTests {
 		Object left = (byte) 1;
 		Object right = (long) 1;
 		Expression e = bitwiseOr(left, right);
-		String message = format("Result class should be {0}, actual {1}",
-				expectedClass, e.getResultClass());
-		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -55,11 +51,8 @@ public class OrExpressionTests {
 		Object left = (byte) 1;
 		Object right = (int) 1;
 		Expression e = bitwiseOr(left, right);
-		String message = format("Result class should be {0}, actual {1}",
-				expectedClass, e.getResultClass());
-		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
-
 
 	@Test
 	public void createOrExpression_callingToString_getsJavaLikeExpression() {

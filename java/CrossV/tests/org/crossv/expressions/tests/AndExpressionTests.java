@@ -1,9 +1,10 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.crossv.expressions.Expression.bitwiseAnd;
+import static org.crossv.expressions.Expression.constant;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static java.text.MessageFormat.format;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
@@ -32,8 +33,7 @@ public class AndExpressionTests {
 		boolean left = false;
 		boolean right = true;
 		Expression e = bitwiseAnd(left, right);
-		assertThat(format("Result class is {0}", expectedClass.getName()), e
-				.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -42,9 +42,7 @@ public class AndExpressionTests {
 		Object left = (byte) 1;
 		Object right = (long) 1;
 		Expression e = bitwiseAnd(left, right);
-		String message = format("Result class should be {0}, actual {1}",
-				expectedClass, e.getResultClass());
-		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test
@@ -53,9 +51,7 @@ public class AndExpressionTests {
 		Object left = (byte) 1;
 		Object right = (int) 1;
 		Expression e = bitwiseAnd(left, right);
-		String message = format("Result class should be {0}, actual {1}",
-				expectedClass, e.getResultClass());
-		assertThat(message, e.getResultClass().equals(expectedClass), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
 
 	@Test

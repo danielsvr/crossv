@@ -1,6 +1,7 @@
 package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.*;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -13,8 +14,7 @@ public class CastExpressionTests {
 	public void createCastOfValueExpression_ReturnClassIsSameAsProvided()
 			throws Exception {
 		Expression e = cast(Byte.class, 123);
-		assertThat("Return class is Byte", e.getResultClass()
-				.equals(Byte.class), is(true));
+		assertThat(e.getResultClass(), is(assignableTo(Byte.class)));
 	}
 
 	@Test
