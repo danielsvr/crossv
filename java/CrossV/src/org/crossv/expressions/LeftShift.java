@@ -6,8 +6,11 @@ public class LeftShift extends BinaryExpression {
 	public LeftShift(Expression left, Expression right) {
 		super(left, right);
 		verifyOperands();
-		resultClass = left.isAssignableTo(Long.class) ? Long.class
+		//@formatter:off
+		resultClass = left.isAssignableTo(Long.class) 
+				? Long.class
 				: Integer.class;
+		//@formatter:on
 	}
 
 	private void verifyOperands() {
