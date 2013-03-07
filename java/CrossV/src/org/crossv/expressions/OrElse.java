@@ -18,7 +18,7 @@ public class OrElse extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "||";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitOrElse(this);
 	}
 }

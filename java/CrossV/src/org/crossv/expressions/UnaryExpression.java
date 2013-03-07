@@ -15,10 +15,5 @@ public abstract class UnaryExpression extends Expression {
 		return operand;
 	}
 
-	@Override
-	public void accept(ExpressionVisitor visitor) {
-		visitor.visitUnary(this);
-	}
-
 	public abstract String getOperatorString();
 }

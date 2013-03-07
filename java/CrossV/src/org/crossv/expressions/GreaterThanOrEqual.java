@@ -19,7 +19,7 @@ public class GreaterThanOrEqual extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return ">=";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitGreaterThanOrEqual(this);
 	}
 }

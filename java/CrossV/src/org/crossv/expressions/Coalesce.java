@@ -21,12 +21,12 @@ public class Coalesce extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "??";
+	public Class<?> getResultClass() {
+		return innerExpression.getResultClass();
 	}
 
 	@Override
-	public Class<?> getResultClass() {
-		return innerExpression.getResultClass();
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitCoalesce(this);
 	}
 }

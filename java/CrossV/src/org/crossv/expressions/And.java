@@ -35,7 +35,7 @@ public class And extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "&";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitAnd(this);
 	}
 }

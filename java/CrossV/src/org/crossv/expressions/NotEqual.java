@@ -21,7 +21,7 @@ public class NotEqual extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "!=";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitNotEqual(this);
 	}
 }

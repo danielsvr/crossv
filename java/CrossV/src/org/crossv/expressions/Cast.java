@@ -15,6 +15,11 @@ public class Cast extends UnaryExpression {
 
 	@Override
 	public String getOperatorString() {
-		return "(" + clazz.getName() + ")";
+		return null;
+	}
+
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitCast(this);
 	}
 }

@@ -28,12 +28,4 @@ public abstract class BinaryExpression extends Expression {
 	public Expression getRight() {
 		return right;
 	}
-
-	@Override
-	public void accept(ExpressionVisitor visitor) {
-		visitor.visitBinary(this);
-	}
-
-	public abstract String getOperatorString();
-
 }

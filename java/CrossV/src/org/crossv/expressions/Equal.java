@@ -21,7 +21,7 @@ public class Equal extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "==";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitEqual(this);
 	}
 }

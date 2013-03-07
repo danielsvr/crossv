@@ -23,7 +23,7 @@ public class Modulo extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "%";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitModulo(this);
 	}
 }

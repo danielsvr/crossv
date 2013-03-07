@@ -17,7 +17,8 @@ public class InstanceOf extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "instanceof";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitInstanceOf(this);
 	}
+
 }

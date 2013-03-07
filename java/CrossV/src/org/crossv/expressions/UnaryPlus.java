@@ -20,4 +20,9 @@ public class UnaryPlus extends UnaryExpression {
 	public String getOperatorString() {
 		return "+";
 	}
+
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitUnaryPlus(this);
+	}
 }

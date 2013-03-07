@@ -20,4 +20,9 @@ public class Not extends UnaryExpression {
 	public String getOperatorString() {
 		return "!";
 	}
+
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitNot(this);
+	}
 }

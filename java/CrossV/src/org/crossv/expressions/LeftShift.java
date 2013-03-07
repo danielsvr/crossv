@@ -27,7 +27,7 @@ public class LeftShift extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "<<";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitLeftShift(this);
 	}
 }

@@ -21,9 +21,9 @@ public class Devide extends BinaryExpression {
 	public Class<?> getResultClass() {
 		return resultClass;
 	}
-
+	
 	@Override
-	public String getOperatorString() {
-		return "/";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitDevide(this);
 	}
 }

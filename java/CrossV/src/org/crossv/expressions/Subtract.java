@@ -23,7 +23,7 @@ public class Subtract extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "-";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitSubtract(this);
 	}
 }

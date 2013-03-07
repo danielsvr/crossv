@@ -34,7 +34,7 @@ public class Xor extends BinaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "^";
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitXor(this);
 	}
 }
