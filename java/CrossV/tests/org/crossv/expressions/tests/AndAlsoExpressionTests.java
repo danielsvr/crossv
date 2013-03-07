@@ -3,6 +3,7 @@ package org.crossv.expressions.tests;
 import static org.crossv.expressions.Expression.and;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -37,5 +38,32 @@ public class AndAlsoExpressionTests {
 		boolean right = false;
 		Expression e = and(left, right);
 		assertThat(e.toString(), is("true && false"));
+	}
+
+	@Test
+	public void evaluateAndExpression_FalseAndTrue_ReturnsFalse()
+			throws Exception {
+		boolean left = false;
+		boolean right = true;
+		Expression e = and(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateAndExpression_FalseAndFalse_ReturnsFalse()
+			throws Exception {
+		boolean left = false;
+		boolean right = false;
+		Expression e = and(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateAndExpression_TrueAndTrue_ReturnsFalse()
+			throws Exception {
+		boolean left = true;
+		boolean right = true;
+		Expression e = and(left, right);
+		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 }

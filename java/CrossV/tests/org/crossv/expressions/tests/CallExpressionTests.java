@@ -4,6 +4,7 @@ import static org.crossv.expressions.Expression.call;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.equal;
+import static org.crossv.tests.helpers.Matchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -60,5 +61,24 @@ public class CallExpressionTests {
 			throws Exception {
 		Expression e = equal(call(context(Monkey.class), "getName"), "name");
 		assertThat(e.toString(), is("context.getName() == \"name\""));
+	}
+
+	@Test
+	public void evaluateCallExpression_GetNameOfMonkeyConstant_ReturnsName()
+			throws Exception {
+		Monkey monkey = new Monkey();
+		monkey.setName("John");
+		Expression e = call(constant(monkey), "getName");
+		assertThat(e.evaluate(), is(equalTo("John")));
+	}
+
+	@Test
+	public void evaluateCallExpression_GetRelativeOfMonkeyConstantByIndex_ReturnsTheRelative()
+			throws Exception {
+		Monkey expectedRelative = new Monkey();
+		Monkey monkey = new Monkey();
+		monkey.setRelativesAsArray(new Monkey[] { expectedRelative });
+		Expression e = call(constant(monkey), "getRelativeByIndex", constant(0));
+		assertThat(e.evaluate(), is(equalTo(expectedRelative)));
 	}
 }

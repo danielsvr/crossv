@@ -2,11 +2,13 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.add;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.subjects.ObjectToString;
 import org.junit.Test;
 
 public class AddExpressionTests {
@@ -47,5 +49,82 @@ public class AddExpressionTests {
 	public void createAddExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = add(1, 2);
 		assertThat(e.toString(), is("1 + 2"));
+	}
+
+	@Test
+	public void evaluateAddExpression_TwoIntegerValues_ReturnsAddedValuesAsInteger()
+			throws Exception {
+		int left = 1;
+		int right = 2;
+		int expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
+	}
+
+	@Test
+	public void evaluateAddExpression_IntAndLongValues_ReturnsAddedValuesAsLong()
+			throws Exception {
+		int left = 1;
+		long right = 2;
+		long expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
+	}
+
+	@Test
+	public void evaluateAddExpression_FloatAndIntValues_ReturnsAddedValuesAsFloat()
+			throws Exception {
+		float left = 1;
+		int right = 2;
+		float expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
+	}
+
+	@Test
+	public void evaluateAddExpression_LongAndDoubleValues_ReturnsAddedValuesAsDouble()
+			throws Exception {
+		long left = 1;
+		double right = 2;
+		double expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
+	}
+
+	@Test
+	public void evaluateAddExpression_StringAndObjectValues_ReturnsConcatenatedStrings()
+			throws Exception {
+		String left = "my ";
+		Object right = new ObjectToString("object");
+		String expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
+	}
+
+	@Test
+	public void evaluateAddExpression_StringAndNullValues_ReturnsConcatenatedStrings()
+			throws Exception {
+		String left = "my ";
+		Object right = null;
+		String expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
+	}
+
+	@Test
+	public void evaluateAddExpression_NullAndStringValues_ReturnsConcatenatedStrings()
+			throws Exception {
+		Object left = null;
+		String right = " my";
+		String expected = left + right;
+
+		Expression e = add(left, right);
+		assertThat(e.evaluate(), is(equalTo(expected)));
 	}
 }

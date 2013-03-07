@@ -11,7 +11,7 @@ public class Monkey {
 	private Iterable<Monkey> relativesAsIteravle;
 	private Enumeration<Monkey> relativesAsEnumeration;
 	public String nickname;
-	
+
 	public List<Monkey> getRelativesAsList() {
 		return relativesAsList;
 	}
@@ -59,5 +59,9 @@ public class Monkey {
 
 	public void setRelativesAsArray(Monkey[] relativesAsArray) {
 		this.relativesAsArray = relativesAsArray;
+	}
+
+	public Monkey getRelativeByIndex(int index) {
+		return relativesAsArray[index];
 	}
 }

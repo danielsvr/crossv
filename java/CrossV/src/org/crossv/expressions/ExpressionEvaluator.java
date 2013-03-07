@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.crossv.primitives.ArgumentNullException;
 
 public class ExpressionEvaluator {
@@ -10,10 +12,6 @@ public class ExpressionEvaluator {
 	protected Object evaluatedValue;
 	private final Object instance;
 	private final Object context;
-
-	public ExpressionEvaluator() {
-		this(NO_INSTANCE, NO_CONTEXT);
-	}
 
 	public ExpressionEvaluator(Object instance, Object context) {
 		if (instance == null)
@@ -58,10 +56,112 @@ public class ExpressionEvaluator {
 		public void visitInstance(Instance expression) {
 			evaluator.evaluateInstance(expression);
 		}
+
+		@Override
+		public void visitAdd(Add expression) {
+			evaluator.evaluateAdd(expression);
+		}
+
+		@Override
+		public void visitAndAlso(AndAlso expression) {
+			evaluator.evaluateAndAlso(expression);
+		}
+
+		@Override
+		public void visitAnd(And expression) {
+			evaluator.evaluateAnd(expression);
+		}
+
+		@Override
+		public void visitCall(Call expression) {
+			evaluator.evaluateCall(expression);
+		}
 	}
 
 	public Object getValue() {
 		return evaluatedValue;
+	}
+
+	protected void evaluateCall(Call expression) {
+		eval(expression.getInstance());
+		Object instance = evaluatedValue;
+		Expression[] paramExpressions = expression.getParameters();
+		Object[] params = new Object[paramExpressions.length];
+		for (int i = 0; i < params.length; i++) {
+			eval(paramExpressions[i]);
+			params[i] = evaluatedValue;
+		}
+		try {
+			evaluatedValue = expression.getMethod().invoke(instance, params);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeEvaluationException();
+		} catch (InvocationTargetException e) {
+			throw new RuntimeEvaluationException();
+		}
+	}
+
+	protected void evaluateAnd(And expression) {
+		if (expression.isAssignableTo(Boolean.class)) {
+			evaluateAnd((BinaryExpression) expression);
+			return;
+		}
+
+		eval(expression.getLeft());
+		Object accumulator = evaluatedValue;
+		eval(expression.getRight());
+
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) accumulator).intValue();
+			int right = ((Number) evaluatedValue).intValue();
+			evaluatedValue = left & right;
+		} else {
+			long left = ((Number) accumulator).longValue();
+			long right = ((Number) evaluatedValue).longValue();
+			evaluatedValue = left & right;
+		}
+	}
+
+	private void evaluateAnd(BinaryExpression expression) {
+		eval(expression.getLeft());
+		if (evaluatedValue.equals(false))
+			return;
+		eval(expression.getRight());
+	}
+
+	protected void evaluateAndAlso(AndAlso expression) {
+		evaluateAnd(expression);
+	}
+
+	protected void evaluateAdd(Add expression) {
+		eval(expression.getLeft());
+		Object accumulator = evaluatedValue;
+		eval(expression.getRight());
+
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) accumulator).intValue();
+			int right = ((Number) evaluatedValue).intValue();
+			evaluatedValue = left + right;
+		} else if (expression.isAssignableTo(Long.class)) {
+			long left = ((Number) accumulator).longValue();
+			long right = ((Number) evaluatedValue).longValue();
+			evaluatedValue = left + right;
+		} else if (expression.isAssignableTo(Float.class)) {
+			float left = ((Number) accumulator).floatValue();
+			float right = ((Number) evaluatedValue).floatValue();
+			evaluatedValue = left + right;
+		} else if (expression.isAssignableTo(Double.class)) {
+			double left = ((Number) accumulator).doubleValue();
+			double right = ((Number) evaluatedValue).doubleValue();
+			evaluatedValue = left + right;
+		} else {
+			//@formatter:off
+			String left = accumulator == null 
+					? "null" : accumulator.toString();
+			String right = evaluatedValue == null 
+					? "null" : evaluatedValue.toString();
+			evaluatedValue = left + right;
+			//@formatter:on
+		}
 	}
 
 	protected void evaluateInstance(Instance expression) {
@@ -82,9 +182,13 @@ public class ExpressionEvaluator {
 
 	public void evaluate(Expression expression) throws EvaluationException {
 		try {
-			expression.accept(visitor);
+			eval(expression);
 		} catch (RuntimeEvaluationException e) {
 			throw new EvaluationException();
 		}
+	}
+
+	protected void eval(Expression expression) {
+		expression.accept(visitor);
 	}
 }
