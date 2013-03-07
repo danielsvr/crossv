@@ -75,7 +75,7 @@ public class ClassDescriptor {
 		throw new NoSuchMethodException(format("Can't find method {0}", method));
 	}
 
-	private Class<?> translateIfPrimitive(Class<?> clazz) {
+	public static Class<?> translateIfPrimitive(Class<?> clazz) {
 		if (primitiveTypes.containsKey(clazz))
 			return primitiveTypes.get(clazz);
 		return clazz;
