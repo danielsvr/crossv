@@ -4,6 +4,7 @@ import static org.crossv.expressions.Expression.instance;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.EvaluationException;
 import org.crossv.expressions.Expression;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
@@ -11,10 +12,18 @@ import org.junit.Test;
 public class InstnaceExpressionTests {
 
 	@Test
-	public void evaluateContextExpression_WithObjectValue_ReturnsTheObject() {
+	public void evaluateInstanceExpression_ProvidingAMonkeyInstanceValue_ReturnsTheMonkey()
+			throws Exception {
 		Object evaluatedIntance = new Monkey();
 		Expression e = instance();
 		Object evaluation = e.evaluate(evaluatedIntance);
 		assertThat(evaluation, is(evaluatedIntance));
+	}
+
+	@Test(expected = EvaluationException.class)
+	public void evaluateInstanceExpression_WithoutProvidingAnInstanceValue_EvaluationExceptionIsThrown()
+			throws Exception {
+		Expression e = instance();
+		e.evaluate();
 	}
 }

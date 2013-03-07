@@ -14,6 +14,4 @@ public abstract class UnaryExpression extends Expression {
 	public Expression getOperand() {
 		return operand;
 	}
-
-	public abstract String getOperatorString();
 }

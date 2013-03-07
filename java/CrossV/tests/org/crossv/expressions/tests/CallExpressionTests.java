@@ -7,12 +7,26 @@ import static org.crossv.expressions.Expression.equal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Method;
+
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
 public class CallExpressionTests {
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createCall_WithNullInstanceAndSomeMethod_ThrowsIllegalArgumentException()
+			throws Exception {
+		call(null, Monkey.class.getMethod("getName"));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createCall_WithSomeInstanceAndNullMethod_ThrowsIllegalArgumentException()
+			throws Exception {
+		call(constant("instance"), (Method) null);
+	}
 
 	@Test(expected = IllegalOperandException.class)
 	public void createCallGetRelativesAsListMethodOfMonkeyClassExpressionForString_ThrowsIllegalOperandException()

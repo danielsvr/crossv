@@ -47,7 +47,8 @@ public class ConstantExpressionTests {
 	}
 
 	@Test
-	public void evaluateConstantExpression_WithObjectValue_ReturnsTheObject() {
+	public void evaluateConstantExpression_WithObjectValue_ReturnsTheObject()
+			throws Exception {
 		Object value = new Object();
 		Expression e = constant(value);
 		assertThat(e.evaluate(), is(value));

@@ -32,6 +32,10 @@ public class ExpressionEvaluator {
 		}
 	}
 
+	private static class RuntimeEvaluationException extends RuntimeException {
+		private static final long serialVersionUID = 6163536626110997376L;
+	}
+
 	private static class PrivateExpressionVisitor extends
 			ExpressionVisitorAdapter {
 		private final ExpressionEvaluator evaluator;
@@ -44,12 +48,12 @@ public class ExpressionEvaluator {
 		public void visitConstant(Constant expression) {
 			evaluator.evaluateConstant(expression);
 		}
-		
+
 		@Override
 		public void visitContext(Context expression) {
 			evaluator.evaluateContext(expression);
 		}
-		
+
 		@Override
 		public void visitInstance(Instance expression) {
 			evaluator.evaluateInstance(expression);
@@ -61,10 +65,14 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateInstance(Instance expression) {
+		if (instance instanceof Missing)
+			throw new RuntimeEvaluationException();
 		evaluatedValue = instance;
 	}
 
 	protected void evaluateContext(Context expression) {
+		if (context instanceof Missing)
+			throw new RuntimeEvaluationException();
 		evaluatedValue = context;
 	}
 
@@ -72,7 +80,11 @@ public class ExpressionEvaluator {
 		evaluatedValue = expression.getValue();
 	}
 
-	public void evaluate(Expression expression) {
-		expression.accept(visitor);
+	public void evaluate(Expression expression) throws EvaluationException {
+		try {
+			expression.accept(visitor);
+		} catch (RuntimeEvaluationException e) {
+			throw new EvaluationException();
+		}
 	}
 }

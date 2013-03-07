@@ -30,15 +30,16 @@ public abstract class Expression {
 		writer.print(this);
 	}
 
-	public Object evaluate() {
+	public Object evaluate() throws EvaluationException {
 		return evaluate(NO_INSTANCE);
 	}
 
-	public Object evaluate(Object instance) {
+	public Object evaluate(Object instance) throws EvaluationException {
 		return evaluate(instance, NO_CONTEXT);
 	}
 
-	public Object evaluate(Object instance, Object context) {
+	public Object evaluate(Object instance, Object context)
+			throws EvaluationException {
 		ExpressionEvaluator evaluator;
 		instance = instance != null ? instance : NO_INSTANCE;
 		evaluator = new ExpressionEvaluator(instance, context);
@@ -46,21 +47,14 @@ public abstract class Expression {
 		return evaluator.getValue();
 	}
 
-	public void evaluateWith(ExpressionEvaluator evaluator) {
+	public void evaluateWith(ExpressionEvaluator evaluator)
+			throws EvaluationException {
 		evaluator.evaluate(this);
 	}
 
 	public abstract Class<?> getResultClass();
 
 	protected boolean isNullConstant() {
-		return false;
-	}
-
-	protected boolean isContext() {
-		return false;
-	}
-
-	protected boolean isInstance() {
 		return false;
 	}
 

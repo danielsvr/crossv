@@ -17,11 +17,6 @@ public class Not extends UnaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "!";
-	}
-
-	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitNot(this);
 	}

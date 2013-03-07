@@ -10,9 +10,4 @@ public final class Instance extends Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitInstance(this);
 	}
-	
-	@Override
-	protected boolean isInstance() {
-		return true;
-	}
 }

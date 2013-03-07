@@ -19,6 +19,21 @@ public class ConditionalExpressionTests {
 				constant(new Object()));
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void createConditionalExpression_NullTestExpression_ThrowsIllegalArgumentException() {
+		conditional(null, constant(new Object()), constant(new Object()));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createConditionalExpression_NullIfTrueExpression_ThrowsIllegalArgumentException() {
+		conditional(constant(new Object()), null, constant(new Object()));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void createConditionalExpression_NullIfFalseExpression_ThrowsIllegalArgumentException() {
+		conditional(constant(new Object()), constant(new Object()), null);
+	}
+
 	@Test(expected = IllegalOperandException.class)
 	public void createConditionalExpression_BooleanTestAndNullForRestOfOperands_throwsIllegalOperandException() {
 		conditional(constant(true), constant(null), constant(null));

@@ -17,11 +17,6 @@ public class UnaryPlus extends UnaryExpression {
 	}
 
 	@Override
-	public String getOperatorString() {
-		return "+";
-	}
-
-	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitUnaryPlus(this);
 	}
