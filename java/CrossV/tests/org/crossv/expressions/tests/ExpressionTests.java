@@ -1,19 +1,28 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-
+import org.crossv.expressions.EvaluationException;
 import org.crossv.expressions.Expression;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
-@SuppressWarnings("unused")
 public class ExpressionTests {
+	@Rule
+	public ExpectedException exception = ExpectedException.none();
 
-	//@Test
-	public void template()
+	@Test
+	public void evaluateConditionalExpression_TestIsTrue_ReturnsIfTrueValue()
 			throws Exception {
-		Expression e = null;//exp(params);
-		assertThat(e, is(nullValue()));
+		exception.expect(EvaluationException.class);
+		exception.expectMessage("Unrecognized expression");
+
+		Expression unknown = new Expression() {
+			@Override
+			public Class<?> getResultClass() {
+				return null;
+			}
+		};
+
+		unknown.evaluate();
 	}
 }

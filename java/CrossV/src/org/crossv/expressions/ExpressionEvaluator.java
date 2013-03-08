@@ -25,6 +25,11 @@ public class ExpressionEvaluator {
 		}
 
 		@Override
+		public void visit(Expression expression) {
+			evaluator.evaluateUnrecognizedExpresison(expression);
+		}
+
+		@Override
 		public void visitAdd(Add expression) {
 			evaluator.evaluateAdd(expression);
 		}
@@ -63,6 +68,11 @@ public class ExpressionEvaluator {
 		public void visitInstance(Instance expression) {
 			evaluator.evaluateInstance(expression);
 		}
+
+		@Override
+		public void visitConditional(Conditional expression) {
+			evaluator.evaluateConditional(expression);
+		}
 	}
 
 	private static class RuntimeEvaluationException extends RuntimeException {
@@ -94,16 +104,35 @@ public class ExpressionEvaluator {
 		visitor = new PrivateExpressionVisitor(this);
 	}
 
+	protected void evaluateConditional(Conditional expression) {
+		eval(expression.getTest());
+		if (evaluatedValue.equals(true))
+			eval(expression.getIfTrue());
+		else
+			eval(expression.getIfFalse());
+	}
+
+	protected void evaluateUnrecognizedExpresison(Expression expression) {
+		throw new RuntimeEvaluationException("Unrecognized expression.", null);
+	}
+
 	protected void eval(Expression expression) {
 		expression.accept(visitor);
 	}
 
-	public void evaluate(Expression expression) throws EvaluationException {
+	public final void evaluate(Expression expression)
+			throws EvaluationException {
 		try {
 			eval(expression);
 		} catch (RuntimeEvaluationException e) {
-			throw new EvaluationException(e);
+			throw evalError(e);
 		}
+	}
+
+	private EvaluationException evalError(RuntimeEvaluationException e) {
+		String trail = " Please inspect cause for more details.";
+		trail = e.getCause() != null ? trail : "";
+		return new EvaluationException(e.getMessage() + trail, e.getCause());
 	}
 
 	protected void evaluateAdd(Add expression) {

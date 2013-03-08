@@ -3,6 +3,7 @@ package org.crossv.expressions.tests;
 import static org.crossv.expressions.Expression.conditional;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -241,5 +242,19 @@ public class ConditionalExpressionTests {
 	public void createConditionalExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = conditional(true, 2, 3);
 		assertThat(e.toString(), is("true ? 2 : 3"));
+	}
+
+	@Test
+	public void evaluateConditionalExpression_TestIsTrue_ReturnsIfTrueValue()
+			throws Exception {
+		Expression e = conditional(true, 2, 3);
+		assertThat(e.evaluate(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluateConditionalExpression_TestIsFalse_ReturnsIfFalseValue()
+			throws Exception {
+		Expression e = conditional(false, 2, 3);
+		assertThat(e.evaluate(), is(equalTo(3)));
 	}
 }

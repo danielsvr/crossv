@@ -98,7 +98,9 @@ public abstract class Expression {
 				Boolean.class);
 	}
 
-	public abstract void accept(ExpressionVisitor visitor);
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visit(this);
+	}
 
 	public static Expression constant(Object value) {
 		return new Constant(value);
