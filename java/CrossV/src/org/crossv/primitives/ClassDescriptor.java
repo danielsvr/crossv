@@ -8,9 +8,9 @@ import java.util.Hashtable;
 
 public class ClassDescriptor {
 	private Method[] methods;
-	private final static Hashtable<Class<?>, Class<?>> primitiveTypes = createPrimitiveTable();
+	private final static Hashtable<Class<?>, Class<?>> primitiveTypesToClasses = createPrimitiveToClassesTable();
 
-	private static Hashtable<Class<?>, Class<?>> createPrimitiveTable() {
+	private static Hashtable<Class<?>, Class<?>> createPrimitiveToClassesTable() {
 		Hashtable<Class<?>, Class<?>> table = new Hashtable<Class<?>, Class<?>>();
 		table.put(Character.TYPE, Character.class);
 		table.put(Boolean.TYPE, Boolean.class);
@@ -20,6 +20,21 @@ public class ClassDescriptor {
 		table.put(Long.TYPE, Long.class);
 		table.put(Float.TYPE, Float.class);
 		table.put(Double.TYPE, Double.class);
+		return table;
+	}
+
+	private final static Hashtable<Class<?>, Class<?>> primitiveClassesToTypes = createPrimitiveToTypesTable();
+
+	private static Hashtable<Class<?>, Class<?>> createPrimitiveToTypesTable() {
+		Hashtable<Class<?>, Class<?>> table = new Hashtable<Class<?>, Class<?>>();
+		table.put(Character.class, Character.TYPE);
+		table.put(Boolean.class, Boolean.TYPE);
+		table.put(Byte.class, Byte.TYPE);
+		table.put(Short.class, Short.TYPE);
+		table.put(Integer.class, Integer.TYPE);
+		table.put(Long.class, Long.TYPE);
+		table.put(Float.class, Float.TYPE);
+		table.put(Double.class, Double.TYPE);
 		return table;
 	}
 
@@ -61,7 +76,7 @@ public class ClassDescriptor {
 				Class<?> parameterType;
 				boolean isOk = true;
 				for (int i = 0; i < methodParameterTypes.length; i++) {
-					methodParameterType = translateIfPrimitive(methodParameterTypes[i]);
+					methodParameterType = transformToClassIfPrimitive(methodParameterTypes[i]);
 					parameterType = paramTypes[i];
 					if (!methodParameterType.isAssignableFrom(parameterType)) {
 						isOk = false;
@@ -75,9 +90,14 @@ public class ClassDescriptor {
 		throw new NoSuchMethodException(format("Can't find method {0}", method));
 	}
 
-	public static Class<?> translateIfPrimitive(Class<?> clazz) {
-		if (primitiveTypes.containsKey(clazz))
-			return primitiveTypes.get(clazz);
+	public static Class<?> transformToClassIfPrimitive(Class<?> clazz) {
+		if (primitiveTypesToClasses.containsKey(clazz))
+			return primitiveTypesToClasses.get(clazz);
+		return clazz;
+	}
+	public static Class<?> transformToTypeIfPrimitive(Class<?> clazz) {
+		if (primitiveClassesToTypes.containsKey(clazz))
+			return primitiveClassesToTypes.get(clazz);
 		return clazz;
 	}
 }

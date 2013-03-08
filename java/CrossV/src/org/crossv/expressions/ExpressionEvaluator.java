@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static java.text.MessageFormat.format;
+import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.crossv.primitives.ArgumentNullException;
@@ -64,6 +67,14 @@ public class ExpressionEvaluator {
 
 	private static class RuntimeEvaluationException extends RuntimeException {
 		private static final long serialVersionUID = 6163536626110997376L;
+
+		public RuntimeEvaluationException(Throwable cause) {
+			this(cause.getMessage(), cause);
+		}
+
+		public RuntimeEvaluationException(String message, Throwable cause) {
+			super(message, cause);
+		}
 	}
 
 	public static final Object NO_INSTANCE = Missing.VALUE;
@@ -91,7 +102,7 @@ public class ExpressionEvaluator {
 		try {
 			eval(expression);
 		} catch (RuntimeEvaluationException e) {
-			throw new EvaluationException();
+			throw new EvaluationException(e);
 		}
 	}
 
@@ -171,270 +182,69 @@ public class ExpressionEvaluator {
 		try {
 			evaluatedValue = expression.getMethod().invoke(instance, params);
 		} catch (IllegalAccessException e) {
-			throw new RuntimeEvaluationException();
+			throw new RuntimeEvaluationException(e);
 		} catch (InvocationTargetException e) {
-			throw new RuntimeEvaluationException();
+			throw new RuntimeEvaluationException(e);
 		}
 	}
 
 	protected void evaluateCast(Cast expression) {
 		eval(expression.getOperand());
 		Class<?> resultClass = expression.getResultClass();
-		// Class<?> evaluatedClass = evaluatedValue != null ? evaluatedValue
-		// .getClass() : null;
-		if (evaluatedValue instanceof Character) {
-			char v = ((Character) evaluatedValue).charValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
-			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
+		Class<?> transformedResultClass;
+		transformedResultClass = transformToTypeIfPrimitive(resultClass);
+		char chr = 0;
+		boolean isChr = evaluatedValue instanceof Character;
+		Number no = null;
+		boolean isNo = evaluatedValue instanceof Number;
+		boolean isBool = evaluatedValue instanceof Boolean;
+
+		if ((isChr || isNo) && transformedResultClass.equals(Boolean.TYPE)) {
+			Class<?> evaluatedClass = evaluatedValue.getClass();
+			evaluatedClass = transformToTypeIfPrimitive(evaluatedClass);
+			String message = "Cannot cast a {0} value to boolean.";
+			message = format(message, evaluatedClass.getName());
+			Throwable cause = new ClassCastException(message);
+			throw new RuntimeEvaluationException(cause);
 		}
 
-		if (evaluatedValue instanceof Byte) {
-			byte v = ((Number) evaluatedValue).byteValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
-			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
-		}
+		if (isChr)
+			chr = ((Character) evaluatedValue).charValue();
+		if (isNo)
+			no = (Number) evaluatedValue;
 
-		if (evaluatedValue instanceof Short) {
-			short v = ((Number) evaluatedValue).shortValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
+		if ((isChr || isNo) && transformedResultClass.equals(Character.TYPE))
+			evaluatedValue = isChr ? (char) chr : (char) no.intValue();
+		else if ((isChr || isNo) && transformedResultClass.equals(Byte.TYPE))
+			evaluatedValue = isChr ? (byte) chr : no.byteValue();
+		else if ((isChr || isNo) && transformedResultClass.equals(Short.TYPE))
+			evaluatedValue = isChr ? (short) chr : no.shortValue();
+		else if ((isChr || isNo) && transformedResultClass.equals(Integer.TYPE))
+			evaluatedValue = isChr ? (int) chr : no.intValue();
+		else if ((isChr || isNo) && transformedResultClass.equals(Long.TYPE))
+			evaluatedValue = isChr ? (long) chr : no.longValue();
+		else if ((isChr || isNo) && transformedResultClass.equals(Float.TYPE))
+			evaluatedValue = isChr ? (float) chr : no.floatValue();
+		else if ((isChr || isNo) && transformedResultClass.equals(Double.TYPE))
+			evaluatedValue = isChr ? (double) chr : no.doubleValue();
+		else if (isBool && transformedResultClass.equals(Character.TYPE)
+				|| Number.class.isAssignableFrom(resultClass)) {
+			String message = "Cannot cast a boolean value to {0}.";
+			message = format(message, transformedResultClass.getName());
+			Throwable cause = new ClassCastException(message);
+			throw new RuntimeEvaluationException(cause);
+		} else if (isBool && transformedResultClass.equals(Boolean.TYPE))
+			return;
+		else
+			try {
+				evaluatedValue = transformedResultClass.cast(evaluatedValue);
+			} catch (ClassCastException e) {
+				Class<?> evaluatedClass = evaluatedValue.getClass();
+				String message = "Cannot cast a {0} value to {1}.";
+				message = format(message, evaluatedClass.getName(),
+						transformedResultClass.getName());
+				throw new RuntimeEvaluationException(message, e);
 			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
-		}
-
-		if (evaluatedValue instanceof Integer) {
-			int v = ((Number) evaluatedValue).intValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
-			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
-		}
-
-		if (evaluatedValue instanceof Long) {
-			long v = ((Number) evaluatedValue).longValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
-			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
-		}
-
-		if (evaluatedValue instanceof Float) {
-			float v = ((Number) evaluatedValue).floatValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
-			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
-		}
-
-		if (evaluatedValue instanceof Double) {
-			double v = ((Number) evaluatedValue).doubleValue();
-			if (resultClass.equals(Boolean.class)) {
-				throw new RuntimeEvaluationException();
-			}
-			if (resultClass.equals(Character.class)) {
-				evaluatedValue = (char) v;
-				return;
-			}
-			if (resultClass.equals(Byte.class)) {
-				evaluatedValue = (byte) v;
-				return;
-			}
-			if (resultClass.equals(Short.class)) {
-				evaluatedValue = (short) v;
-				return;
-			}
-			if (resultClass.equals(Integer.class)) {
-				evaluatedValue = (int) v;
-				return;
-			}
-			if (resultClass.equals(Long.class)) {
-				evaluatedValue = (long) v;
-				return;
-			}
-			if (resultClass.equals(Float.class)) {
-				evaluatedValue = (float) v;
-				return;
-			}
-			if (resultClass.equals(Double.class)) {
-				evaluatedValue = (double) v;
-				return;
-			}
-		}
-		if (evaluatedValue instanceof Boolean) {
-			if (resultClass.equals(Character.class)
-					|| Number.class.isAssignableFrom(resultClass))
-				throw new RuntimeEvaluationException();
-			if (resultClass.equals(Boolean.class)) {
-				return;
-			}
-		}
-		evaluatedValue = resultClass.cast(evaluatedValue);
 	}
 
 	protected void evaluateConstant(Constant expression) {
@@ -442,14 +252,20 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateContext(Context expression) {
-		if (context instanceof Missing)
-			throw new RuntimeEvaluationException();
+		if (context instanceof Missing) {
+			String message = "Context value is missing.";
+			NullPointerException cause = new NullPointerException(message);
+			throw new RuntimeEvaluationException(cause);
+		}
 		evaluatedValue = context;
 	}
 
 	protected void evaluateInstance(Instance expression) {
-		if (instance instanceof Missing)
-			throw new RuntimeEvaluationException();
+		if (instance instanceof Missing) {
+			String message = "Instance value is missing.";
+			NullPointerException cause = new NullPointerException(message);
+			throw new RuntimeEvaluationException(cause);
+		}
 		evaluatedValue = instance;
 	}
 
