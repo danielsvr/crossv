@@ -11,7 +11,6 @@ import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Rat;
 import org.crossv.tests.subjects.WhiteMouse;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class CoalesceExpressionTests {
@@ -65,7 +64,6 @@ public class CoalesceExpressionTests {
 	}
 
 	@Test
-	@Ignore
 	public void evaluateCoalesceExpression_NotNullOnLeft_ReturnsLeft()
 			throws Exception {
 		Expression e = coalesce(constant("1"), constant("2"));
@@ -73,7 +71,6 @@ public class CoalesceExpressionTests {
 	}
 
 	@Test
-	@Ignore
 	public void evaluateCoalesceExpression_NullOnLeft_ReturnsRight()
 			throws Exception {
 		Expression e = coalesce(constant(null), constant("2"));
