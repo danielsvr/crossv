@@ -6,6 +6,7 @@ import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import java.lang.reflect.InvocationTargetException;
 
 import org.crossv.primitives.ArgumentNullException;
+import org.crossv.primitives.ConvertibleTo;
 
 public class ExpressionEvaluator {
 
@@ -73,6 +74,11 @@ public class ExpressionEvaluator {
 		public void visitConditional(Conditional expression) {
 			evaluator.evaluateConditional(expression);
 		}
+
+		@Override
+		public void visitCoalesce(Coalesce expression) {
+			evaluator.evaluateCoalesce(expression);
+		}
 	}
 
 	private static class RuntimeEvaluationException extends RuntimeException {
@@ -102,6 +108,16 @@ public class ExpressionEvaluator {
 		this.instance = instance;
 		this.context = context;
 		visitor = new PrivateExpressionVisitor(this);
+	}
+
+	protected void evaluateCoalesce(Coalesce expression) {
+		evaluateConverableExpression(expression);
+	}
+
+	private <E extends Expression> void evaluateConverableExpression(
+			ConvertibleTo<E> expression) {
+		E converted = expression.convert();
+		eval(converted);
 	}
 
 	protected void evaluateConditional(Conditional expression) {

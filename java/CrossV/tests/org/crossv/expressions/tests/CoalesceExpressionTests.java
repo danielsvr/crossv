@@ -1,7 +1,9 @@
 package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.coalesce;
+import static org.crossv.expressions.Expression.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -9,6 +11,7 @@ import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Rat;
 import org.crossv.tests.subjects.WhiteMouse;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CoalesceExpressionTests {
@@ -59,5 +62,21 @@ public class CoalesceExpressionTests {
 	public void createCoalesceExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = coalesce("1", "2");
 		assertThat(e.toString(), is("\"1\" ?? \"2\""));
+	}
+
+	@Test
+	@Ignore
+	public void evaluateCoalesceExpression_NotNullOnLeft_ReturnsLeft()
+			throws Exception {
+		Expression e = coalesce(constant("1"), constant("2"));
+		assertThat(e.evaluate(), is(equalTo("1")));
+	}
+
+	@Test
+	@Ignore
+	public void evaluateCoalesceExpression_NullOnLeft_ReturnsRight()
+			throws Exception {
+		Expression e = coalesce(constant(null), constant("2"));
+		assertThat(e.evaluate(), is(equalTo("2")));
 	}
 }

@@ -1,14 +1,17 @@
 package org.crossv.expressions;
 
-public class Coalesce extends BinaryExpression {
+import org.crossv.primitives.ConvertibleTo;
 
-	private Expression innerExpression;
+public class Coalesce extends BinaryExpression implements
+		ConvertibleTo<Conditional> {
+
+	private Conditional innerExpression;
 
 	public Coalesce(Expression left, Expression right) {
 		super(left, right);
 		verifyOperands();
 		Expression coalesceTest = notEqual(left, constant(null));
-		innerExpression = conditional(coalesceTest, left, right);
+		innerExpression = new Conditional(coalesceTest, left, right);
 	}
 
 	private void verifyOperands() {
@@ -28,5 +31,10 @@ public class Coalesce extends BinaryExpression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitCoalesce(this);
+	}
+
+	@Override
+	public Conditional convert() {
+		return innerExpression;
 	}
 }
