@@ -79,6 +79,11 @@ public class ExpressionEvaluator {
 		public void visitCoalesce(Coalesce expression) {
 			evaluator.evaluateCoalesce(expression);
 		}
+
+		@Override
+		public void visitNotEqual(NotEqual expression) {
+			evaluator.evaluateNotEqual(expression);
+		}
 	}
 
 	private static class RuntimeEvaluationException extends RuntimeException {
@@ -108,6 +113,14 @@ public class ExpressionEvaluator {
 		this.instance = instance;
 		this.context = context;
 		visitor = new PrivateExpressionVisitor(this);
+	}
+
+	protected void evaluateNotEqual(NotEqual expression) {
+		eval(expression.getLeft());
+		Object accumulator = evaluatedValue;
+		eval(expression.getRight());
+		evaluatedValue = (accumulator == null && evaluatedValue != null)
+				|| (accumulator != null && !accumulator.equals(evaluatedValue));
 	}
 
 	protected void evaluateCoalesce(Coalesce expression) {
