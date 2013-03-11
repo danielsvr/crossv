@@ -395,4 +395,60 @@ public class ExpressionEvaluator {
 			stack.push(left << right);
 		}
 	}
+
+	protected void evaluateLessThan(LessThan expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		Class<?> leftClass = expression.getLeft().getResultClass();
+		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
+		if (Integer.class.isAssignableFrom(promotion)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left < right);
+		} else if (Long.class.isAssignableFrom(promotion)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left < right);
+		} else if (Float.class.isAssignableFrom(promotion)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left < right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left < right);
+		}
+	}
+
+	protected void evaluateLessThanOrEqual(LessThanOrEqual expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		Class<?> leftClass = expression.getLeft().getResultClass();
+		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
+		if (Integer.class.isAssignableFrom(promotion)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left <= right);
+		} else if (Long.class.isAssignableFrom(promotion)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left <= right);
+		} else if (Float.class.isAssignableFrom(promotion)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left <= right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left <= right);
+		}
+	}
 }

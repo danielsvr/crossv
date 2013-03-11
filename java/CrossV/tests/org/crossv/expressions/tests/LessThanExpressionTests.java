@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.lessThan;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,5 +30,47 @@ public class LessThanExpressionTests {
 	public void createLessThanExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = lessThan(1, 2);
 		assertThat(e.toString(), is("1 < 2"));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_LeftLessThatRight_ReturnsTrue()
+			throws Exception {
+		Expression e = lessThan(1, 2);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_IntLeftLessThatLongRight_ReturnsTrue()
+			throws Exception {
+		Expression e = lessThan(1, 2L);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_FloatLeftLessThatLongRight_ReturnsTrue()
+			throws Exception {
+		Expression e = lessThan(1f, 2L);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_DoubleLeftLessThatLongRight_ReturnsTrue()
+			throws Exception {
+		Expression e = lessThan(1d, 2L);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_DoubleLeftEqualToLongRight_ReturnsFalse()
+			throws Exception {
+		Expression e = lessThan(2d, 2L);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_IntLeftGreaterThanLongRight_ReturnsFalse()
+			throws Exception {
+		Expression e = lessThan(2, 1L);
+		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 }

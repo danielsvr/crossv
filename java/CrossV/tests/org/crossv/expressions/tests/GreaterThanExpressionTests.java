@@ -13,7 +13,7 @@ import org.junit.Test;
 public class GreaterThanExpressionTests {
 
 	@Test(expected = IllegalOperandException.class)
-	public void createGraterThanExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
+	public void createGreaterThanExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
 		greaterThan(1, "2");
 	}
 
@@ -27,48 +27,48 @@ public class GreaterThanExpressionTests {
 	}
 
 	@Test
-	public void createGraterThanExpression_callingToString_getsJavaLikeExpression() {
+	public void createGreaterThanExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = greaterThan(1, 2);
 		assertThat(e.toString(), is("1 > 2"));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_LeftGreaterThatRight_ReturnsTrue()
+	public void evaluateGreaterThanExpression_LeftGreaterThatRight_ReturnsTrue()
 			throws Exception {
 		Expression e = greaterThan(2, 1);
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_IntLeftGreaterThatLongRight_ReturnsTrue()
+	public void evaluateGreaterThanExpression_IntLeftGreaterThatLongRight_ReturnsTrue()
 			throws Exception {
 		Expression e = greaterThan(2, 1L);
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_FloatLeftGreaterThatLongRight_ReturnsTrue()
+	public void evaluateGreaterThanExpression_FloatLeftGreaterThatLongRight_ReturnsTrue()
 			throws Exception {
 		Expression e = greaterThan(2f, 1L);
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_DoubleLeftGreaterThatLongRight_ReturnsTrue()
+	public void evaluateGreaterThanExpression_DoubleLeftGreaterThatLongRight_ReturnsTrue()
 			throws Exception {
 		Expression e = greaterThan(2d, 1L);
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_DoubleLeftEqualToLongRight_ReturnsFalse()
+	public void evaluateGreaterThanExpression_DoubleLeftEqualToLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = greaterThan(2d, 2L);
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_IntLeftLessThanLongRight_ReturnsFalse()
+	public void evaluateGreaterThanExpression_IntLeftLessThanLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = greaterThan(1, 2L);
 		assertThat(e.evaluate(), is(equalTo(false)));

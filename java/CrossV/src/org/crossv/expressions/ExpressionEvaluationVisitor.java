@@ -99,14 +99,12 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitLessThan(LessThan expression) {
-		// TODO Auto-generated method stub
-		super.visitLessThan(expression);
+		evaluator.evaluateLessThan(expression);
 	}
 
 	@Override
 	public void visitLessThanOrEqual(LessThanOrEqual expression) {
-		// TODO Auto-generated method stub
-		super.visitLessThanOrEqual(expression);
+		evaluator.evaluateLessThanOrEqual(expression);
 	}
 
 	@Override
