@@ -6,4 +6,8 @@ public class EvaluationException extends Exception {
 	public EvaluationException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
+	public EvaluationException(String string) {
+		super(string);
+	}
 }

@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Stack;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ConvertibleTo;
@@ -101,7 +102,7 @@ public class ExpressionEvaluator {
 	public static final Object NO_INSTANCE = Missing.VALUE;
 	public static final Object NO_CONTEXT = Missing.VALUE;
 	private final ExpressionVisitor visitor;
-	protected Object evaluatedValue;
+	protected final Stack<Object> stack;
 	private final Object instance;
 	private final Object context;
 
@@ -113,14 +114,18 @@ public class ExpressionEvaluator {
 		this.instance = instance;
 		this.context = context;
 		visitor = new PrivateExpressionVisitor(this);
+		stack = new Stack<Object>();
 	}
 
 	protected void evaluateNotEqual(NotEqual expression) {
 		eval(expression.getLeft());
-		Object accumulator = evaluatedValue;
 		eval(expression.getRight());
-		evaluatedValue = (accumulator == null && evaluatedValue != null)
-				|| (accumulator != null && !accumulator.equals(evaluatedValue));
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+
+		stack.push((leftPop == null && rightPop != null)
+				|| (leftPop != null && !leftPop.equals(rightPop)));
 	}
 
 	protected void evaluateCoalesce(Coalesce expression) {
@@ -135,7 +140,8 @@ public class ExpressionEvaluator {
 
 	protected void evaluateConditional(Conditional expression) {
 		eval(expression.getTest());
-		if (evaluatedValue.equals(true))
+		Object popedValue = stack.pop();
+		if (popedValue.equals(true))
 			eval(expression.getIfTrue());
 		else
 			eval(expression.getIfFalse());
@@ -166,32 +172,33 @@ public class ExpressionEvaluator {
 
 	protected void evaluateAdd(Add expression) {
 		eval(expression.getLeft());
-		Object accumulator = evaluatedValue;
 		eval(expression.getRight());
 
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
 		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) accumulator).intValue();
-			int right = ((Number) evaluatedValue).intValue();
-			evaluatedValue = left + right;
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left + right);
 		} else if (expression.isAssignableTo(Long.class)) {
-			long left = ((Number) accumulator).longValue();
-			long right = ((Number) evaluatedValue).longValue();
-			evaluatedValue = left + right;
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left + right);
 		} else if (expression.isAssignableTo(Float.class)) {
-			float left = ((Number) accumulator).floatValue();
-			float right = ((Number) evaluatedValue).floatValue();
-			evaluatedValue = left + right;
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left + right);
 		} else if (expression.isAssignableTo(Double.class)) {
-			double left = ((Number) accumulator).doubleValue();
-			double right = ((Number) evaluatedValue).doubleValue();
-			evaluatedValue = left + right;
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left + right);
 		} else {
 			//@formatter:off
-			String left = accumulator == null 
-					? "null" : accumulator.toString();
-			String right = evaluatedValue == null 
-					? "null" : evaluatedValue.toString();
-			evaluatedValue = left + right;
+			String left = leftPop == null 
+					? "null" : leftPop.toString();
+			String right = rightPop == null 
+					? "null" : rightPop.toString();
+			stack.push(left + right);
 			//@formatter:on
 		}
 	}
@@ -203,25 +210,27 @@ public class ExpressionEvaluator {
 		}
 
 		eval(expression.getLeft());
-		Object accumulator = evaluatedValue;
 		eval(expression.getRight());
 
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
 		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) accumulator).intValue();
-			int right = ((Number) evaluatedValue).intValue();
-			evaluatedValue = left & right;
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left & right);
 		} else {
-			long left = ((Number) accumulator).longValue();
-			long right = ((Number) evaluatedValue).longValue();
-			evaluatedValue = left & right;
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left & right);
 		}
 	}
 
 	private void evaluateAnd(BinaryExpression expression) {
 		eval(expression.getLeft());
-		if (evaluatedValue.equals(false))
-			return;
-		eval(expression.getRight());
+		if (stack.peek().equals(true)) {
+			stack.pop();
+			eval(expression.getRight());
+		}
 	}
 
 	protected void evaluateAndAlso(AndAlso expression) {
@@ -230,15 +239,15 @@ public class ExpressionEvaluator {
 
 	protected void evaluateCall(Call expression) {
 		eval(expression.getInstance());
-		Object instance = evaluatedValue;
+		Object instance = stack.pop();
 		Expression[] paramExpressions = expression.getParameters();
 		Object[] params = new Object[paramExpressions.length];
 		for (int i = 0; i < params.length; i++) {
 			eval(paramExpressions[i]);
-			params[i] = evaluatedValue;
+			params[i] = stack.pop();
 		}
 		try {
-			evaluatedValue = expression.getMethod().invoke(instance, params);
+			stack.push(expression.getMethod().invoke(instance, params));
 		} catch (IllegalAccessException e) {
 			throw new RuntimeEvaluationException(e);
 		} catch (InvocationTargetException e) {
@@ -252,13 +261,14 @@ public class ExpressionEvaluator {
 		Class<?> transformedResultClass;
 		transformedResultClass = transformToTypeIfPrimitive(resultClass);
 		char chr = 0;
-		boolean isChr = evaluatedValue instanceof Character;
+		Object popedValue = stack.pop();
+		boolean isChr = popedValue instanceof Character;
 		Number no = null;
-		boolean isNo = evaluatedValue instanceof Number;
-		boolean isBool = evaluatedValue instanceof Boolean;
+		boolean isNo = popedValue instanceof Number;
+		boolean isBool = popedValue instanceof Boolean;
 
 		if ((isChr || isNo) && transformedResultClass.equals(Boolean.TYPE)) {
-			Class<?> evaluatedClass = evaluatedValue.getClass();
+			Class<?> evaluatedClass = popedValue.getClass();
 			evaluatedClass = transformToTypeIfPrimitive(evaluatedClass);
 			String message = "Cannot cast a {0} value to boolean.";
 			message = format(message, evaluatedClass.getName());
@@ -267,37 +277,37 @@ public class ExpressionEvaluator {
 		}
 
 		if (isChr)
-			chr = ((Character) evaluatedValue).charValue();
+			chr = ((Character) popedValue).charValue();
 		if (isNo)
-			no = (Number) evaluatedValue;
+			no = (Number) popedValue;
 
 		if ((isChr || isNo) && transformedResultClass.equals(Character.TYPE))
-			evaluatedValue = isChr ? (char) chr : (char) no.intValue();
+			stack.push(isChr ? (char) chr : (char) no.intValue());
 		else if ((isChr || isNo) && transformedResultClass.equals(Byte.TYPE))
-			evaluatedValue = isChr ? (byte) chr : no.byteValue();
+			stack.push(isChr ? (byte) chr : no.byteValue());
 		else if ((isChr || isNo) && transformedResultClass.equals(Short.TYPE))
-			evaluatedValue = isChr ? (short) chr : no.shortValue();
+			stack.push(isChr ? (short) chr : no.shortValue());
 		else if ((isChr || isNo) && transformedResultClass.equals(Integer.TYPE))
-			evaluatedValue = isChr ? (int) chr : no.intValue();
+			stack.push(isChr ? (int) chr : no.intValue());
 		else if ((isChr || isNo) && transformedResultClass.equals(Long.TYPE))
-			evaluatedValue = isChr ? (long) chr : no.longValue();
+			stack.push(isChr ? (long) chr : no.longValue());
 		else if ((isChr || isNo) && transformedResultClass.equals(Float.TYPE))
-			evaluatedValue = isChr ? (float) chr : no.floatValue();
+			stack.push(isChr ? (float) chr : no.floatValue());
 		else if ((isChr || isNo) && transformedResultClass.equals(Double.TYPE))
-			evaluatedValue = isChr ? (double) chr : no.doubleValue();
+			stack.push(isChr ? (double) chr : no.doubleValue());
 		else if (isBool && transformedResultClass.equals(Character.TYPE)
 				|| Number.class.isAssignableFrom(resultClass)) {
 			String message = "Cannot cast a boolean value to {0}.";
 			message = format(message, transformedResultClass.getName());
 			Throwable cause = new ClassCastException(message);
 			throw new RuntimeEvaluationException(cause);
-		} else if (isBool && transformedResultClass.equals(Boolean.TYPE))
-			return;
-		else
+		} else if (isBool && transformedResultClass.equals(Boolean.TYPE)) {
+			stack.push(popedValue);
+		} else
 			try {
-				evaluatedValue = transformedResultClass.cast(evaluatedValue);
+				stack.push(transformedResultClass.cast(popedValue));
 			} catch (ClassCastException e) {
-				Class<?> evaluatedClass = evaluatedValue.getClass();
+				Class<?> evaluatedClass = popedValue.getClass();
 				String message = "Cannot cast a {0} value to {1}.";
 				message = format(message, evaluatedClass.getName(),
 						transformedResultClass.getName());
@@ -306,7 +316,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateConstant(Constant expression) {
-		evaluatedValue = expression.getValue();
+		stack.push(expression.getValue());
 	}
 
 	protected void evaluateContext(Context expression) {
@@ -315,7 +325,7 @@ public class ExpressionEvaluator {
 			NullPointerException cause = new NullPointerException(message);
 			throw new RuntimeEvaluationException(cause);
 		}
-		evaluatedValue = context;
+		stack.push(context);
 	}
 
 	protected void evaluateInstance(Instance expression) {
@@ -324,10 +334,12 @@ public class ExpressionEvaluator {
 			NullPointerException cause = new NullPointerException(message);
 			throw new RuntimeEvaluationException(cause);
 		}
-		evaluatedValue = instance;
+		stack.push(instance);
 	}
 
-	public Object getValue() {
-		return evaluatedValue;
+	public Object getValue() throws EvaluationException {
+		if (stack.size() != 1)
+			throw new EvaluationException("Incorrect evaluation.");
+		return stack.pop();
 	}
 }
