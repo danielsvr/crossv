@@ -38,18 +38,8 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitConstant(Constant expression) {
-		evaluator.evaluateConstant(expression);
-	}
-
-	@Override
-	public void visitContext(Context expression) {
-		evaluator.evaluateContext(expression);
-	}
-
-	@Override
-	public void visitInstance(Instance expression) {
-		evaluator.evaluateInstance(expression);
+	public void visitCoalesce(Coalesce expression) {
+		evaluator.evaluateCoalesce(expression);
 	}
 
 	@Override
@@ -58,13 +48,13 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitCoalesce(Coalesce expression) {
-		evaluator.evaluateCoalesce(expression);
+	public void visitConstant(Constant expression) {
+		evaluator.evaluateConstant(expression);
 	}
 
 	@Override
-	public void visitNotEqual(NotEqual expression) {
-		evaluator.evaluateNotEqual(expression);
+	public void visitContext(Context expression) {
+		evaluator.evaluateContext(expression);
 	}
 
 	@Override
@@ -81,14 +71,100 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	public void visitGreaterThan(GreaterThan expression) {
 		evaluator.evaluateGreaterThan(expression);
 	}
-	
+
 	@Override
 	public void visitGreaterThanOrEqual(GreaterThanOrEqual expression) {
 		evaluator.evaluateGreaterThanOrEqual(expression);
+	}
+
+	@Override
+	public void visitInstance(Instance expression) {
+		evaluator.evaluateInstance(expression);
 	}
 	
 	@Override
 	public void visitInstanceOf(InstanceOf expression) {
 		evaluator.evaluateInstanceOf(expression);
 	}
+	
+	@Override
+	public void visitNotEqual(NotEqual expression) {
+		evaluator.evaluateNotEqual(expression);
+	}
+
+	@Override
+	public void visitOrElse(OrElse expression) {
+		evaluator.evaluateOrElse(expression);
+	}
+
+	@Override
+	public void visitLessThan(LessThan expression) {
+		// TODO Auto-generated method stub
+		super.visitLessThan(expression);
+	}
+
+	@Override
+	public void visitLessThanOrEqual(LessThanOrEqual expression) {
+		// TODO Auto-generated method stub
+		super.visitLessThanOrEqual(expression);
+	}
+
+	@Override
+	public void visitModulo(Modulo expression) {
+		// TODO Auto-generated method stub
+		super.visitModulo(expression);
+	}
+
+	@Override
+	public void visitMultiply(Multiply expression) {
+		// TODO Auto-generated method stub
+		super.visitMultiply(expression);
+	}
+
+	@Override
+	public void visitSubtract(Subtract expression) {
+		// TODO Auto-generated method stub
+		super.visitSubtract(expression);
+	}
+
+	@Override
+	public void visitRightShift(RightShift expression) {
+		// TODO Auto-generated method stub
+		super.visitRightShift(expression);
+	}
+
+	@Override
+	public void visitLeftShift(LeftShift expression) {
+		evaluator.evaluateLeftShift(expression);
+	}
+
+	@Override
+	public void visitOr(Or expression) {
+		// TODO Auto-generated method stub
+		super.visitOr(expression);
+	}
+
+	@Override
+	public void visitXor(Xor expression) {
+		// TODO Auto-generated method stub
+		super.visitXor(expression);
+	}
+
+	@Override
+	public void visitNegate(Negate expression) {
+		// TODO Auto-generated method stub
+		super.visitNegate(expression);
+	}
+
+	@Override
+	public void visitNot(Not expression) {
+		// TODO Auto-generated method stub
+		super.visitNot(expression);
+	}
+
+	@Override
+	public void visitUnaryPlus(UnaryPlus expression) {
+		// TODO Auto-generated method stub
+		super.visitUnaryPlus(expression);
+	}	
 }

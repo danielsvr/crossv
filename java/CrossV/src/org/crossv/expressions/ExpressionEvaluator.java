@@ -345,7 +345,10 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateUnrecognizedExpresison(Expression expression) {
-		throw new RuntimeEvaluationException("Unrecognized expression.", null);
+		Class<?> expressionClass = expression.getClass();
+		String message = "Unrecognized expression of type {0}.";
+		message = format(message, expressionClass.getName());
+		throw new RuntimeEvaluationException(message);
 	}
 
 	public Object getValue() throws EvaluationException {
@@ -362,5 +365,34 @@ public class ExpressionEvaluator {
 		Object leftPop = stack.pop();
 		stack.push(leftPop != null ? rightPop.isAssignableFrom(leftPop
 				.getClass()) : false);
+	}
+
+	protected void evaluateOrElse(OrElse expression) {
+		evaluateOr(expression);
+	}
+
+	private void evaluateOr(BinaryExpression expression) {
+		eval(expression.getLeft());
+		if (stack.peek().equals(false)) {
+			stack.pop();
+			eval(expression.getRight());
+		}
+	}
+
+	protected void evaluateLeftShift(LeftShift expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left << right);
+		} else {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left << right);
+		}
 	}
 }

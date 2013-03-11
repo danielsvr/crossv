@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.leftShift;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -62,5 +63,32 @@ public class LeftShiftExpressionTests {
 	public void createLeftShiftExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = leftShift(1, 2);
 		assertThat(e.toString(), is("1 << 2"));
+	}
+
+	@Test
+	public void evaluateLeftShiftExpression_OneByteAndOneIntValue_ReturnsTwo()
+			throws Exception {
+		Object left = (byte) 1;
+		Object right = (int) 1;
+		Expression e = leftShift(left, right);
+		assertThat(e.evaluate(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluateLeftShiftExpression_OneLongAndOneIntValue_ReturnsTwo()
+			throws Exception {
+		Object left = (long) 1;
+		Object right = (int) 1;
+		Expression e = leftShift(left, right);
+		assertThat(e.evaluate(), is(equalTo(2L)));
+	}
+
+	@Test
+	public void evaluateLeftShiftExpression_OneIntAndOneLongValue_ReturnsTwo()
+			throws Exception {
+		Object left = (int) 1;
+		Object right = (long) 1;
+		Expression e = leftShift(left, right);
+		assertThat(e.evaluate(), is(equalTo(2)));
 	}
 }
