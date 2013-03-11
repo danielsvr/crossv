@@ -19,108 +19,12 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	private static class PrivateExpressionVisitor extends
-			ExpressionVisitorAdapter {
-		private final ExpressionEvaluator evaluator;
-
-		public PrivateExpressionVisitor(ExpressionEvaluator evaluator) {
-			this.evaluator = evaluator;
-		}
-
-		@Override
-		public void visit(Expression expression) {
-			evaluator.evaluateUnrecognizedExpresison(expression);
-		}
-
-		@Override
-		public void visitAdd(Add expression) {
-			evaluator.evaluateAdd(expression);
-		}
-
-		@Override
-		public void visitAnd(And expression) {
-			evaluator.evaluateAnd(expression);
-		}
-
-		@Override
-		public void visitAndAlso(AndAlso expression) {
-			evaluator.evaluateAndAlso(expression);
-		}
-
-		@Override
-		public void visitCall(Call expression) {
-			evaluator.evaluateCall(expression);
-		}
-
-		@Override
-		public void visitCast(Cast expression) {
-			evaluator.evaluateCast(expression);
-		}
-
-		@Override
-		public void visitConstant(Constant expression) {
-			evaluator.evaluateConstant(expression);
-		}
-
-		@Override
-		public void visitContext(Context expression) {
-			evaluator.evaluateContext(expression);
-		}
-
-		@Override
-		public void visitInstance(Instance expression) {
-			evaluator.evaluateInstance(expression);
-		}
-
-		@Override
-		public void visitConditional(Conditional expression) {
-			evaluator.evaluateConditional(expression);
-		}
-
-		@Override
-		public void visitCoalesce(Coalesce expression) {
-			evaluator.evaluateCoalesce(expression);
-		}
-
-		@Override
-		public void visitNotEqual(NotEqual expression) {
-			evaluator.evaluateNotEqual(expression);
-		}
-
-		@Override
-		public void visitDevide(Devide expression) {
-			evaluator.evaluateDevide(expression);
-		}
-
-		@Override
-		public void visitEqual(Equal expression) {
-			evaluator.evaluateEqual(expression);
-		}
-
-		@Override
-		public void visitGreaterThan(GreaterThan expression) {
-			evaluator.evaluateGreaterThan(expression);
-		}
-	}
-
-	private static class RuntimeEvaluationException extends RuntimeException {
-		private static final long serialVersionUID = 6163536626110997376L;
-
-		public RuntimeEvaluationException(Throwable cause) {
-			this(cause.getMessage(), cause);
-		}
-
-		public RuntimeEvaluationException(String message, Throwable cause) {
-			super(message, cause);
-		}
-	}
-
-	public static final Object NO_INSTANCE = Missing.VALUE;
 	public static final Object NO_CONTEXT = Missing.VALUE;
-	private final ExpressionVisitor visitor;
-	protected final Stack<Object> stack;
-	private final Object instance;
+	public static final Object NO_INSTANCE = Missing.VALUE;
 	private final Object context;
+	private final Object instance;
+	protected final Stack<Object> stack;
+	private final ExpressionVisitor visitor;
 
 	public ExpressionEvaluator(Object instance, Object context) {
 		if (instance == null)
@@ -129,109 +33,18 @@ public class ExpressionEvaluator {
 			throw new ArgumentNullException("context");
 		this.instance = instance;
 		this.context = context;
-		visitor = new PrivateExpressionVisitor(this);
+		visitor = new ExpressionEvaluationVisitor(this);
 		stack = new Stack<Object>();
-	}
-
-	protected void evaluateGreaterThan(GreaterThan expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		Class<?> leftClass = expression.getLeft().getResultClass();
-		Class<?> rightClass = expression.getRight().getResultClass();
-		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
-		if (Integer.class.isAssignableFrom(promotion)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left > right);
-		} else if (Long.class.isAssignableFrom(promotion)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left > right);
-		} else if (Float.class.isAssignableFrom(promotion)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left > right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left > right);
-		}
-	}
-
-	public void evaluateEqual(Equal expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		stack.push((leftPop == null && rightPop == null)
-				|| (leftPop != null && leftPop.equals(rightPop)));
-	}
-
-	protected void evaluateDevide(Devide expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left / right);
-		} else if (expression.isAssignableTo(Long.class)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left / right);
-		} else if (expression.isAssignableTo(Float.class)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left / right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left / right);
-		}
-	}
-
-	protected void evaluateNotEqual(NotEqual expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-
-		stack.push((leftPop == null && rightPop != null)
-				|| (leftPop != null && !leftPop.equals(rightPop)));
-	}
-
-	protected void evaluateCoalesce(Coalesce expression) {
-		evaluateConverableExpression(expression);
-	}
-
-	private <E extends Expression> void evaluateConverableExpression(
-			ConvertibleTo<E> expression) {
-		E converted = expression.convert();
-		eval(converted);
-	}
-
-	protected void evaluateConditional(Conditional expression) {
-		eval(expression.getTest());
-		Object popedValue = stack.pop();
-		if (popedValue.equals(true))
-			eval(expression.getIfTrue());
-		else
-			eval(expression.getIfFalse());
-	}
-
-	protected void evaluateUnrecognizedExpresison(Expression expression) {
-		throw new RuntimeEvaluationException("Unrecognized expression.", null);
 	}
 
 	protected void eval(Expression expression) {
 		expression.accept(visitor);
+	}
+
+	private EvaluationException evalError(RuntimeEvaluationException e) {
+		String trail = " Please inspect cause for more details.";
+		trail = e.getCause() != null ? trail : "";
+		return new EvaluationException(e.getMessage() + trail, e.getCause());
 	}
 
 	public final void evaluate(Expression expression)
@@ -241,12 +54,6 @@ public class ExpressionEvaluator {
 		} catch (RuntimeEvaluationException e) {
 			throw evalError(e);
 		}
-	}
-
-	private EvaluationException evalError(RuntimeEvaluationException e) {
-		String trail = " Please inspect cause for more details.";
-		trail = e.getCause() != null ? trail : "";
-		return new EvaluationException(e.getMessage() + trail, e.getCause());
 	}
 
 	protected void evaluateAdd(Add expression) {
@@ -394,6 +201,19 @@ public class ExpressionEvaluator {
 			}
 	}
 
+	protected void evaluateCoalesce(Coalesce expression) {
+		evaluateConverableExpression(expression);
+	}
+
+	protected void evaluateConditional(Conditional expression) {
+		eval(expression.getTest());
+		Object popedValue = stack.pop();
+		if (popedValue.equals(true))
+			eval(expression.getIfTrue());
+		else
+			eval(expression.getIfFalse());
+	}
+
 	protected void evaluateConstant(Constant expression) {
 		stack.push(expression.getValue());
 	}
@@ -407,6 +227,103 @@ public class ExpressionEvaluator {
 		stack.push(context);
 	}
 
+	private <E extends Expression> void evaluateConverableExpression(
+			ConvertibleTo<E> expression) {
+		E converted = expression.convert();
+		eval(converted);
+	}
+
+	protected void evaluateDevide(Devide expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left / right);
+		} else if (expression.isAssignableTo(Long.class)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left / right);
+		} else if (expression.isAssignableTo(Float.class)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left / right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left / right);
+		}
+	}
+
+	public void evaluateEqual(Equal expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		stack.push((leftPop == null && rightPop == null)
+				|| (leftPop != null && leftPop.equals(rightPop)));
+	}
+
+	protected void evaluateGreaterThan(GreaterThan expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		Class<?> leftClass = expression.getLeft().getResultClass();
+		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
+		if (Integer.class.isAssignableFrom(promotion)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left > right);
+		} else if (Long.class.isAssignableFrom(promotion)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left > right);
+		} else if (Float.class.isAssignableFrom(promotion)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left > right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left > right);
+		}
+	}
+
+	protected void evaluateGreaterThanOrEqual(GreaterThanOrEqual expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		Class<?> leftClass = expression.getLeft().getResultClass();
+		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
+		if (Integer.class.isAssignableFrom(promotion)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left >= right);
+		} else if (Long.class.isAssignableFrom(promotion)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left >= right);
+		} else if (Float.class.isAssignableFrom(promotion)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left >= right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left >= right);
+		}
+	}
+
 	protected void evaluateInstance(Instance expression) {
 		if (instance instanceof Missing) {
 			String message = "Instance value is missing.";
@@ -416,9 +333,34 @@ public class ExpressionEvaluator {
 		stack.push(instance);
 	}
 
+	protected void evaluateNotEqual(NotEqual expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+
+		stack.push((leftPop == null && rightPop != null)
+				|| (leftPop != null && !leftPop.equals(rightPop)));
+	}
+
+	protected void evaluateUnrecognizedExpresison(Expression expression) {
+		throw new RuntimeEvaluationException("Unrecognized expression.", null);
+	}
+
 	public Object getValue() throws EvaluationException {
 		if (stack.size() != 1)
 			throw new EvaluationException("Incorrect evaluation.");
 		return stack.pop();
+	}
+
+	protected void evaluateInstanceOf(InstanceOf expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Class<?> rightPop = (Class<?>) stack.pop();
+		Object leftPop = stack.pop();
+		stack.push(leftPop != null ? rightPop.isAssignableFrom(leftPop
+				.getClass()) : false);
 	}
 }

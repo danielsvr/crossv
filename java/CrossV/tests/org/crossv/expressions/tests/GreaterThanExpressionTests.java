@@ -39,7 +39,7 @@ public class GreaterThanExpressionTests {
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
-//	@Test
+	@Test
 	public void evaluateGraterThanExpression_IntLeftGreaterThatLongRight_ReturnsTrue()
 			throws Exception {
 		Expression e = greaterThan(2, 1L);
@@ -61,14 +61,14 @@ public class GreaterThanExpressionTests {
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_DoubleLeftEqualToLongRight_ReturnsTrue()
+	public void evaluateGraterThanExpression_DoubleLeftEqualToLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = greaterThan(2d, 2L);
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
 	@Test
-	public void evaluateGraterThanExpression_IntLeftLessThanLongRight_ReturnsTrue()
+	public void evaluateGraterThanExpression_IntLeftLessThanLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = greaterThan(1, 2L);
 		assertThat(e.evaluate(), is(equalTo(false)));

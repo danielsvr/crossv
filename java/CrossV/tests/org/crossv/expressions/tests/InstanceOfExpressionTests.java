@@ -5,11 +5,15 @@ import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.instance;
 import static org.crossv.expressions.Expression.instanceOf;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.subjects.Monkey;
+import org.crossv.tests.subjects.Mouse;
+import org.crossv.tests.subjects.Rat;
 import org.junit.Test;
 
 public class InstanceOfExpressionTests {
@@ -59,5 +63,41 @@ public class InstanceOfExpressionTests {
 		Class<String> right = String.class;
 		Expression e = instanceOf(left, right);
 		assertThat(e.toString(), is("obj instanceof java.lang.String"));
+	}
+
+	@Test
+	public void evaluateInstanceOfExpression_StringValueInstanceOfString_ReturnsTrue()
+			throws Exception {
+		Expression left = constant("value");
+		Class<String> right = String.class;
+		Expression e = instanceOf(left, right);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateInstanceOfExpression_MonkeyValueInstanceOfString_ReturnsFalse()
+			throws Exception {
+		Expression left = constant(new Monkey());
+		Class<String> right = String.class;
+		Expression e = instanceOf(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateInstanceOfExpression_NullValueInstanceOfString_ReturnsFalse()
+			throws Exception {
+		Expression left = constant(null);
+		Class<String> right = String.class;
+		Expression e = instanceOf(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateInstanceOfExpression_RatValueInstanceOfMouse_ReturnsTrue()
+			throws Exception {
+		Expression left = constant(new Rat());
+		Class<Mouse> right = Mouse.class;
+		Expression e = instanceOf(left, right);
+		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 }
