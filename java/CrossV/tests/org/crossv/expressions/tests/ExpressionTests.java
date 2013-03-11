@@ -49,6 +49,5 @@ public class ExpressionTests {
 			}
 		};
 		e.evaluateWith(badEvaluator);
-		badEvaluator.getValue();
 	}
 }

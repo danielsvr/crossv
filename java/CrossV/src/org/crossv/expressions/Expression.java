@@ -43,13 +43,13 @@ public abstract class Expression {
 		ExpressionEvaluator evaluator;
 		instance = instance != null ? instance : NO_INSTANCE;
 		evaluator = new ExpressionEvaluator(instance, context);
-		evaluateWith(evaluator);
-		return evaluator.getValue();
+		return evaluateWith(evaluator);
 	}
 
-	public void evaluateWith(ExpressionEvaluator evaluator)
+	public Object evaluateWith(ExpressionEvaluator evaluator)
 			throws EvaluationException {
 		evaluator.evaluate(this);
+		return evaluator.getValue();
 	}
 
 	public abstract Class<?> getResultClass();
