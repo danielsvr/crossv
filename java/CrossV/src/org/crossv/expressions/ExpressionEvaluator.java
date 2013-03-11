@@ -2,6 +2,7 @@ package org.crossv.expressions;
 
 import static java.text.MessageFormat.format;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
+import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
@@ -90,6 +91,16 @@ public class ExpressionEvaluator {
 		public void visitDevide(Devide expression) {
 			evaluator.evaluateDevide(expression);
 		}
+
+		@Override
+		public void visitEqual(Equal expression) {
+			evaluator.evaluateEqual(expression);
+		}
+
+		@Override
+		public void visitGreaterThan(GreaterThan expression) {
+			evaluator.evaluateGreaterThan(expression);
+		}
 	}
 
 	private static class RuntimeEvaluationException extends RuntimeException {
@@ -120,6 +131,44 @@ public class ExpressionEvaluator {
 		this.context = context;
 		visitor = new PrivateExpressionVisitor(this);
 		stack = new Stack<Object>();
+	}
+
+	protected void evaluateGreaterThan(GreaterThan expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		Class<?> leftClass = expression.getLeft().getResultClass();
+		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
+		if (Integer.class.isAssignableFrom(promotion)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left > right);
+		} else if (Long.class.isAssignableFrom(promotion)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left > right);
+		} else if (Float.class.isAssignableFrom(promotion)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left > right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left > right);
+		}
+	}
+
+	public void evaluateEqual(Equal expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		stack.push((leftPop == null && rightPop == null)
+				|| (leftPop != null && leftPop.equals(rightPop)));
 	}
 
 	protected void evaluateDevide(Devide expression) {

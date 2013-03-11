@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.equal;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -18,7 +19,7 @@ public class EqualExpressionTests {
 	public void createEqualExpression_DifferentClassOperands_IllegalOperandExceptionIsThrown() {
 		equal(new WhiteMouse(), new Rat());
 	}
-	
+
 	@Test
 	public void createEqualExpression_SuperAndSubClassOperands_IllegalOperandExceptionIsNotThrown() {
 		equal(new Mouse(), new Rat());
@@ -42,5 +43,19 @@ public class EqualExpressionTests {
 	public void createEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = equal(1, 2);
 		assertThat(e.toString(), is("1 == 2"));
+	}
+
+	@Test
+	public void evaluateEqualExpression_SameValueOnLoftAndRight_ReturnsTrue()
+			throws Exception {
+		Expression e = equal(1, 1);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateEqualExpression_DifferentValueOnLoftAndRight_ReturnsFalse()
+			throws Exception {
+		Expression e = equal(2, 1);
+		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 }

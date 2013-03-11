@@ -53,7 +53,7 @@ public class NotEqualExpressionTests {
 	}
 
 	@Test
-	public void evaluateNotEqualExpression_DifferentValueOnLoftAndRight_ReturnsFalse()
+	public void evaluateNotEqualExpression_DifferentValueOnLoftAndRight_ReturnsTrue()
 			throws Exception {
 		Expression e = notEqual(2, 1);
 		assertThat(e.evaluate(), is(equalTo(true)));
