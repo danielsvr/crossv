@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.devide;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -81,7 +82,49 @@ public class DivideExpressionTests {
 	}
 
 	@Test(expected = IllegalOperandException.class)
-	public void createAddExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
+	public void createDevideExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
 		devide(1, false);
+	}
+
+	@Test
+	public void evaluateDevideExpression_OneAsIntAndTwoAsByte_ReturnsTwo()
+			throws Exception {
+		Expression e = devide(1, (byte) 2);
+		assertThat(e.evaluate(), is(equalTo(0)));
+	}
+
+	@Test
+	public void evaluateDevideExpression_TwoAsIntAndOneAsByte_ReturnsTwo()
+			throws Exception {
+		Expression e = devide(2, (byte) 1);
+		assertThat(e.evaluate(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluateDevideExpression_TwoAsIntAndOneAsLong_ReturnsTwo()
+			throws Exception {
+		Expression e = devide(2, 1L);
+		assertThat(e.evaluate(), is(equalTo(2L)));
+	}
+
+	@Test
+	public void evaluateDevideExpression_TwoAsIntAndOneAsFloat_ReturnsTwo()
+			throws Exception {
+		Expression e = devide(2, 1f);
+		assertThat(e.evaluate(), is(equalTo(2f)));
+	}
+
+	@Test
+	public void evaluateDevideExpression_1AsIntAndTwoAsFloat_ReturnsTwo()
+			throws Exception {
+		Expression e = devide(1, 2f);
+		assertThat(e.evaluate(), is(equalTo(0.5f)));
+	}
+
+	@Test
+	public void evaluateDevideExpression_TwoAsIntAndOneAsDouble_ReturnsTwo()
+			throws Exception {
+		Expression e = devide(2, 1d);
+		assertThat(e.evaluate(), is(equalTo(2d)));
 	}
 }

@@ -85,6 +85,11 @@ public class ExpressionEvaluator {
 		public void visitNotEqual(NotEqual expression) {
 			evaluator.evaluateNotEqual(expression);
 		}
+
+		@Override
+		public void visitDevide(Devide expression) {
+			evaluator.evaluateDevide(expression);
+		}
 	}
 
 	private static class RuntimeEvaluationException extends RuntimeException {
@@ -115,6 +120,31 @@ public class ExpressionEvaluator {
 		this.context = context;
 		visitor = new PrivateExpressionVisitor(this);
 		stack = new Stack<Object>();
+	}
+
+	protected void evaluateDevide(Devide expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left / right);
+		} else if (expression.isAssignableTo(Long.class)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left / right);
+		} else if (expression.isAssignableTo(Float.class)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left / right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left / right);
+		}
 	}
 
 	protected void evaluateNotEqual(NotEqual expression) {
