@@ -520,4 +520,10 @@ public class ExpressionEvaluator {
 			stack.push(-op);
 		}
 	}
+
+	protected void evaluateNot(Not expression) {
+		eval(expression.getOperand());
+		boolean op = (Boolean) stack.pop();
+		stack.push(!op);
+	}
 }

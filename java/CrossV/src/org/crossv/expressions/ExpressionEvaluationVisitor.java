@@ -153,8 +153,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitNot(Not expression) {
-		// TODO Auto-generated method stub
-		super.visitNot(expression);
+		evaluator.evaluateNot(expression);
 	}
 
 	@Override
