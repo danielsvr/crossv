@@ -3,6 +3,7 @@ package org.crossv.expressions.tests;
 import static org.crossv.expressions.Expression.bitwiseXor;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -58,5 +59,52 @@ public class XorExpressionTests {
 	public void createXorExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = bitwiseXor(1, 2);
 		assertThat(e.toString(), is("1 ^ 2"));
+	}
+
+	@Test
+	public void evaluateXorExpression_FalseAndTrue_ReturnsTrue()
+			throws Exception {
+		boolean left = false;
+		boolean right = true;
+		Expression e = bitwiseXor(left, right);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateXorExpression_FalseAndFalse_ReturnsFalse()
+			throws Exception {
+		boolean left = false;
+		boolean right = false;
+		Expression e = bitwiseXor(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateXorExpression_TrueAndTrue_ReturnsFalse()
+			throws Exception {
+		boolean left = true;
+		boolean right = true;
+		Expression e = bitwiseXor(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateXorExpression_OneXorTwoAsIntegerValues_ReturnsThreeAsInteger()
+			throws Exception {
+		int left = 1;
+		int right = 2;
+
+		Expression e = bitwiseXor(left, right);
+		assertThat(e.evaluate(), is(equalTo(3)));
+	}
+
+	@Test
+	public void evaluateXorExpression_OneAsIntXorTwoAsLong_ReturnsThreeAsLong()
+			throws Exception {
+		int left = 1;
+		long right = 2;
+
+		Expression e = bitwiseXor(left, right);
+		assertThat(e.evaluate(), is(equalTo(3L)));
 	}
 }

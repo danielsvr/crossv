@@ -4,6 +4,7 @@ import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.plus;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,5 +42,37 @@ public class UnaryPlusExpressionTests {
 	public void createPlusExpression_NegativeNumberAndCallingToString_getsJavaLikeExpression() {
 		Expression e = plus((int) -1);
 		assertThat(e.toString(), is("+(-1)"));
+	}
+
+	@Test
+	public void evaluatePlusExpression_PositiveValue_ReturnsPositiveValue()
+			throws Exception {
+		float value = 1;
+		Expression e = plus(value);
+		assertThat(e.evaluate(), is(equalTo(1f)));
+	}
+
+	@Test
+	public void evaluatePlusExpression_NegativeValue_ReturnsNegativeValue()
+			throws Exception {
+		int value = -1;
+		Expression e = plus(value);
+		assertThat(e.evaluate(), is(equalTo(-1)));
+	}
+
+	@Test
+	public void evaluatePlusExpression_PositoveLongValue_ReturnsPositiveLongValue()
+			throws Exception {
+		long value = 1;
+		Expression e = plus(value);
+		assertThat(e.evaluate(), is(equalTo(1L)));
+	}
+
+	@Test
+	public void evaluatePlusExpression_NegativeDoubleValue_ReturnsNegativeDoubleValue()
+			throws Exception {
+		double value = -1;
+		Expression e = plus(value);
+		assertThat(e.evaluate(), is(equalTo(-1d)));
 	}
 }

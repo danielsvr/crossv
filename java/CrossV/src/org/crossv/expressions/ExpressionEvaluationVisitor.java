@@ -119,8 +119,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitSubtract(Subtract expression) {
-		// TODO Auto-generated method stub
-		super.visitSubtract(expression);
+		evaluator.evaluateSubtract(expression);
 	}
 
 	@Override
@@ -140,8 +139,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitXor(Xor expression) {
-		// TODO Auto-generated method stub
-		super.visitXor(expression);
+		evaluator.evaluateXor(expression);
 	}
 
 	@Override
@@ -156,7 +154,6 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitUnaryPlus(UnaryPlus expression) {
-		// TODO Auto-generated method stub
-		super.visitUnaryPlus(expression);
+		evaluator.evaluatePlus(expression);
 	}	
 }
