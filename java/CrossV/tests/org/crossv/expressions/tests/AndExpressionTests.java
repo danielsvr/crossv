@@ -62,25 +62,23 @@ public class AndExpressionTests {
 	}
 
 	@Test
-	public void evaluateAndExpression_TwoIntegerValues_ReturnsAddedValuesAsInteger()
+	public void evaluateAndExpression_OneAndTwoAsIntegerValues_ReturnsZeroAsInteger()
 			throws Exception {
 		int left = 1;
 		int right = 2;
-		int expected = left & right;
 
 		Expression e = bitwiseAnd(left, right);
-		assertThat(e.evaluate(), is(equalTo(expected)));
+		assertThat(e.evaluate(), is(equalTo(0)));
 	}
 
 	@Test
-	public void evaluateAndExpression_IntAndLongValues_ReturnsAddedValuesAsLong()
+	public void evaluateAndExpression_OneAsIntAndTwoAsLongValues_ReturnsZeroAsLong()
 			throws Exception {
 		int left = 1;
 		long right = 2;
-		long expected = left & right;
 
 		Expression e = bitwiseAnd(left, right);
-		assertThat(e.evaluate(), is(equalTo(expected)));
+		assertThat(e.evaluate(), is(equalTo(0L)));
 	}
 
 	@Test

@@ -371,6 +371,28 @@ public class ExpressionEvaluator {
 		evaluateOr(expression);
 	}
 
+	protected void evaluateOr(Or expression) {
+		if (expression.isAssignableTo(Boolean.class)) {
+			evaluateOr((BinaryExpression) expression);
+			return;
+		}
+		
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left | right);
+		} else {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left | right);
+		}
+	}
+
 	private void evaluateOr(BinaryExpression expression) {
 		eval(expression.getLeft());
 		if (stack.peek().equals(false)) {

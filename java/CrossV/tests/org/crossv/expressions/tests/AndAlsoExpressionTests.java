@@ -59,7 +59,7 @@ public class AndAlsoExpressionTests {
 	}
 
 	@Test
-	public void evaluateAndExpression_TrueAndTrue_ReturnsFalse()
+	public void evaluateAndExpression_TrueAndTrue_ReturnsTrue()
 			throws Exception {
 		boolean left = true;
 		boolean right = true;

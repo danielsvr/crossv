@@ -136,8 +136,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitOr(Or expression) {
-		// TODO Auto-generated method stub
-		super.visitOr(expression);
+		evaluator.evaluateOr(expression);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package org.crossv.expressions.tests;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.or;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -37,5 +38,31 @@ public class OrElseExpressionTests {
 		boolean right = false;
 		Expression e = or(left, right);
 		assertThat(e.toString(), is("true || false"));
+	}
+
+	@Test
+	public void evaluateOrExpression_FalseAndTrue_ReturnsTrue()
+			throws Exception {
+		boolean left = false;
+		boolean right = true;
+		Expression e = or(left, right);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateOrExpression_FalseAndFalse_ReturnsFalse()
+			throws Exception {
+		boolean left = false;
+		boolean right = false;
+		Expression e = or(left, right);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateOrExpression_TrueAndTrue_ReturnsTrue() throws Exception {
+		boolean left = true;
+		boolean right = true;
+		Expression e = or(left, right);
+		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 }
