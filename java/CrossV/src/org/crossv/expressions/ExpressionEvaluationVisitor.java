@@ -125,8 +125,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitRightShift(RightShift expression) {
-		// TODO Auto-generated method stub
-		super.visitRightShift(expression);
+		evaluator.evaluateRightShift(expression);
 	}
 
 	@Override

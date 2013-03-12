@@ -376,7 +376,7 @@ public class ExpressionEvaluator {
 			evaluateOr((BinaryExpression) expression);
 			return;
 		}
-		
+
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -547,5 +547,22 @@ public class ExpressionEvaluator {
 		eval(expression.getOperand());
 		boolean op = (Boolean) stack.pop();
 		stack.push(!op);
+	}
+
+	protected void evaluateRightShift(RightShift expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left >> right);
+		} else {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left >> right);
+		}
 	}
 }
