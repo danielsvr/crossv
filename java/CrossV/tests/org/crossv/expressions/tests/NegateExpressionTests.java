@@ -4,6 +4,7 @@ import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.negate;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,5 +42,37 @@ public class NegateExpressionTests {
 	public void createNegatedDoubleContextValue_callingToString_getsJavaLikeExpression() {
 		Expression e = negate(context(Double.class));
 		assertThat(e.toString(), is("-context"));
+	}
+
+	@Test
+	public void evaluateNegatedExpression_PositiveValue_ReturnsNegativeValue()
+			throws Exception {
+		float value = 1;
+		Expression e = negate(value);
+		assertThat(e.evaluate(), is(equalTo(-1f)));
+	}
+
+	@Test
+	public void evaluateNegatedExpression_NegativeValue_ReturnsPositiveValue()
+			throws Exception {
+		int value = -1;
+		Expression e = negate(value);
+		assertThat(e.evaluate(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluateNegatedExpression_PositoveLongValue_ReturnsNegativeLongValue()
+			throws Exception {
+		long value = 1;
+		Expression e = negate(value);
+		assertThat(e.evaluate(), is(equalTo(-1L)));
+	}
+
+	@Test
+	public void evaluateNegatedExpression_NegativeDoubleValue_ReturnsPositiveDoubleValue()
+			throws Exception {
+		double value = -1;
+		Expression e = negate(value);
+		assertThat(e.evaluate(), is(equalTo(1d)));
 	}
 }

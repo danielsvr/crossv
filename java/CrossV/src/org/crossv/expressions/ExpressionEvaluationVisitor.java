@@ -148,8 +148,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitNegate(Negate expression) {
-		// TODO Auto-generated method stub
-		super.visitNegate(expression);
+		evaluator.evaluateNegate(expression);
 	}
 
 	@Override

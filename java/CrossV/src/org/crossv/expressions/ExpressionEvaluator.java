@@ -501,4 +501,23 @@ public class ExpressionEvaluator {
 			stack.push(left * right);
 		}
 	}
+
+	protected void evaluateNegate(Negate expression) {
+		eval(expression.getOperand());
+
+		Object opPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int op = ((Number) opPop).intValue();
+			stack.push(-op);
+		} else if (expression.isAssignableTo(Long.class)) {
+			long op = ((Number) opPop).longValue();
+			stack.push(-op);
+		} else if (expression.isAssignableTo(Float.class)) {
+			float op = ((Number) opPop).floatValue();
+			stack.push(-op);
+		} else {
+			double op = ((Number) opPop).doubleValue();
+			stack.push(-op);
+		}
+	}
 }
