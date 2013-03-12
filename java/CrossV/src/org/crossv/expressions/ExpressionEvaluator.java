@@ -451,4 +451,54 @@ public class ExpressionEvaluator {
 			stack.push(left <= right);
 		}
 	}
+
+	protected void evaluateModulo(Modulo expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left % right);
+		} else if (expression.isAssignableTo(Long.class)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left % right);
+		} else if (expression.isAssignableTo(Float.class)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left % right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left % right);
+		}
+	}
+
+	protected void evaluateMultiply(Multiply expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left * right);
+		} else if (expression.isAssignableTo(Long.class)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left * right);
+		} else if (expression.isAssignableTo(Float.class)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			stack.push(left * right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			stack.push(left * right);
+		}
+	}
 }

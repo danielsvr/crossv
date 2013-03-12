@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.multiply;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -56,5 +57,47 @@ public class MultiplyExpressionTests {
 	@Test(expected = IllegalOperandException.class)
 	public void createAddExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
 		multiply(1, false);
+	}
+
+	@Test
+	public void evaluateMultiplyExpression_OneAsIntAndTwoAsByte_ReturnsTwoAsInt()
+			throws Exception {
+		Expression e = multiply(1, (byte) 2);
+		assertThat(e.evaluate(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluateMultiplyExpression_TwoAsIntAndOneAsByte_ReturnsTwoAsInt()
+			throws Exception {
+		Expression e = multiply(2, (byte) 1);
+		assertThat(e.evaluate(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluateMultiplyExpression_TwoAsIntAndOneAsLong_ReturnsTwoAsLong()
+			throws Exception {
+		Expression e = multiply(2, 1L);
+		assertThat(e.evaluate(), is(equalTo(2L)));
+	}
+
+	@Test
+	public void evaluateMultiplyExpression_TwoAsIntAndOneAsFloat_ReturnsTwoAsFloat()
+			throws Exception {
+		Expression e = multiply(2, 1f);
+		assertThat(e.evaluate(), is(equalTo(2f)));
+	}
+
+	@Test
+	public void evaluateMultiplyExpression_1AsIntAndTwoAsFloat_ReturnsTwoAsFloat()
+			throws Exception {
+		Expression e = multiply(1, 2f);
+		assertThat(e.evaluate(), is(equalTo(2f)));
+	}
+
+	@Test
+	public void evaluateMultiplyExpression_TwoAsIntAndOneAsDouble_ReturnsTwoAsDouble()
+			throws Exception {
+		Expression e = multiply(2, 1d);
+		assertThat(e.evaluate(), is(equalTo(2d)));
 	}
 }

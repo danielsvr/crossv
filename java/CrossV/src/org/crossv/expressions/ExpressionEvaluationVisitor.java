@@ -109,14 +109,12 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitModulo(Modulo expression) {
-		// TODO Auto-generated method stub
-		super.visitModulo(expression);
+		evaluator.evaluateModulo(expression);
 	}
 
 	@Override
 	public void visitMultiply(Multiply expression) {
-		// TODO Auto-generated method stub
-		super.visitMultiply(expression);
+		evaluator.evaluateMultiply(expression);
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expression.modulo;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -56,5 +57,47 @@ public class ModuloExpressionTests {
 	public void createModuloExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = modulo(1, 2);
 		assertThat(e.toString(), is("1 % 2"));
+	}
+
+	@Test
+	public void evaluateModuloExpression_OneAsIntAndTwoAsByte_ReturnsOneAsInt()
+			throws Exception {
+		Expression e = modulo(1, (byte) 2);
+		assertThat(e.evaluate(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluateModuloExpression_TwoAsIntAndOneAsByte_ReturnsZeroAsInt()
+			throws Exception {
+		Expression e = modulo(2, (byte) 1);
+		assertThat(e.evaluate(), is(equalTo(0)));
+	}
+
+	@Test
+	public void evaluateModuloExpression_TwoAsIntAndOneAsLong_ReturnsZeroAsLong()
+			throws Exception {
+		Expression e = modulo(2, 1L);
+		assertThat(e.evaluate(), is(equalTo(0L)));
+	}
+
+	@Test
+	public void evaluateModuloExpression_TwoAsIntAndOneAsFloat_ReturnsZeroFloat()
+			throws Exception {
+		Expression e = modulo(2, 1f);
+		assertThat(e.evaluate(), is(equalTo(0f)));
+	}
+
+	@Test
+	public void evaluateModuloExpression_1AsIntAndTwoAsFloat_ReturnsOneAsFloat()
+			throws Exception {
+		Expression e = modulo(1, 2f);
+		assertThat(e.evaluate(), is(equalTo(1f)));
+	}
+
+	@Test
+	public void evaluateModuloExpression_TwoAsIntAndOneAsDouble_ReturnsZeroAsDouble()
+			throws Exception {
+		Expression e = modulo(2, 1d);
+		assertThat(e.evaluate(), is(equalTo(0d)));
 	}
 }
