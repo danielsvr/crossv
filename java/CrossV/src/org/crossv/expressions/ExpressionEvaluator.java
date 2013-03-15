@@ -21,6 +21,9 @@ public class ExpressionEvaluator {
 
 	public static final Object NO_CONTEXT = Missing.VALUE;
 	public static final Object NO_INSTANCE = Missing.VALUE;
+	private static final int DEVIDE = 1;
+	private static final int MODULO = 2;
+	private static final int MULTIPLY = 3;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -234,28 +237,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateDevide(Devide expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left / right);
-		} else if (expression.isAssignableTo(Long.class)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left / right);
-		} else if (expression.isAssignableTo(Float.class)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left / right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left / right);
-		}
+		evaluateMultiplicity(expression, DEVIDE);
 	}
 
 	public void evaluateEqual(Equal expression) {
@@ -333,30 +315,6 @@ public class ExpressionEvaluator {
 		stack.push(instance);
 	}
 
-	protected void evaluateNotEqual(NotEqual expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-
-		stack.push((leftPop == null && rightPop != null)
-				|| (leftPop != null && !leftPop.equals(rightPop)));
-	}
-
-	protected void evaluateUnrecognizedExpresison(Expression expression) {
-		Class<?> expressionClass = expression.getClass();
-		String message = "Unrecognized expression of type {0}.";
-		message = format(message, expressionClass.getName());
-		throw new RuntimeEvaluationException(message);
-	}
-
-	public Object getValue() throws EvaluationException {
-		if (stack.size() != 1)
-			throw new EvaluationException("Incorrect evaluation.");
-		return stack.pop();
-	}
-
 	protected void evaluateInstanceOf(InstanceOf expression) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
@@ -365,40 +323,6 @@ public class ExpressionEvaluator {
 		Object leftPop = stack.pop();
 		stack.push(leftPop != null ? rightPop.isAssignableFrom(leftPop
 				.getClass()) : false);
-	}
-
-	protected void evaluateOrElse(OrElse expression) {
-		evaluateOr(expression);
-	}
-
-	protected void evaluateOr(Or expression) {
-		if (expression.isAssignableTo(Boolean.class)) {
-			evaluateOr((BinaryExpression) expression);
-			return;
-		}
-
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left | right);
-		} else {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left | right);
-		}
-	}
-
-	private void evaluateOr(BinaryExpression expression) {
-		eval(expression.getLeft());
-		if (stack.peek().equals(false)) {
-			stack.pop();
-			eval(expression.getRight());
-		}
 	}
 
 	protected void evaluateLeftShift(LeftShift expression) {
@@ -475,6 +399,10 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateModulo(Modulo expression) {
+		evaluateMultiplicity(expression, MODULO);
+	}
+
+	private void evaluateMultiplicity(MultiplicityExpression expression, int op) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -483,45 +411,44 @@ public class ExpressionEvaluator {
 		if (expression.isAssignableTo(Integer.class)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
-			stack.push(left % right);
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
 		} else if (expression.isAssignableTo(Long.class)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
-			stack.push(left % right);
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
 		} else if (expression.isAssignableTo(Float.class)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
-			stack.push(left % right);
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
 		} else {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
-			stack.push(left % right);
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
 		}
 	}
 
 	protected void evaluateMultiply(Multiply expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left * right);
-		} else if (expression.isAssignableTo(Long.class)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left * right);
-		} else if (expression.isAssignableTo(Float.class)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left * right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left * right);
-		}
+		evaluateMultiplicity(expression, MULTIPLY);
 	}
 
 	protected void evaluateNegate(Negate expression) {
@@ -547,6 +474,57 @@ public class ExpressionEvaluator {
 		eval(expression.getOperand());
 		boolean op = (Boolean) stack.pop();
 		stack.push(!op);
+	}
+
+	protected void evaluateNotEqual(NotEqual expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+
+		stack.push((leftPop == null && rightPop != null)
+				|| (leftPop != null && !leftPop.equals(rightPop)));
+	}
+
+	private void evaluateOr(BinaryExpression expression) {
+		eval(expression.getLeft());
+		if (stack.peek().equals(false)) {
+			stack.pop();
+			eval(expression.getRight());
+		}
+	}
+
+	protected void evaluateOr(Or expression) {
+		if (expression.isAssignableTo(Boolean.class)) {
+			evaluateOr((BinaryExpression) expression);
+			return;
+		}
+
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			stack.push(left | right);
+		} else {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			stack.push(left | right);
+		}
+	}
+
+	protected void evaluateOrElse(OrElse expression) {
+		evaluateOr(expression);
+	}
+
+	protected void evaluatePlus(UnaryPlus expression) {
+		eval(expression.getOperand());
+		Object opPop = stack.pop();
+		stack.push(opPop);
 	}
 
 	protected void evaluateRightShift(RightShift expression) {
@@ -591,10 +569,11 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluatePlus(UnaryPlus expression) {
-		eval(expression.getOperand());
-		Object opPop = stack.pop();
-		stack.push(opPop);
+	protected void evaluateUnrecognizedExpresison(Expression expression) {
+		Class<?> expressionClass = expression.getClass();
+		String message = "Unrecognized expression of type {0}.";
+		message = format(message, expressionClass.getName());
+		throw new RuntimeEvaluationException(message);
 	}
 
 	protected void evaluateXor(Xor expression) {
@@ -620,5 +599,11 @@ public class ExpressionEvaluator {
 			long right = ((Number) rightPop).longValue();
 			stack.push(left ^ right);
 		}
+	}
+
+	public Object getValue() throws EvaluationException {
+		if (stack.size() != 1)
+			throw new EvaluationException("Incorrect evaluation.");
+		return stack.pop();
 	}
 }
