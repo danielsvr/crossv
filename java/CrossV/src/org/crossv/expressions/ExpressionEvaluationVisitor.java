@@ -88,13 +88,8 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 	
 	@Override
-	public void visitNotEqual(NotEqual expression) {
-		evaluator.evaluateNotEqual(expression);
-	}
-
-	@Override
-	public void visitOrElse(OrElse expression) {
-		evaluator.evaluateOrElse(expression);
+	public void visitLeftShift(LeftShift expression) {
+		evaluator.evaluateLeftShift(expression);
 	}
 
 	@Override
@@ -118,31 +113,6 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitSubtract(Subtract expression) {
-		evaluator.evaluateSubtract(expression);
-	}
-
-	@Override
-	public void visitRightShift(RightShift expression) {
-		evaluator.evaluateRightShift(expression);
-	}
-
-	@Override
-	public void visitLeftShift(LeftShift expression) {
-		evaluator.evaluateLeftShift(expression);
-	}
-
-	@Override
-	public void visitOr(Or expression) {
-		evaluator.evaluateOr(expression);
-	}
-
-	@Override
-	public void visitXor(Xor expression) {
-		evaluator.evaluateXor(expression);
-	}
-
-	@Override
 	public void visitNegate(Negate expression) {
 		evaluator.evaluateNegate(expression);
 	}
@@ -153,7 +123,37 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
+	public void visitNotEqual(NotEqual expression) {
+		evaluator.evaluateNotEqual(expression);
+	}
+
+	@Override
+	public void visitOr(Or expression) {
+		evaluator.evaluateOr(expression);
+	}
+
+	@Override
+	public void visitOrElse(OrElse expression) {
+		evaluator.evaluateOrElse(expression);
+	}
+
+	@Override
+	public void visitRightShift(RightShift expression) {
+		evaluator.evaluateRightShift(expression);
+	}
+
+	@Override
+	public void visitSubtract(Subtract expression) {
+		evaluator.evaluateSubtract(expression);
+	}
+
+	@Override
 	public void visitUnaryPlus(UnaryPlus expression) {
 		evaluator.evaluatePlus(expression);
+	}
+
+	@Override
+	public void visitXor(Xor expression) {
+		evaluator.evaluateXor(expression);
 	}	
 }

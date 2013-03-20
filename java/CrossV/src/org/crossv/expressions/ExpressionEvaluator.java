@@ -32,6 +32,8 @@ public class ExpressionEvaluator {
 	private static final int GREATER_THAN_OR_EQUAL = 9;
 	private static final int LESS_THAN = 10;
 	private static final int LESS_THAN_OR_EQUAL = 11;
+	private static final int EQUAL = 12;
+	private static final int NOT_EQUAL = 13;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -55,16 +57,6 @@ public class ExpressionEvaluator {
 		} catch (RuntimeEvaluationException e) {
 			throw evalError(e);
 		}
-	}
-
-	public void evaluateEqual(Equal expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		stack.push((leftPop == null && rightPop == null)
-				|| (leftPop != null && leftPop.equals(rightPop)));
 	}
 
 	public Object getValue() throws EvaluationException {
@@ -136,6 +128,20 @@ public class ExpressionEvaluator {
 			ConvertibleTo<E> expression) {
 		E converted = expression.convert();
 		eval(converted);
+	}
+
+	private void evaluateEquality(EqualityExpression expression, int op) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (op == EQUAL)
+			stack.push((leftPop == null && rightPop == null)
+					|| (leftPop != null && leftPop.equals(rightPop)));
+		else if (op == NOT_EQUAL)
+			stack.push((leftPop == null && rightPop != null)
+					|| (leftPop != null && !leftPop.equals(rightPop)));
 	}
 
 	private void evaluateMultiplicity(MultiplicityExpression expression, int op) {
@@ -413,6 +419,10 @@ public class ExpressionEvaluator {
 		evaluateMultiplicity(expression, DEVIDE);
 	}
 
+	protected void evaluateEqual(Equal expression) {
+		evaluateEquality(expression, EQUAL);
+	}
+
 	protected void evaluateGreaterThan(GreaterThan expression) {
 		evaluateNumericalComparison(expression, GREATER_THAN);
 	}
@@ -486,14 +496,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateNotEqual(NotEqual expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-
-		stack.push((leftPop == null && rightPop != null)
-				|| (leftPop != null && !leftPop.equals(rightPop)));
+		evaluateEquality(expression, NOT_EQUAL);
 	}
 
 	protected void evaluateOr(Or expression) {
