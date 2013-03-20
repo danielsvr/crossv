@@ -16,7 +16,7 @@ public interface ExpressionVisitor {
 
 	void visitCoalesce(Coalesce expression);
 
-	void visitConditional(Conditional expression);
+	void visitConditional(ConditionalTernaryExpression expression);
 
 	void visitConstant(Constant expression);
 

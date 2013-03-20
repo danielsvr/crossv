@@ -521,7 +521,7 @@ public abstract class Expression {
 
 	public static Expression conditional(Expression test, Expression ifTrue,
 			Expression ifFalse) {
-		return new Conditional(test, ifTrue, ifFalse);
+		return new ConditionalTernaryExpression(test, ifTrue, ifFalse);
 	}
 
 	public static Expression conditional(boolean test, Expression ifTrue,

@@ -36,6 +36,8 @@ public class ExpressionEvaluator {
 	private static final int NOT_EQUAL = 13;
 	private static final int AND = 14;
 	private static final int OR = 15;
+	private static final int OR_ELSE = 16;
+	private static final int AND_ALSO = 17;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -118,29 +120,20 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	private void evaluateAnd(BinaryExpression expression) {
-		eval(expression.getLeft());
-		if (stack.peek().equals(true)) {
-			stack.pop();
-			eval(expression.getRight());
-		}
-	}
-
 	private void evaluateBitwise(BitwiseExpression expression, int op) {
-		if (expression.isAssignableTo(Boolean.class)) {
-			if (op == AND)
-				evaluateAnd(expression);
-			else if (op == OR)
-				evaluateOr(expression);
-			return;
-		}
-
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
+		if (expression.isAssignableTo(Boolean.class)) {
+			boolean left = ((Boolean) leftPop).booleanValue();
+			boolean right = ((Boolean) rightPop).booleanValue();
+			if (op == AND)
+				stack.push(left & right);
+			else if (op == OR)
+				stack.push(left | right);
+		} else if (expression.isAssignableTo(Integer.class)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
 			if (op == AND)
@@ -279,14 +272,6 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	private void evaluateOr(BinaryExpression expression) {
-		eval(expression.getLeft());
-		if (stack.peek().equals(false)) {
-			stack.pop();
-			eval(expression.getRight());
-		}
-	}
-
 	private void evaluateShift(ShiftExpression expression, int op) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
@@ -323,7 +308,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateAndAlso(AndAlso expression) {
-		evaluateAnd(expression);
+		evaluateConditionalBinary(expression, AND_ALSO);
 	}
 
 	protected void evaluateCall(Call expression) {
@@ -408,7 +393,7 @@ public class ExpressionEvaluator {
 		evaluateConverableExpression(expression);
 	}
 
-	protected void evaluateConditional(Conditional expression) {
+	protected void evaluateConditional(ConditionalTernaryExpression expression) {
 		eval(expression.getTest());
 		Object popedValue = stack.pop();
 		if (popedValue.equals(true))
@@ -519,7 +504,17 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateOrElse(OrElse expression) {
-		evaluateOr(expression);
+		evaluateConditionalBinary(expression, OR_ELSE);
+	}
+
+	private void evaluateConditionalBinary(
+			ConditionalBinaryExpression expression, int op) {
+		eval(expression.getLeft());
+		boolean obj = op == AND_ALSO;
+		if (stack.peek().equals(obj)) {
+			stack.pop();
+			eval(expression.getRight());
+		}
 	}
 
 	protected void evaluatePlus(UnaryPlus expression) {
@@ -554,10 +549,7 @@ public class ExpressionEvaluator {
 			boolean left = ((Boolean) leftPop).booleanValue();
 			boolean right = ((Boolean) rightPop).booleanValue();
 			stack.push(left ^ right);
-			return;
-		}
-
-		if (expression.isAssignableTo(Integer.class)) {
+		} else if (expression.isAssignableTo(Integer.class)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
 			stack.push(left ^ right);

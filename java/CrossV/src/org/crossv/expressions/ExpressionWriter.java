@@ -182,7 +182,7 @@ public class ExpressionWriter {
 		print("!", expression.getOperand());
 	}
 
-	protected void printConditional(Conditional expression) {
+	protected void printConditional(ConditionalTernaryExpression expression) {
 		print(expression.getTest(), " ? ", expression.getIfTrue(), " : ",
 				expression.getIfFalse());
 	}
