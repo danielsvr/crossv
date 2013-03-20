@@ -34,6 +34,8 @@ public class ExpressionEvaluator {
 	private static final int LESS_THAN_OR_EQUAL = 11;
 	private static final int EQUAL = 12;
 	private static final int NOT_EQUAL = 13;
+	private static final int AND = 14;
+	private static final int OR = 15;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -121,6 +123,37 @@ public class ExpressionEvaluator {
 		if (stack.peek().equals(true)) {
 			stack.pop();
 			eval(expression.getRight());
+		}
+	}
+
+	private void evaluateBitwise(BitwiseExpression expression, int op) {
+		if (expression.isAssignableTo(Boolean.class)) {
+			if (op == AND)
+				evaluateAnd(expression);
+			else if (op == OR)
+				evaluateOr(expression);
+			return;
+		}
+
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			if (op == AND)
+				stack.push(left & right);
+			else if (op == OR)
+				stack.push(left | right);
+		} else {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			if (op == AND)
+				stack.push(left & right);
+			else if (op == OR)
+				stack.push(left | right);
 		}
 	}
 
@@ -286,25 +319,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateAnd(And expression) {
-		if (expression.isAssignableTo(Boolean.class)) {
-			evaluateAnd((BinaryExpression) expression);
-			return;
-		}
-
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left & right);
-		} else {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left & right);
-		}
+		evaluateBitwise(expression, AND);
 	}
 
 	protected void evaluateAndAlso(AndAlso expression) {
@@ -500,25 +515,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateOr(Or expression) {
-		if (expression.isAssignableTo(Boolean.class)) {
-			evaluateOr((BinaryExpression) expression);
-			return;
-		}
-
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left | right);
-		} else {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left | right);
-		}
+		evaluateBitwise(expression, OR);
 	}
 
 	protected void evaluateOrElse(OrElse expression) {
