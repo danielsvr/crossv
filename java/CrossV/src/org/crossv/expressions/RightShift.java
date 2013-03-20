@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-public class RightShift extends Shift {
+public class RightShift extends ShiftExpression {
 	public RightShift(Expression left, Expression right) {
 		super(left, right);
 	}

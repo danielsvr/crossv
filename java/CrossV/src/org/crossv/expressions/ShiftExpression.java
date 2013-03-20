@@ -1,9 +1,9 @@
 package org.crossv.expressions;
 
-public abstract class Shift extends BinaryExpression {
+public abstract class ShiftExpression extends BinaryExpression {
 	private Class<?> resultClass;
 
-	public Shift(Expression left, Expression right) {
+	public ShiftExpression(Expression left, Expression right) {
 		super(left, right);
 		verifyOperands();
 		resultClass = left.isAssignableTo(Long.class) ? Long.class

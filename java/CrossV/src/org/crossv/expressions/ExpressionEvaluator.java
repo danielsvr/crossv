@@ -187,6 +187,29 @@ public class ExpressionEvaluator {
 		}
 	}
 
+	private void evaluateShift(ShiftExpression expression, int op) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			long right = ((Number) rightPop).longValue();
+			if (op == LEFT_SHIFT)
+				stack.push(left << right);
+			else if (op == RIGHT_SHIFT)
+				stack.push(left >> right);
+		} else {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			if (op == LEFT_SHIFT)
+				stack.push(left << right);
+			else if (op == RIGHT_SHIFT)
+				stack.push(left >> right);
+		}
+	}
+
 	protected void eval(Expression expression) {
 		expression.accept(visitor);
 	}
@@ -406,29 +429,6 @@ public class ExpressionEvaluator {
 
 	protected void evaluateLeftShift(LeftShift expression) {
 		evaluateShift(expression, LEFT_SHIFT);
-	}
-
-	private void evaluateShift(Shift expression, int op) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			long right = ((Number) rightPop).longValue();
-			if (op == LEFT_SHIFT)
-				stack.push(left << right);
-			else if (op == RIGHT_SHIFT)
-				stack.push(left >> right);
-		} else {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			if (op == LEFT_SHIFT)
-				stack.push(left << right);
-			else if (op == RIGHT_SHIFT)
-				stack.push(left >> right);
-		}
 	}
 
 	protected void evaluateLessThan(LessThan expression) {
