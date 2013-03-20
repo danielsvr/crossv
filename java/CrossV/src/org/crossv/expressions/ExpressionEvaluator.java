@@ -28,6 +28,10 @@ public class ExpressionEvaluator {
 	private static final int SUBTRACT = 5;
 	private static final int LEFT_SHIFT = 6;
 	private static final int RIGHT_SHIFT = 7;
+	private static final int GREATER_THAN = 8;
+	private static final int GREATER_THAN_OR_EQUAL = 9;
+	private static final int LESS_THAN = 10;
+	private static final int LESS_THAN_OR_EQUAL = 11;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -176,6 +180,63 @@ public class ExpressionEvaluator {
 				stack.push(left % right);
 			else if (op == MULTIPLY)
 				stack.push(left * right);
+		}
+	}
+
+	private void evaluateNumericalComparison(
+			NumericalComparisonExpression expression, int op) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		Class<?> leftClass = expression.getLeft().getResultClass();
+		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
+		if (Integer.class.isAssignableFrom(promotion)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			if (op == GREATER_THAN)
+				stack.push(left > right);
+			else if (op == GREATER_THAN_OR_EQUAL)
+				stack.push(left >= right);
+			else if (op == LESS_THAN)
+				stack.push(left < right);
+			else if (op == LESS_THAN_OR_EQUAL)
+				stack.push(left <= right);
+		} else if (Long.class.isAssignableFrom(promotion)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			if (op == GREATER_THAN)
+				stack.push(left > right);
+			else if (op == GREATER_THAN_OR_EQUAL)
+				stack.push(left >= right);
+			else if (op == LESS_THAN)
+				stack.push(left < right);
+			else if (op == LESS_THAN_OR_EQUAL)
+				stack.push(left <= right);
+		} else if (Float.class.isAssignableFrom(promotion)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			if (op == GREATER_THAN)
+				stack.push(left > right);
+			else if (op == GREATER_THAN_OR_EQUAL)
+				stack.push(left >= right);
+			else if (op == LESS_THAN)
+				stack.push(left < right);
+			else if (op == LESS_THAN_OR_EQUAL)
+				stack.push(left <= right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			if (op == GREATER_THAN)
+				stack.push(left > right);
+			else if (op == GREATER_THAN_OR_EQUAL)
+				stack.push(left >= right);
+			else if (op == LESS_THAN)
+				stack.push(left < right);
+			else if (op == LESS_THAN_OR_EQUAL)
+				stack.push(left <= right);
 		}
 	}
 
@@ -353,59 +414,11 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateGreaterThan(GreaterThan expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		Class<?> leftClass = expression.getLeft().getResultClass();
-		Class<?> rightClass = expression.getRight().getResultClass();
-		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
-		if (Integer.class.isAssignableFrom(promotion)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left > right);
-		} else if (Long.class.isAssignableFrom(promotion)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left > right);
-		} else if (Float.class.isAssignableFrom(promotion)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left > right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left > right);
-		}
+		evaluateNumericalComparison(expression, GREATER_THAN);
 	}
 
 	protected void evaluateGreaterThanOrEqual(GreaterThanOrEqual expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		Class<?> leftClass = expression.getLeft().getResultClass();
-		Class<?> rightClass = expression.getRight().getResultClass();
-		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
-		if (Integer.class.isAssignableFrom(promotion)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left >= right);
-		} else if (Long.class.isAssignableFrom(promotion)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left >= right);
-		} else if (Float.class.isAssignableFrom(promotion)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left >= right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left >= right);
-		}
+		evaluateNumericalComparison(expression, GREATER_THAN_OR_EQUAL);
 	}
 
 	protected void evaluateInstance(Instance expression) {
@@ -432,59 +445,11 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateLessThan(LessThan expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		Class<?> leftClass = expression.getLeft().getResultClass();
-		Class<?> rightClass = expression.getRight().getResultClass();
-		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
-		if (Integer.class.isAssignableFrom(promotion)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left < right);
-		} else if (Long.class.isAssignableFrom(promotion)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left < right);
-		} else if (Float.class.isAssignableFrom(promotion)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left < right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left < right);
-		}
+		evaluateNumericalComparison(expression, LESS_THAN);
 	}
 
 	protected void evaluateLessThanOrEqual(LessThanOrEqual expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		Class<?> leftClass = expression.getLeft().getResultClass();
-		Class<?> rightClass = expression.getRight().getResultClass();
-		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
-		if (Integer.class.isAssignableFrom(promotion)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left <= right);
-		} else if (Long.class.isAssignableFrom(promotion)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left <= right);
-		} else if (Float.class.isAssignableFrom(promotion)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left <= right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left <= right);
-		}
+		evaluateNumericalComparison(expression, LESS_THAN_OR_EQUAL);
 	}
 
 	protected void evaluateModulo(Modulo expression) {

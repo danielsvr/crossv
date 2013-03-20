@@ -1,21 +1,8 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
-
-public class GreaterThanOrEqual extends BinaryExpression {
+public class GreaterThanOrEqual extends NumericalComparisonExpression {
 	public GreaterThanOrEqual(Expression left, Expression right) {
 		super(left, right);
-		verifyOperands();
-	}
-
-	private void verifyOperands() {
-		if (!canPromoteNumbers(leftClass, rightClass))
-			throw illegalOperand();
-	}
-
-	@Override
-	public Class<?> getResultClass() {
-		return Boolean.class;
 	}
 
 	@Override

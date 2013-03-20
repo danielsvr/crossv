@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-public class InstanceOf extends BinaryExpression {
+public class InstanceOf extends RelationalExpression {
 	public InstanceOf(Expression left, Expression right) {
 		super(left, right);
 		verifyOperands();
