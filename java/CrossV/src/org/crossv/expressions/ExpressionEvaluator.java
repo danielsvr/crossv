@@ -26,6 +26,8 @@ public class ExpressionEvaluator {
 	private static final int MULTIPLY = 3;
 	private static final int PLUS = 4;
 	private static final int SUBTRACT = 5;
+	private static final int LEFT_SHIFT = 6;
+	private static final int RIGHT_SHIFT = 7;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -42,16 +44,6 @@ public class ExpressionEvaluator {
 		stack = new Stack<Object>();
 	}
 
-	protected void eval(Expression expression) {
-		expression.accept(visitor);
-	}
-
-	private EvaluationException evalError(RuntimeEvaluationException e) {
-		String trail = " Please inspect cause for more details.";
-		trail = e.getCause() != null ? trail : "";
-		return new EvaluationException(e.getMessage() + trail, e.getCause());
-	}
-
 	public final void evaluate(Expression expression)
 			throws EvaluationException {
 		try {
@@ -61,8 +53,26 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateAdd(Add expression) {
-		evaluateAdditivity(expression, PLUS);
+	public void evaluateEqual(Equal expression) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		stack.push((leftPop == null && rightPop == null)
+				|| (leftPop != null && leftPop.equals(rightPop)));
+	}
+
+	public Object getValue() throws EvaluationException {
+		if (stack.size() != 1)
+			throw new EvaluationException("Incorrect evaluation.");
+		return stack.pop();
+	}
+
+	private EvaluationException evalError(RuntimeEvaluationException e) {
+		String trail = " Please inspect cause for more details.";
+		trail = e.getCause() != null ? trail : "";
+		return new EvaluationException(e.getMessage() + trail, e.getCause());
 	}
 
 	private void evaluateAdditivity(AdditiveExpression expression, int op) {
@@ -110,6 +120,81 @@ public class ExpressionEvaluator {
 		}
 	}
 
+	private void evaluateAnd(BinaryExpression expression) {
+		eval(expression.getLeft());
+		if (stack.peek().equals(true)) {
+			stack.pop();
+			eval(expression.getRight());
+		}
+	}
+
+	private <E extends Expression> void evaluateConverableExpression(
+			ConvertibleTo<E> expression) {
+		E converted = expression.convert();
+		eval(converted);
+	}
+
+	private void evaluateMultiplicity(MultiplicityExpression expression, int op) {
+		eval(expression.getLeft());
+		eval(expression.getRight());
+
+		Object rightPop = stack.pop();
+		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(Integer.class)) {
+			int left = ((Number) leftPop).intValue();
+			int right = ((Number) rightPop).intValue();
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
+		} else if (expression.isAssignableTo(Long.class)) {
+			long left = ((Number) leftPop).longValue();
+			long right = ((Number) rightPop).longValue();
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
+		} else if (expression.isAssignableTo(Float.class)) {
+			float left = ((Number) leftPop).floatValue();
+			float right = ((Number) rightPop).floatValue();
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
+		} else {
+			double left = ((Number) leftPop).doubleValue();
+			double right = ((Number) rightPop).doubleValue();
+			if (op == DEVIDE)
+				stack.push(left / right);
+			else if (op == MODULO)
+				stack.push(left % right);
+			else if (op == MULTIPLY)
+				stack.push(left * right);
+		}
+	}
+
+	private void evaluateOr(BinaryExpression expression) {
+		eval(expression.getLeft());
+		if (stack.peek().equals(false)) {
+			stack.pop();
+			eval(expression.getRight());
+		}
+	}
+
+	protected void eval(Expression expression) {
+		expression.accept(visitor);
+	}
+
+	protected void evaluateAdd(Add expression) {
+		evaluateAdditivity(expression, PLUS);
+	}
+
 	protected void evaluateAnd(And expression) {
 		if (expression.isAssignableTo(Boolean.class)) {
 			evaluateAnd((BinaryExpression) expression);
@@ -129,14 +214,6 @@ public class ExpressionEvaluator {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
 			stack.push(left & right);
-		}
-	}
-
-	private void evaluateAnd(BinaryExpression expression) {
-		eval(expression.getLeft());
-		if (stack.peek().equals(true)) {
-			stack.pop();
-			eval(expression.getRight());
 		}
 	}
 
@@ -248,24 +325,8 @@ public class ExpressionEvaluator {
 		stack.push(context);
 	}
 
-	private <E extends Expression> void evaluateConverableExpression(
-			ConvertibleTo<E> expression) {
-		E converted = expression.convert();
-		eval(converted);
-	}
-
 	protected void evaluateDevide(Devide expression) {
 		evaluateMultiplicity(expression, DEVIDE);
-	}
-
-	public void evaluateEqual(Equal expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		stack.push((leftPop == null && rightPop == null)
-				|| (leftPop != null && leftPop.equals(rightPop)));
 	}
 
 	protected void evaluateGreaterThan(GreaterThan expression) {
@@ -344,6 +405,10 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateLeftShift(LeftShift expression) {
+		evaluateShift(expression, LEFT_SHIFT);
+	}
+
+	private void evaluateShift(Shift expression, int op) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -352,11 +417,17 @@ public class ExpressionEvaluator {
 		if (expression.isAssignableTo(Integer.class)) {
 			int left = ((Number) leftPop).intValue();
 			long right = ((Number) rightPop).longValue();
-			stack.push(left << right);
+			if (op == LEFT_SHIFT)
+				stack.push(left << right);
+			else if (op == RIGHT_SHIFT)
+				stack.push(left >> right);
 		} else {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
-			stack.push(left << right);
+			if (op == LEFT_SHIFT)
+				stack.push(left << right);
+			else if (op == RIGHT_SHIFT)
+				stack.push(left >> right);
 		}
 	}
 
@@ -420,51 +491,6 @@ public class ExpressionEvaluator {
 		evaluateMultiplicity(expression, MODULO);
 	}
 
-	private void evaluateMultiplicity(MultiplicityExpression expression, int op) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			if (op == DEVIDE)
-				stack.push(left / right);
-			else if (op == MODULO)
-				stack.push(left % right);
-			else if (op == MULTIPLY)
-				stack.push(left * right);
-		} else if (expression.isAssignableTo(Long.class)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			if (op == DEVIDE)
-				stack.push(left / right);
-			else if (op == MODULO)
-				stack.push(left % right);
-			else if (op == MULTIPLY)
-				stack.push(left * right);
-		} else if (expression.isAssignableTo(Float.class)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			if (op == DEVIDE)
-				stack.push(left / right);
-			else if (op == MODULO)
-				stack.push(left % right);
-			else if (op == MULTIPLY)
-				stack.push(left * right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			if (op == DEVIDE)
-				stack.push(left / right);
-			else if (op == MODULO)
-				stack.push(left % right);
-			else if (op == MULTIPLY)
-				stack.push(left * right);
-		}
-	}
-
 	protected void evaluateMultiply(Multiply expression) {
 		evaluateMultiplicity(expression, MULTIPLY);
 	}
@@ -505,14 +531,6 @@ public class ExpressionEvaluator {
 				|| (leftPop != null && !leftPop.equals(rightPop)));
 	}
 
-	private void evaluateOr(BinaryExpression expression) {
-		eval(expression.getLeft());
-		if (stack.peek().equals(false)) {
-			stack.pop();
-			eval(expression.getRight());
-		}
-	}
-
 	protected void evaluateOr(Or expression) {
 		if (expression.isAssignableTo(Boolean.class)) {
 			evaluateOr((BinaryExpression) expression);
@@ -546,20 +564,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateRightShift(RightShift expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left >> right);
-		} else {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left >> right);
-		}
+		evaluateShift(expression, RIGHT_SHIFT);
 	}
 
 	protected void evaluateSubtract(Subtract expression) {
@@ -596,11 +601,5 @@ public class ExpressionEvaluator {
 			long right = ((Number) rightPop).longValue();
 			stack.push(left ^ right);
 		}
-	}
-
-	public Object getValue() throws EvaluationException {
-		if (stack.size() != 1)
-			throw new EvaluationException("Incorrect evaluation.");
-		return stack.pop();
 	}
 }
