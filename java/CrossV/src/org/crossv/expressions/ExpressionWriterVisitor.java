@@ -156,4 +156,9 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitConditional(ConditionalTernaryExpression expression) {
 		printer.printConditional(expression);
 	}
+
+	@Override
+	public void visitComplement(Complement expression) {
+		printer.visitComplement(expression);
+	}
 }

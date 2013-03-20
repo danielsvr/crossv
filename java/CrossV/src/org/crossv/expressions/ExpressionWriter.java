@@ -186,4 +186,8 @@ public class ExpressionWriter {
 		print(expression.getTest(), " ? ", expression.getIfTrue(), " : ",
 				expression.getIfFalse());
 	}
+
+	protected void visitComplement(Complement expression) {
+		print("~", expression.getOperand());
+	}
 }

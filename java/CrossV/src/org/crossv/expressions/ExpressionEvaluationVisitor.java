@@ -155,5 +155,10 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	@Override
 	public void visitXor(Xor expression) {
 		evaluator.evaluateXor(expression);
-	}	
+	}
+	
+	@Override
+	public void visitComplement(Complement expression) {
+		evaluator.visitComplement(expression);
+	}
 }

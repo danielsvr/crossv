@@ -61,4 +61,6 @@ public interface ExpressionVisitor {
 	void visitUnaryPlus(UnaryPlus expression);
 
 	void visitXor(Xor expression);
+
+	void visitComplement(Complement expression);
 }

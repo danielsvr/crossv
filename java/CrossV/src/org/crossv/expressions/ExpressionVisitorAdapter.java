@@ -150,4 +150,9 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 	public void visitUnaryPlus(UnaryPlus expression) {
 		visit(expression);
 	}
+
+	@Override
+	public void visitComplement(Complement expression) {
+		visit(expression);
+	}
 }

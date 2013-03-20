@@ -554,4 +554,12 @@ public abstract class Expression {
 	public static Expression coalesce(Object left, Expression right) {
 		return coalesce(constant(left), right);
 	}
+
+	public static Expression complemented(Expression operand) {
+		return new Complement(operand);
+	}
+
+	public static Expression complemented(Object operand) {
+		return complemented(constant(operand));
+	}
 }
