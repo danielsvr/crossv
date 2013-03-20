@@ -24,6 +24,8 @@ public class ExpressionEvaluator {
 	private static final int DEVIDE = 1;
 	private static final int MODULO = 2;
 	private static final int MULTIPLY = 3;
+	private static final int PLUS = 4;
+	private static final int SUBTRACT = 5;
 	private final Object context;
 	private final Object instance;
 	protected final Stack<Object> stack;
@@ -60,6 +62,10 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateAdd(Add expression) {
+		evaluateAdditivity(expression, PLUS);
+	}
+
+	private void evaluateAdditivity(AdditiveExpression expression, int op) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -68,20 +74,32 @@ public class ExpressionEvaluator {
 		if (expression.isAssignableTo(Integer.class)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
-			stack.push(left + right);
+			if (op == PLUS)
+				stack.push(left + right);
+			else if (op == SUBTRACT)
+				stack.push(left - right);
 		} else if (expression.isAssignableTo(Long.class)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
-			stack.push(left + right);
+			if (op == PLUS)
+				stack.push(left + right);
+			else if (op == SUBTRACT)
+				stack.push(left - right);
 		} else if (expression.isAssignableTo(Float.class)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
-			stack.push(left + right);
+			if (op == PLUS)
+				stack.push(left + right);
+			else if (op == SUBTRACT)
+				stack.push(left - right);
 		} else if (expression.isAssignableTo(Double.class)) {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
-			stack.push(left + right);
-		} else {
+			if (op == PLUS)
+				stack.push(left + right);
+			else if (op == SUBTRACT)
+				stack.push(left - right);
+		} else if (op == PLUS) {
 			//@formatter:off
 			String left = leftPop == null 
 					? "null" : leftPop.toString();
@@ -545,28 +563,7 @@ public class ExpressionEvaluator {
 	}
 
 	protected void evaluateSubtract(Subtract expression) {
-		eval(expression.getLeft());
-		eval(expression.getRight());
-
-		Object rightPop = stack.pop();
-		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
-			int left = ((Number) leftPop).intValue();
-			int right = ((Number) rightPop).intValue();
-			stack.push(left - right);
-		} else if (expression.isAssignableTo(Long.class)) {
-			long left = ((Number) leftPop).longValue();
-			long right = ((Number) rightPop).longValue();
-			stack.push(left - right);
-		} else if (expression.isAssignableTo(Float.class)) {
-			float left = ((Number) leftPop).floatValue();
-			float right = ((Number) rightPop).floatValue();
-			stack.push(left - right);
-		} else {
-			double left = ((Number) leftPop).doubleValue();
-			double right = ((Number) rightPop).doubleValue();
-			stack.push(left - right);
-		}
+		evaluateAdditivity(expression, SUBTRACT);
 	}
 
 	protected void evaluateUnrecognizedExpresison(Expression expression) {

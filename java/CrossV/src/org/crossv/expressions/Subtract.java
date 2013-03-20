@@ -3,7 +3,7 @@ package org.crossv.expressions;
 import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
-public class Subtract extends BinaryExpression {
+public class Subtract extends AdditiveExpression {
 	private Class<?> resultClass;
 
 	public Subtract(Expression left, Expression right) {

@@ -2,7 +2,7 @@ package org.crossv.expressions;
 
 import static org.crossv.primitives.ExpressionUtil.*;
 
-public class Add extends BinaryExpression {
+public class Add extends AdditiveExpression {
 	private Class<?> resultClass;
 
 	public Add(Expression left, Expression right) {
