@@ -2,3 +2,12 @@ MEMBER_ACCESS		// An operation that reads from a field or getter, such as obj.Sa
 SEQ_LENGTH			// An operation that obtains the length of a one-dimensional sequence, such as array.Length
 SEQ_INDEX 			// An indexing operation in a one-dimensional sequence, such as array[index]
 ....
+//validation 
+<PROP|STRING> is_valid_if [context_is <CLASS> &&] <BOOLEAN> [THEN <STRING>] ELSE <STRING>
+	// IfEvaluationExpression
+<PROP|STRING> warn_if [context_is <CLASS> &&] <BOOLEAN> THEN <STRING>
+	// IfEvaluationExpression
+
+for_instance_of <CLASS> <n:IfEvaluationExpression>
+fault(<STRING>)		//:string
+warn(<STRING>)		//:string
