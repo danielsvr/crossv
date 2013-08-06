@@ -7,7 +7,6 @@ import static org.junit.Assert.assertThat;
 import org.crossv.expressions.EvaluationException;
 import org.crossv.expressions.Expression;
 import org.crossv.tests.helpers.TestObjectFactory;
-import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
 public class ContextExpressionTests {
