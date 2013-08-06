@@ -11,6 +11,7 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
 import org.crossv.tests.subjects.Rat;
@@ -77,7 +78,9 @@ public class InstanceOfExpressionTests {
 	@Test
 	public void evaluateInstanceOfExpression_MonkeyValueInstanceOfString_ReturnsFalse()
 			throws Exception {
-		Expression left = constant(new Monkey());
+		Monkey monkey = TestObjectFactory.createMonkey();
+		
+		Expression left = constant(monkey);
 		Class<String> right = String.class;
 		Expression e = instanceOf(left, right);
 		assertThat(e.evaluate(), is(equalTo(false)));

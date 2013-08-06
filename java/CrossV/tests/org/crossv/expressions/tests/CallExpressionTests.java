@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
@@ -38,8 +39,9 @@ public class CallExpressionTests {
 	@Test(expected = IllegalOperandException.class)
 	public void createCallSetNameExpressionForMonkey_ThrowsIllegalOperandException()
 			throws Exception {
-		call(constant(new Monkey()),
-				Monkey.class.getMethod("setName", String.class));
+		Monkey monkney = TestObjectFactory.createMonkey();
+
+		call(constant(monkney), Monkey.class.getMethod("setName", String.class));
 	}
 
 	@Test
@@ -66,7 +68,7 @@ public class CallExpressionTests {
 	@Test
 	public void evaluateCallExpression_GetNameOfMonkeyConstant_ReturnsName()
 			throws Exception {
-		Monkey monkey = new Monkey();
+		Monkey monkey = TestObjectFactory.createMonkey();
 		monkey.setName("John");
 		Expression e = call(constant(monkey), "getName");
 		assertThat(e.evaluate(), is(equalTo("John")));
@@ -75,8 +77,8 @@ public class CallExpressionTests {
 	@Test
 	public void evaluateCallExpression_GetRelativeOfMonkeyConstantByIndex_ReturnsTheRelative()
 			throws Exception {
-		Monkey expectedRelative = new Monkey();
-		Monkey monkey = new Monkey();
+		Monkey expectedRelative = TestObjectFactory.createMonkey();
+		Monkey monkey = TestObjectFactory.createMonkey();
 		monkey.setRelativesAsArray(new Monkey[] { expectedRelative });
 		Expression e = call(constant(monkey), "getRelativeByIndex", constant(0));
 		assertThat(e.evaluate(), is(equalTo(expectedRelative)));

@@ -26,11 +26,7 @@ public class Validator {
 
 	public Validator(EvaluatorProvider evaluatorProvider) {
 		this.evaluatorProvider = evaluatorProvider;
-		this.strategy = ValidationStrategy.getDefault();
-	}
-
-	public ValidationStrategy getStrategy() {
-		return strategy;
+		setStrategy(ValidationStrategy.getDefault());
 	}
 
 	public void setStrategy(ValidationStrategy strategy) {

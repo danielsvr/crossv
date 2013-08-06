@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.EvaluationException;
 import org.crossv.expressions.Expression;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class InstnaceExpressionTests {
 	@Test
 	public void evaluateInstanceExpression_ProvidingAMonkeyInstanceValue_ReturnsTheMonkey()
 			throws Exception {
-		Object evaluatedIntance = new Monkey();
+		Object evaluatedIntance = TestObjectFactory.createMonkey();
 		Expression e = instance();
 		Object evaluation = e.evaluate(evaluatedIntance);
 		assertThat(evaluation, is(evaluatedIntance));

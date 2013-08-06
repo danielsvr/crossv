@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.primitives.ClassDescriptor;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
@@ -14,9 +15,10 @@ public class ClassDescriptorTests {
 		try {
 			ClassDescriptor descriptor;
 			Object result;
-
+			Monkey monkey = TestObjectFactory.createMonkey();
+			
 			descriptor = new ClassDescriptor(Monkey.class);
-			result = descriptor.execute(new Monkey(), "setName", "name");
+			result = descriptor.execute(monkey, "setName", "name");
 			assertThat(result, is(equalTo(null)));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
@@ -78,8 +79,8 @@ public class ConditionalExpressionTests {
 
 	@Test
 	public void createConditionalExpression_TheSecondAndThirdOperandsHaveTheSameType_ReturnsThatType() {
-		Object second = new Monkey();
-		Object third = new Monkey();
+		Object second = TestObjectFactory.createMonkey();
+		Object third = TestObjectFactory.createMonkey();
 		Class<?> expectedClass = Monkey.class;
 		Expression e = conditional(true, second, third);
 		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
@@ -97,7 +98,7 @@ public class ConditionalExpressionTests {
 	@Test
 	public void createConditionalExpression_TheSecondIsNullAndThirdIsAReferenceType_ReturnsThatReferenceType() {
 		Object second = null;
-		Object third = new Monkey();
+		Object third = TestObjectFactory.createMonkey();
 		Class<?> expectedClass = Monkey.class;
 		Expression e = conditional(true, second, third);
 		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
@@ -105,7 +106,7 @@ public class ConditionalExpressionTests {
 
 	@Test
 	public void createConditionalExpression_TheSecondIsAReferenceTypeIsAndThirdNull_ReturnsThatReferenceType() {
-		Object second = new Monkey();
+		Object second = TestObjectFactory.createMonkey();
 		Object third = null;
 		Class<?> expectedClass = Monkey.class;
 		Expression e = conditional(true, second, third);

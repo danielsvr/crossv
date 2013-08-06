@@ -18,10 +18,11 @@ public class ValidatorTests_WithNoEvalutorsAtAll {
 	Validator validator;
 	Validation validation;
 	Monkey monkey;
-	BasicEvaluatorRegistry registry;
 
 	@Before
 	public void setup() {
+		BasicEvaluatorRegistry registry;
+		
 		registry = new BasicEvaluatorRegistry();
 		monkey = TestObjectFactory.createMonkey();
 		validator = TestObjectFactory.createValidator(registry);
@@ -29,7 +30,6 @@ public class ValidatorTests_WithNoEvalutorsAtAll {
 
 	@After
 	public void unsetup() {
-		registry = null;
 		validator = null;
 		validation = null;
 		monkey = null;

@@ -24,7 +24,6 @@ import org.junit.Test;
 
 public class ValidationByCotextStrategyTests {
 	static List<TestableEvaluator> unorderedEcaluators;
-	static Iterable<? extends Evaluator> strategicIterable;
 	static ValidationByCotextStrategy strategy;
 
 	@Before
@@ -54,7 +53,6 @@ public class ValidationByCotextStrategyTests {
 	@After
 	public void unsetup() {
 		unorderedEcaluators = null;
-		strategicIterable = null;
 		strategy = null;
 	}
 
@@ -62,6 +60,8 @@ public class ValidationByCotextStrategyTests {
 	public void iterate_OneElement_ContextOfCurrentEvaluatorIsSuperContext() {
 		Evaluator element;
 		Class<?> contextClass;
+		Iterable<? extends Evaluator> strategicIterable;
+		
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 0);
 		contextClass = element.getContextClass();
@@ -72,6 +72,8 @@ public class ValidationByCotextStrategyTests {
 	public void iterate_TwoElements_ContextOfCurrentEvaluatorIsIndependentContext1() {
 		Evaluator element;
 		Class<?> contextClass;
+		Iterable<? extends Evaluator> strategicIterable;
+		
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 1);
 		contextClass = element.getContextClass();
@@ -82,6 +84,8 @@ public class ValidationByCotextStrategyTests {
 	public void iterate_ThreeElements_ContextOfCurrentEvaluatorIsExtendedConext() {
 		Evaluator element;
 		Class<?> contextClass;
+		Iterable<? extends Evaluator> strategicIterable;
+		
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 2);
 		contextClass = element.getContextClass();
@@ -92,6 +96,8 @@ public class ValidationByCotextStrategyTests {
 	public void iterate_FourElements_ContextOfCurrentEvaluatorIsExtraExtendedConext() {
 		Evaluator element;
 		Class<?> contextClass;
+		Iterable<? extends Evaluator> strategicIterable;
+		
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		element = Iterables.elementAt(strategicIterable, 3);
 		contextClass = element.getContextClass();
@@ -101,7 +107,8 @@ public class ValidationByCotextStrategyTests {
 	@Test
 	public void evaluate_FirstThreeElements_StrategicIteratorDoentIterate() {
 		Iterator<? extends Evaluator> iterator;
-
+		Iterable<? extends Evaluator> strategicIterable;
+		
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		iterator = strategicIterable.iterator();
 		iterator.next().evaluate(null, new SuperContext1());
@@ -115,7 +122,8 @@ public class ValidationByCotextStrategyTests {
 		Iterator<? extends Evaluator> iterator;
 		Evaluator element;
 		Iterable<Evaluation> results;
-
+		Iterable<? extends Evaluator> strategicIterable;
+		
 		strategicIterable = strategy.apply(unorderedEcaluators);
 		iterator = strategicIterable.iterator();
 		iterator.next().evaluate(null, new SuperContext1());
