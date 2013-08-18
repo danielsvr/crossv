@@ -7,19 +7,21 @@ public class ValidationException extends RuntimeException {
 	private Validation validation;
 
 	public ValidationException() {
-		this(Iterables.<Evaluation> empty());
+		this(Iterables.<EvaluationFault> empty());
 	}
 
-	public ValidationException(Iterable<Evaluation> evaluations) {
-		this(new Validation(Iterables.emptyIfNull(evaluations)));
+	public ValidationException(Iterable<EvaluationFault> evaluations) {
+		this(new Validation(
+				Iterables.<EvaluationFault, Evaluation> cast(Iterables
+						.emptyIfNull(evaluations))));
 	}
 
 	public ValidationException(Validation validation) {
 		this.validation = validation != null ? validation : new Validation(
 				Iterables.<Evaluation> empty());
 	}
-	
-	public Iterable<String> getEvaluationMessages(){
+
+	public Iterable<String> getEvaluationMessages() {
 		return validation.getMessages();
 	}
 }

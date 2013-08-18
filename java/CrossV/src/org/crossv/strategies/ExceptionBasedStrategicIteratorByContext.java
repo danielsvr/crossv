@@ -1,14 +1,19 @@
 package org.crossv.strategies;
 
+import static org.crossv.primitives.Iterables.ofClass;
+
 import java.util.Iterator;
 
 import org.crossv.Evaluation;
+import org.crossv.EvaluationFault;
 import org.crossv.Evaluator;
 import org.crossv.ValidationException;
 
-public class ExceptionBasedStrategicIteratorByContext extends StrategicIteratorByContext {
+public class ExceptionBasedStrategicIteratorByContext extends
+		StrategicIteratorByContext {
 
-	public ExceptionBasedStrategicIteratorByContext(Iterator<? extends Evaluator> evaluators) {
+	public ExceptionBasedStrategicIteratorByContext(
+			Iterator<? extends Evaluator> evaluators) {
 		super(evaluators);
 	}
 
@@ -17,7 +22,12 @@ public class ExceptionBasedStrategicIteratorByContext extends StrategicIteratorB
 			Iterable<Evaluation> result) {
 		super.evaluateMethodCalled(proxy, result);
 
-		if (isIterationStopped())
-			throw new ValidationException(getEvaluations());
+		if (isIterationStopped()) {
+			Iterable<Evaluation> evaluations = getEvaluations();
+			Iterable<EvaluationFault> faults;
+			
+			faults = ofClass(EvaluationFault.class, evaluations);
+			throw new ValidationException(faults);
+		}
 	}
 }

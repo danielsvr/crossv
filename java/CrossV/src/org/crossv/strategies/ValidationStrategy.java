@@ -67,11 +67,11 @@ public abstract class ValidationStrategy {
 		}
 	}
 
-	private static ValidationByCotextStrategy createValidationByContext() {
+	private static ValidationStrategy createValidationByContext() {
 		return new ValidationByCotextStrategy();
 	}
 
-	private static ExceptionBasedValidationByCotextStrategy createExceptionBasedValidationStrategy() {
+	private static ValidationStrategy createExceptionBasedValidationStrategy() {
 		return new ExceptionBasedValidationByCotextStrategy();
 	}
 }
