@@ -16,6 +16,10 @@ public class Validator {
 		this(evaluator, (Evaluator[]) null);
 	}
 
+	public Validator(Iterable<Evaluator> evaluators) {
+		this(new BasicEvaluatorRegistry(evaluators));
+	}
+
 	public Validator(Evaluator evaluator1, Evaluator... evaluators) {
 		this(new BasicEvaluatorRegistry(evaluator1, evaluators));
 	}

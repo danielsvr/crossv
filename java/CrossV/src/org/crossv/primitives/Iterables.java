@@ -185,6 +185,10 @@ public final class Iterables {
 		return new ArrayIterable<E>(null, objs);
 	}
 
+	public static <E> Iterable<E> toIterable(E firstItem, E... otherItems) {
+		return new ArrayIterable<E>(firstItem, otherItems);
+	}
+
 	public static <E> Iterable<E> empty() {
 		return new EmptyIterable<E>();
 	}

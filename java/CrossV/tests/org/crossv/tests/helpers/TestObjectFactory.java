@@ -3,11 +3,13 @@ package org.crossv.tests.helpers;
 import org.crossv.BasicEvaluator;
 import org.crossv.BasicEvaluatorRegistry;
 import org.crossv.Evaluation;
+import org.crossv.Evaluator;
 import org.crossv.NoContext;
 import org.crossv.Validator;
 import org.crossv.primitives.Iterables;
 import org.crossv.strategies.ExceptionBasedValidationByCotextStrategy;
 import org.crossv.strategies.ValidationByCotextStrategy;
+import org.crossv.strategies.ValidationStrategy;
 import org.crossv.tests.subjects.Monkey;
 import org.crossv.tests.subjects.Mouse;
 import org.crossv.tests.subjects.TestableMonkeyEvaluator;
@@ -17,6 +19,12 @@ public class TestObjectFactory {
 
 	public static Monkey createMonkey() {
 		return new Monkey();
+	}
+
+	public static Validator createValidator(Evaluator... evaluators) {
+		Iterable<Evaluator> iterable = Iterables.toIterable(evaluators);
+		BasicEvaluatorRegistry registry = new BasicEvaluatorRegistry(iterable);
+		return createValidator(registry);
 	}
 
 	public static Validator createValidatorWithAEvaluatorForMouseClass() {
@@ -56,7 +64,9 @@ public class TestObjectFactory {
 	}
 
 	public static Validator createValidator(BasicEvaluatorRegistry registry) {
-		return new Validator(registry);
+		Validator validator = new Validator(registry);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
+		return validator;
 	}
 
 	public static BasicEvaluatorRegistry createEvaluatorRegistry() {

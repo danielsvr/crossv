@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.crossv.primitives.ArgumentException;
+import org.crossv.primitives.Iterables;
 
 /**
  * An registry of evaluators that will be used by the {@link Validator}.
@@ -24,7 +25,7 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 	 * Creates an instance of an {@link BasicEvaluatorRegistry}.
 	 */
 	public BasicEvaluatorRegistry() {
-		this(null);
+		this((Evaluator) null);
 	}
 
 	/**
@@ -44,12 +45,13 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 	 *            that will be added to the registry.
 	 */
 	public BasicEvaluatorRegistry(Evaluator evaluator1, Evaluator... evaluators) {
+		this(Iterables.toIterable(evaluator1, evaluators));
+	}
+
+	public BasicEvaluatorRegistry(Iterable<Evaluator> evaluators) {
 		allEvaluators = new ArrayList<Evaluator>();
 		contextTable = new Hashtable<Class<?>, Dictionary<Class<?>, List<Evaluator>>>();
 		noContextEvaluatorsByEvaluatedClass = new Hashtable<Class<?>, List<Evaluator>>();
-
-		if (evaluator1 != null)
-			register(evaluator1);
 
 		if (evaluators == null)
 			return;

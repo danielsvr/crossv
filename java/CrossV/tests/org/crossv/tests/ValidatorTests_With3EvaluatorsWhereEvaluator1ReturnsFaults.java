@@ -1,13 +1,13 @@
 package org.crossv.tests;
 
-import static org.junit.Assert.assertThat;
 import static org.crossv.tests.helpers.Matchers.doesntHave;
-import static org.crossv.tests.helpers.Matchers.have;
 import static org.crossv.tests.helpers.Matchers.hasSize;
+import static org.crossv.tests.helpers.Matchers.have;
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-import org.crossv.Evaluation;
 import org.crossv.BasicEvaluatorRegistry;
+import org.crossv.Evaluation;
 import org.crossv.EvaluationFault;
 import org.crossv.EvaluationSuccess;
 import org.crossv.Validation;
@@ -50,7 +50,7 @@ public class ValidatorTests_With3EvaluatorsWhereEvaluator1ReturnsFaults {
 		evaluator.returns(independentContext1Success);
 		registry.register(evaluator);
 
-		validator = new Validator(registry);
+		validator = TestObjectFactory.createValidator(registry);
 	}
 
 	@After
