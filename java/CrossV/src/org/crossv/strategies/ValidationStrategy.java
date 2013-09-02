@@ -1,13 +1,26 @@
 package org.crossv.strategies;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Properties;
 
 import org.crossv.Evaluator;
+import org.crossv.primitives.Lists;
 
 public abstract class ValidationStrategy {
 	public final static ValidationStrategy BY_CONTEXT = createValidationByContext();
-	public final static ValidationStrategy EXCEPTION_BY_CONTEXT = createExceptionExceptionBasedValidationStrategy();
+	public final static ValidationStrategy EXCEPTION_BY_CONTEXT = createExceptionBasedValidationStrategy();
+
+	private static final String BYCONTEXT_LITERAL = "BYCONTEXT";
+	private static final String STRATEGY_LITERAL = "strategy";
+	private static final String DEFAULT_STRATEGY_PROPERTY = "default_strategy";
+
+	private static final List<String> BY_CONTEXT_LITERALS = Lists.of(
+			BYCONTEXT_LITERAL, "BY_CONTEXT");
+
+	private static final List<String> EXCEPTION_BY_CONTEXT_LITERALS = Lists.of(
+			"EXCEPTION", "VALIDATIONEXCEPTION", "EXCEPTIONBYCONTEXT",
+			"EXCEPTION_BY_CONTEXT");
 
 	protected ValidationStrategy() {
 	}
@@ -21,8 +34,7 @@ public abstract class ValidationStrategy {
 
 	public static ValidationStrategy getDefault(InputStream resourceStream) {
 		if (resourceStream == null)
-			return createValidationByContext();
-
+			return createExceptionBasedValidationStrategy();
 		Class<ValidationStrategy> thisClass;
 		Class<?> strategyClass;
 		ValidationStrategy strategy = null;
@@ -35,35 +47,31 @@ public abstract class ValidationStrategy {
 			properties = new Properties();
 			properties.load(resourceStream);
 
-			strategyProperty = properties.get("default_strategy");
+			strategyProperty = properties.get(DEFAULT_STRATEGY_PROPERTY);
 			strategyProperty = strategyProperty == null ? properties
-					.get("strategy") : strategyProperty;
+					.get(STRATEGY_LITERAL) : strategyProperty;
 			strategyName = strategyProperty != null ? strategyProperty
-					.toString().toUpperCase() : "BYCONTEXT";
+					.toString().toUpperCase() : BYCONTEXT_LITERAL;
 
-			if (strategyName.equals("BYCONTEXT")
-					|| strategyName.equals("BY_CONTEXT"))
+			if (BY_CONTEXT_LITERALS.contains(strategyName))
 				return createValidationByContext();
-			if (strategyName.equals("EXCEPTION")
-					|| strategyName.equals("VALIDATIONEXCEPTION")
-					|| strategyName.equals("EXCEPTIONBYCONTEXT")
-					|| strategyName.equals("EXCEPTION_BY_CONTEXT"))
-				return createExceptionExceptionBasedValidationStrategy();
+			if (EXCEPTION_BY_CONTEXT_LITERALS.contains(strategyName))
+				return createExceptionBasedValidationStrategy();
 			strategyClass = Class.forName(strategyName);
 			strategy = thisClass.cast(strategyClass.newInstance());
 			return strategy;
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return createValidationByContext();
+			return createExceptionBasedValidationStrategy();
 		}
 	}
 
-	private static ValidationByCotextStrategy createValidationByContext() {
+	private static ValidationStrategy createValidationByContext() {
 		return new ValidationByCotextStrategy();
 	}
 
-	private static ExceptionBasedValidationByCotextStrategy createExceptionExceptionBasedValidationStrategy() {
+	private static ValidationStrategy createExceptionBasedValidationStrategy() {
 		return new ExceptionBasedValidationByCotextStrategy();
 	}
 }

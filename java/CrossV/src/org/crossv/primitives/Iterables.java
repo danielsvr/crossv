@@ -185,6 +185,10 @@ public final class Iterables {
 		return new ArrayIterable<E>(null, objs);
 	}
 
+	public static <E> Iterable<E> toIterable(E firstItem, E... otherItems) {
+		return new ArrayIterable<E>(firstItem, otherItems);
+	}
+
 	public static <E> Iterable<E> empty() {
 		return new EmptyIterable<E>();
 	}
@@ -238,5 +242,33 @@ public final class Iterables {
 
 	public static <E> Enumeration<E> toEnumeration(Iterable<E> monkeys) {
 		return new IterableToEnumeration<E>(monkeys);
+	}
+
+	public static <ER> Iterable<ER> ofClass(Class<ER> clazz, Iterable<?> items) {
+		Iterable<Object> objects = cast(items);
+		Iterable<Object> whereIterable = where(objects, new OfClassPredicate(
+				clazz));
+		Iterable<ER> result = cast(whereIterable);
+		return result;
+	}
+
+	public static <E> Iterable<E> where(Iterable<E> iterable,
+			Predicate<E> predicate) {
+		return new WhereIterable<E>(iterable, predicate);
+	}
+
+	private static class OfClassPredicate implements Predicate<Object> {
+		private Class<?> clazz;
+
+		public OfClassPredicate(Class<?> clazz) {
+			this.clazz = clazz;
+		}
+
+		@Override
+		public boolean eval(Object value) {
+			if (value == null)
+				return false;
+			return clazz.isAssignableFrom(value.getClass());
+		}
 	}
 }

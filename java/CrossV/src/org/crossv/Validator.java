@@ -24,6 +24,9 @@ public class Validator {
 		this(evaluator, (Evaluator[]) null);
 	}
 
+	public Validator(Iterable<Evaluator> evaluators) {
+		this(new BasicEvaluatorRegistry(evaluators));
+	}
   /**
    * Creates a new {@link Validator} object that uses the provided evaludators.
    * @param evaluator

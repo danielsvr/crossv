@@ -63,7 +63,7 @@ public class ValidatorTests_With5EvaluatorsWhereEvaluator1And5ThrowsException {
 		evaluator.isThrowing(mySecondBadException);
 		registry.register(evaluator);
 		
-		validator = new Validator(registry);
+		validator = TestObjectFactory.createValidator(registry);		
 	}
 
 	@After

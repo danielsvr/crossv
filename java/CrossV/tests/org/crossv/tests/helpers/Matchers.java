@@ -43,4 +43,9 @@ public class Matchers {
 	public static Matcher<Object> assignableTo(Class<?> clazz) {
 		return new AssignableToMatcher(clazz);
 	}
+
+	public static <E extends Iterable<?>> Matcher<E> isSequence(
+			Object... objects) {
+		return new IsSequence<E>(objects);
+	}
 }
