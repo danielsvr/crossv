@@ -21,7 +21,7 @@ public abstract class TypeSafeEvaluator<E, EContext> implements Evaluator {
 			actualContext = contextClass.cast(context);
 
 			return evaluateInstance(actualObj, actualContext);
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			return Evaluation.fault(e);
 		}
 	}
