@@ -5,7 +5,7 @@ import org.crossv.EvaluationFault;
 import org.crossv.primitives.Iterables;
 import org.crossv.primitives.Predicate;
 import org.hamcrest.Description;
-import org.junit.internal.matchers.TypeSafeMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
 public class HasFaultsWith extends TypeSafeMatcher<Iterable<Evaluation>> {
 	private final Exception cause;

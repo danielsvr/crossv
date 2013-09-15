@@ -3,7 +3,7 @@ package org.crossv.tests.helpers;
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Description;
 import org.hamcrest.SelfDescribing;
-import org.junit.internal.matchers.TypeSafeMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
 public class HasElementsMatcher<E> extends TypeSafeMatcher<Iterable<E>>
 		implements SelfDescribing {

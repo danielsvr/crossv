@@ -2,7 +2,7 @@ package org.crossv.tests.helpers;
 
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Description;
-import org.junit.internal.matchers.TypeSafeMatcher;
+import org.hamcrest.TypeSafeMatcher;
 
 public class IsEmptyMatcher<E extends Iterable<?>> extends TypeSafeMatcher<E> {
 

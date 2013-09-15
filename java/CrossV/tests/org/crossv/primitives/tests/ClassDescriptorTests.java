@@ -2,6 +2,7 @@ package org.crossv.primitives.tests;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
 
 import org.crossv.primitives.ClassDescriptor;
@@ -39,12 +40,12 @@ public class ClassDescriptorTests {
 	public void executeEqualsOnStringPassingInt_returnsBoolean()
 			throws Exception {
 		ClassDescriptor descriptor;
-		Object result;
+		Boolean result;
 
 		descriptor = new ClassDescriptor(String.class);
-		result = descriptor.execute("test", "equals", 123);
+		result = (Boolean)descriptor.execute("test", "equals", 123);
 
-		assertThat(result, is(Boolean.class));
+		assertThat(result, isA(Boolean.class));
 	}
 
 	@Test
