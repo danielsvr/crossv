@@ -19,13 +19,6 @@ public interface Evaluator {
 	 *            will be evaluated.
 	 */
 	Iterable<Evaluation> evaluate(Object obj, Object context);
-
-//	/**
-//	 * When implemented, gets the metadata of the current {@link Evaluator}.
-//	 * 
-//	 *  @return the metadata of the current {@link Evaluator}
-//	 */
-//	EvaluatorMetadata getMetadata();
 	
 	/**
 	 * When implemented, gets the {@link Class} of the object that later will be
