@@ -143,26 +143,26 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 	}
 
 	/**
-	 * Gets all the registered evaluators for the provided object and context
-	 * {@link Class}es.
+	 * Gets all the registered evaluators for the provided object {@link Class}
+	 * and context.
 	 * 
 	 * @param objClass
 	 *            is the {@link Class} of the object that will be evaluated.
-	 * @param contextClass
-	 *            is the {@link Class} of the context on which the object will
-	 *            be evaluated.
-	 * @return a sequence of evaluators for the provided object and context
-	 *         {@link Class}es.
+	 * @param context
+	 *            is the instance of the context on which the object will be
+	 *            evaluated. If the context is null then {@link NoContext} will
+	 *            be used
+	 * @return a sequence of evaluators for the provided object {@link Class}
+	 *         and context.
 	 */
 	@Override
-	public <E, EContext> Iterable<Evaluator> get(Class<E> objClass,
-			Class<EContext> contextClass) {
+	public <E> Iterable<Evaluator> get(Class<E> objClass, Object context) {
 		List<Evaluator> result;
 		Class<?> actualContextClass;
 		Dictionary<Class<?>, List<Evaluator>> entry;
 		List<Evaluator> all;
 
-		actualContextClass = contextClass != null ? contextClass
+		actualContextClass = context != null ? context.getClass()
 				: NoContext.class;
 		result = new ArrayList<Evaluator>();
 

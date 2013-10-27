@@ -99,12 +99,8 @@ public class Validator {
 		List<Evaluation> allEvaluations;
 		Iterable<Evaluation> currentEvaluations;
 		Iterable<? extends Evaluator> evaluators;
-		Class<?> contextClass;
 
-		context = context != null ? context : NoContext.instance;
-		contextClass = context.getClass();
-
-		evaluators = evaluatorProvider.get(objClass, contextClass);
+		evaluators = evaluatorProvider.get(objClass, context);
 		evaluators = strategy.apply(evaluators);
 
 		allEvaluations = new ArrayList<Evaluation>();

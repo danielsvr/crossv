@@ -5,8 +5,8 @@ import static org.crossv.tests.helpers.Matchers.has;
 import static org.crossv.tests.helpers.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
-import org.crossv.Evaluator;
 import org.crossv.BasicEvaluatorRegistry;
+import org.crossv.Evaluator;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.ExtendedContext1;
 import org.crossv.tests.subjects.IndependentContext1;
@@ -86,169 +86,169 @@ public class BasicEvaluatorRegistryTests {
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_Returns2Evaluators() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, hasSize(2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_ReturnsMonkeyEvaluator1() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, has(monkeyEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_ReturnsMonkeyEvaluator2() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, has(monkeyEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMonkeyEvaluator3() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, doesntHave(monkeyEvaluator3));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMonkeyEvaluator4() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, doesntHave(monkeyEvaluator4));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMouseEvaluator1() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, doesntHave(mouseEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_DoesntReturnMouseEvaluator2() {
-		evaluators = registry.get(Monkey.class, ExtendedContext1.class);
+		evaluators = registry.get(Monkey.class, new ExtendedContext1());
 		assertThat(evaluators, doesntHave(mouseEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_Return1Evaluator() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, hasSize(1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_ReturnMonkeyEvaluator3() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, has(monkeyEvaluator3));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_DoesntReturnMonkeyEvaluator1() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, doesntHave(monkeyEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_DoesntReturnMonkeyEvaluator2() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, doesntHave(monkeyEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_DoesntReturnMonkeyEvaluator4() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, doesntHave(monkeyEvaluator4));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_DoesntReturnMouseEvaluator1() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, doesntHave(mouseEvaluator1));
 	}
 
 	@Test
 	public void vgetEvaluators_ForMonkeyAndIndependentContext1_DoesntReturnMouseEvaluator2() {
-		evaluators = registry.get(Monkey.class, IndependentContext1.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext1());
 		assertThat(evaluators, doesntHave(mouseEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_Return1Evaluator() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, hasSize(1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_ReturnMonkeyEvaluator4() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, has(monkeyEvaluator4));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_DoesntReturnMonkeyEvaluator1() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, doesntHave(monkeyEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_DoesntReturnMonkeyEvaluator2() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, doesntHave(monkeyEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_DoesntReturnMonkeyEvaluator3() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, doesntHave(monkeyEvaluator3));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_DoesntReturnMouseEvaluator1() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, doesntHave(mouseEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_DoesntReturnMouseEvaluator2() {
-		evaluators = registry.get(Monkey.class, IndependentContext2.class);
+		evaluators = registry.get(Monkey.class, new IndependentContext2());
 		assertThat(evaluators, doesntHave(mouseEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_Return3Evaluators() {
-		evaluators = registry.get(Monkey.class, null);
+		evaluators = registry.get(Monkey.class, (Object) null);
 		assertThat(evaluators, hasSize(3));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_ReturnMonkeyEvaluator1() {
-		evaluators = registry.get(Monkey.class, null);
+		evaluators = registry.get(Monkey.class, (Object) null);
 		assertThat(evaluators, has(monkeyEvaluator5));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_ReturnMonkeyEvaluator3() {
-		evaluators = registry.get(Monkey.class, null);
+		evaluators = registry.get(Monkey.class, (Object) null);
 		assertThat(evaluators, has(monkeyEvaluator6));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_ReturnMonkeyEvaluator4() {
-		evaluators = registry.get(Monkey.class, null);
+		evaluators = registry.get(Monkey.class, (Object) null);
 		assertThat(evaluators, has(monkeyEvaluator7));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_DoesntReturnMonkeyEvaluator2() {
-		evaluators = registry.get(Monkey.class, Object.class);
+		evaluators = registry.get(Monkey.class, new Object());
 		assertThat(evaluators, doesntHave(monkeyEvaluator2));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_DoesntReturnMouseEvaluator1() {
-		evaluators = registry.get(Monkey.class, Object.class);
+		evaluators = registry.get(Monkey.class, new Object());
 		assertThat(evaluators, doesntHave(mouseEvaluator1));
 	}
 
 	@Test
 	public void getEvaluators_ForMonkeyAndNoContext_DoesntReturnMouseEvaluator2() {
-		evaluators = registry.get(Monkey.class, Object.class);
+		evaluators = registry.get(Monkey.class, new Object());
 		assertThat(evaluators, doesntHave(mouseEvaluator2));
 	}
 }
