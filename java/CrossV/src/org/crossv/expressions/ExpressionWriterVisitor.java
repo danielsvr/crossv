@@ -159,6 +159,11 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitComplement(Complement expression) {
-		printer.visitComplement(expression);
+		printer.printComplement(expression);
+	}
+	
+	@Override
+	public void visitSequenceLength(SequenceLength expression) {
+		printer.printSequenceLength(expression);
 	}
 }

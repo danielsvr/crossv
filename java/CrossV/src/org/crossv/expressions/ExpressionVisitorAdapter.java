@@ -155,4 +155,9 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 	public void visitComplement(Complement expression) {
 		visit(expression);
 	}
+
+	@Override
+	public void visitSequenceLength(SequenceLength expression) {
+		visit(expression);
+	}
 }

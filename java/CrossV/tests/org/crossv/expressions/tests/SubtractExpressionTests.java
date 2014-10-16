@@ -16,7 +16,7 @@ public class SubtractExpressionTests {
 	public void createSubtractExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
 		subtract(1, false);
 	}
-
+	
 	@Test
 	public void createSubtractExpression_NumberOperands_ReturnClassIsNumber() {
 		Class<?> expectedClass = Number.class;

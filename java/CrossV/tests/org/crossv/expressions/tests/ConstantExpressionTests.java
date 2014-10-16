@@ -3,6 +3,7 @@ package org.crossv.expressions.tests;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.instance;
+import static org.crossv.primitives.Iterables.repeat;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -34,6 +35,12 @@ public class ConstantExpressionTests {
 	public void createConstantWithPositiveFloatValueExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = constant((float) 1);
 		assertThat(e.toString(), is("1.0"));
+	}
+	
+	@Test
+	public void createConstantExpressionWithIterableOfFloats_callingToString_getsJavaLikeExpression() {
+		Expression e = constant(repeat((float) 1, 3));
+		assertThat(e.toString(), is("new java.lang.Float[] { 1.0, 1.0, 1.0 }"));
 	}
 
 	@Test(expected = IllegalOperandException.class)

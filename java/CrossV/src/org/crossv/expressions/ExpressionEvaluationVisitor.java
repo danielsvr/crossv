@@ -159,6 +159,11 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	
 	@Override
 	public void visitComplement(Complement expression) {
-		evaluator.visitComplement(expression);
+		evaluator.evaluateComplement(expression);
+	}
+	
+	@Override
+	public void visitSequenceLength(SequenceLength expression) {
+		evaluator.evaluateSequenceLength(expression);
 	}
 }

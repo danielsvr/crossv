@@ -1,6 +1,9 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.Iterables.toIterable;
+
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import org.crossv.primitives.ArgumentNullException;
 
@@ -35,32 +38,61 @@ public class ExpressionWriter {
 		out.print(expression);
 	}
 
-	protected void printConstant(Constant expression) {
-		Object value = expression.getValue();
-		if (value == null) {
+	protected void printObject(Object expression) {
+		if (expression == null) {
 			out.print("null");
 			return;
 		}
 
-		if (value instanceof String) {
-			out.print("\"" + value.toString() + "\"");
+		if (expression instanceof String) {
+			out.print("\"" + expression.toString() + "\"");
 			return;
 		}
 
-		if (value instanceof Number) {
-			Number number = (Number) value;
+		if (expression instanceof Number) {
+			Number number = (Number) expression;
 			if (number.doubleValue() < 0) {
-				out.print("(" + value.toString() + ")");
+				out.print("(" + number.toString() + ")");
 				return;
 			}
 		}
 
-		if (value instanceof Class) {
-			out.print(((Class<?>) value).getName());
+		if (expression instanceof Class) {
+			out.print(((Class<?>) expression).getName());
 			return;
 		}
 
-		out.print(value.toString());
+		out.print(expression.toString());
+	}
+
+	protected void printArray(Iterable<?> values) {
+		boolean first = true;
+		for (Object obj : values) {
+			if (first)
+				out.print("new " + obj.getClass().getName() + "[] { ");
+			else
+				out.print(", ");
+			first &= false;
+			printObject(obj);
+		}
+		out.print(" }");
+	}
+
+	protected void printConstant(Constant expression) {
+		Object value = expression.getValue();
+
+		if (value != null && expression.isAssignableTo(Iterable.class)) {
+			printArray((Iterable<?>) value);
+			return;
+		}
+		if (value != null
+				&& (expression.isArray() || expression
+						.isAssignableTo(Enumeration.class))) {
+			printArray(toIterable(value));
+			return;
+		}
+
+		printObject(value);
 	}
 
 	protected void printContext(Context expression) {
@@ -187,7 +219,11 @@ public class ExpressionWriter {
 				expression.getIfFalse());
 	}
 
-	protected void visitComplement(Complement expression) {
+	protected void printComplement(Complement expression) {
 		print("~", expression.getOperand());
+	}
+
+	public void printSequenceLength(SequenceLength expression) {
+		print("(", expression.getOperand(), ").length");
 	}
 }

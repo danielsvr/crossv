@@ -80,7 +80,7 @@ public class CallExpressionTests {
 		Monkey expectedRelative = TestObjectFactory.createMonkey();
 		Monkey monkey = TestObjectFactory.createMonkey();
 		monkey.setRelativesAsArray(new Monkey[] { expectedRelative });
-		Expression e = call(constant(monkey), "getRelativeByIndex", constant(0));
+		Expression e = call(constant(monkey), "getRelativeByIndex", 0);
 		assertThat(e.evaluate(), is(equalTo(expectedRelative)));
 	}
 }

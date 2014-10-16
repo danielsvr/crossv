@@ -3,8 +3,12 @@ package org.crossv.expressions;
 import static java.text.MessageFormat.format;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+import static org.crossv.primitives.Iterables.count;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
 import java.util.Stack;
 
 import org.crossv.primitives.ArgumentNullException;
@@ -93,13 +97,11 @@ public class ExpressionEvaluator {
 			else if (op == EvalOp.SUBTRACT)
 				stack.push(left - right);
 		} else if (op == EvalOp.PLUS) {
-			//@formatter:off
-			String left = leftPop == null 
-					? "null" : leftPop.toString();
-			String right = rightPop == null 
-					? "null" : rightPop.toString();
+			// @formatter:off
+			String left = leftPop == null ? "null" : leftPop.toString();
+			String right = rightPop == null ? "null" : rightPop.toString();
 			stack.push(left + right);
-			//@formatter:on
+			// @formatter:on
 		}
 	}
 
@@ -169,7 +171,8 @@ public class ExpressionEvaluator {
 					|| (leftPop != null && !leftPop.equals(rightPop)));
 	}
 
-	private void evaluateMultiplicity(MultiplicityExpression expression, EvalOp  op) {
+	private void evaluateMultiplicity(MultiplicityExpression expression,
+			EvalOp op) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -205,7 +208,7 @@ public class ExpressionEvaluator {
 		} else {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
-			if (op ==EvalOp.DEVIDE)
+			if (op == EvalOp.DEVIDE)
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
@@ -320,7 +323,9 @@ public class ExpressionEvaluator {
 			params[i] = stack.pop();
 		}
 		try {
-			stack.push(expression.getMethod().invoke(instance, params));
+			Method method = expression.getMethod();
+			Object value = method.invoke(instance, params);
+			stack.push(value);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeEvaluationException(e);
 		} catch (InvocationTargetException e) {
@@ -529,7 +534,7 @@ public class ExpressionEvaluator {
 		evaluateBitwise(expression, EvalOp.XOR);
 	}
 
-	protected void visitComplement(Complement expression) {
+	protected void evaluateComplement(Complement expression) {
 		eval(expression.getOperand());
 
 		Object opPop = stack.pop();
@@ -539,6 +544,24 @@ public class ExpressionEvaluator {
 		} else {
 			long op = ((Number) opPop).longValue();
 			stack.push(~op);
+		}
+	}
+
+	protected void evaluateSequenceLength(SequenceLength expression) {
+		eval(expression.getOperand());
+		Expression opExp = expression.getOperand();
+		Object opPop = stack.pop();
+		if (opExp.isArray()) {
+			stack.push(Array.getLength(opPop));
+		} else if (opExp.isAssignableTo(String.class)) {
+			String string = (String) opPop;
+			stack.push(string.length());
+		} else if (opExp.isAssignableTo(Iterable.class)) {
+			Iterable<?> iterable = (Iterable<?>) opPop;
+			stack.push(count(iterable));
+		} else if (opExp.isAssignableTo(Enumeration.class)) {
+			Enumeration<?> enumeration = (Enumeration<?>) opPop;
+			stack.push(count(enumeration));
 		}
 	}
 }

@@ -2,10 +2,15 @@ package org.crossv.expressions;
 
 import static org.crossv.expressions.ExpressionEvaluator.NO_CONTEXT;
 import static org.crossv.expressions.ExpressionEvaluator.NO_INSTANCE;
+import static org.crossv.primitives.Iterables.select;
+import static org.crossv.primitives.Iterables.toArray;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.Enumeration;
+
+import org.crossv.primitives.Function;
 
 public abstract class Expression {
 
@@ -88,9 +93,10 @@ public abstract class Expression {
 			return true;
 		return false;
 	}
-
-	protected static IllegalOperandException illegalOperand() {
-		return new IllegalOperandException();
+	
+	protected boolean isArray(){
+		Class<?> resultClass = getResultClass();
+		return resultClass.isArray();
 	}
 
 	protected boolean returnsPrimitiveType() {
@@ -273,10 +279,7 @@ public abstract class Expression {
 
 	public static Expression call(Object instance, String methodName,
 			Object... parameters) throws NoSuchMethodException {
-		Expression[] params = new Expression[parameters.length];
-		for (int i = 0; i < params.length; i++)
-			params[i] = constant(parameters[i]);
-
+		Expression[] params = convertObjectsToExpressions(parameters);
 		return call(constant(instance), methodName, params);
 	}
 
@@ -288,6 +291,12 @@ public abstract class Expression {
 	public static Expression call(Expression instance, String methodName,
 			Expression... parameters) throws NoSuchMethodException {
 		return new Call(instance, methodName, parameters);
+	}
+
+	public static Expression call(Expression instance, String methodName,
+			Object... parameters) throws NoSuchMethodException {
+		Expression[] params = convertObjectsToExpressions(parameters);
+		return call(instance, methodName, params);
 	}
 
 	public static Expression call(Expression instance, Method method,
@@ -561,5 +570,59 @@ public abstract class Expression {
 
 	public static Expression complemented(Object operand) {
 		return complemented(constant(operand));
+	}	
+
+	public static Expression sequenceLength(Expression operand) {
+		return new SequenceLength(operand);
+	}
+
+	public static Expression sequenceLength(byte[] operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static Expression sequenceLength(short[] operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static Expression sequenceLength(int[] operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static Expression sequenceLength(long[] operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static Expression sequenceLength(double[] operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static Expression sequenceLength(String[] operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static Expression sequenceLength(String operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static <E> Expression sequenceLength(Iterable<E> operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	public static <E> Expression sequenceLength(Enumeration<E> operand) {
+		return sequenceLength(constant(operand));
+	}
+
+	protected static IllegalOperandException illegalOperand() {
+		return new IllegalOperandException();
+	}
+
+	private static Expression[] convertObjectsToExpressions(Object[] parameters) {
+		return toArray(select(parameters,
+				new Function<Object, Expression>() {
+			@Override
+			public Expression eval(Object value) {
+				return constant(value);
+			}
+		}), new Expression[1]);
 	}
 }

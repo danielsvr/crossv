@@ -8,6 +8,15 @@ import java.util.Iterator;
 import java.util.List;
 
 public final class Iterables {
+	public static <E> E[] toArray(Iterable<E> iterable, E[] array) {
+		if (iterable == null)
+			throw new ArgumentNullException("iterable");
+		List<E> list = asList(iterable);
+		if (list == null)
+			list = toList(iterable);
+
+		return list.toArray(array);
+	}
 
 	public static <E> List<E> toList(Iterable<E> iterable) {
 		if (iterable == null)
@@ -173,8 +182,13 @@ public final class Iterables {
 			list.add(item);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <E> Iterable<E> toIterable(E obj) {
-		return new ArrayIterable<E>(obj, null);
+		if (obj != null && obj.getClass().isArray())
+			return new ArrayIterable<E>(obj, true);
+		if (obj != null && Enumeration.class.isAssignableFrom(obj.getClass()))
+			return (Iterable<E>) toIterable((Enumeration<?>) obj);
+		return new ArrayIterable<E>(obj);
 	}
 
 	public static <E> Iterable<E> toIterable(Enumeration<E> obj) {
@@ -238,6 +252,10 @@ public final class Iterables {
 
 	public static <E> Iterable<E> repeatDefault(int max) {
 		return new CreateItemIterable<E>(null, max);
+	}
+
+	public static <E> Iterable<E> repeat(E value, int max) {
+		return new CreateItemIterable<E>(value, max);
 	}
 
 	public static <E> Enumeration<E> toEnumeration(Iterable<E> monkeys) {

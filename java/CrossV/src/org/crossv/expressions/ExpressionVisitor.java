@@ -63,4 +63,6 @@ public interface ExpressionVisitor {
 	void visitXor(Xor expression);
 
 	void visitComplement(Complement expression);
+
+	void visitSequenceLength(SequenceLength expression);
 }
