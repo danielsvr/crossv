@@ -1,11 +1,13 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CObject;
+
 public final class Context extends Expression {
 
 	private final Class<?> clazz;
 
 	public Context() {
-		this.clazz = Object.class;
+		this.clazz = CObject;
 	}
 
 	public Context(Class<?> clazz) {

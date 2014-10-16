@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+import static org.crossv.expressions.ExpressionClass.CCharacter;
+import static org.crossv.expressions.ExpressionClass.CNumber;
 import static org.crossv.expressions.ExpressionEvaluator.NO_CONTEXT;
 import static org.crossv.expressions.ExpressionEvaluator.NO_INSTANCE;
 import static org.crossv.primitives.Iterables.select;
@@ -93,15 +96,14 @@ public abstract class Expression {
 			return true;
 		return false;
 	}
-	
-	protected boolean isArray(){
+
+	protected boolean isArray() {
 		Class<?> resultClass = getResultClass();
 		return resultClass.isArray();
 	}
 
 	protected boolean returnsPrimitiveType() {
-		return isAssignableToAny(Void.TYPE, Number.class, Character.class,
-				Boolean.class);
+		return isAssignableToAny(Void.TYPE, CNumber, CCharacter, CBoolean);
 	}
 
 	public void accept(ExpressionVisitor visitor) {
@@ -570,7 +572,7 @@ public abstract class Expression {
 
 	public static Expression complemented(Object operand) {
 		return complemented(constant(operand));
-	}	
+	}
 
 	public static Expression sequenceLength(Expression operand) {
 		return new SequenceLength(operand);
@@ -612,11 +614,10 @@ public abstract class Expression {
 		return sequenceLength(constant(operand));
 	}
 
-
 	public static Expression sequenceIndex(Expression operand, Expression index) {
 		return new SequenceIndex(operand, index);
 	}
-	
+
 	public static Expression sequenceIndex(Expression operand, int index) {
 		return sequenceIndex(operand, constant(index));
 	}
@@ -657,16 +658,12 @@ public abstract class Expression {
 		return sequenceIndex(constant(operand), index);
 	}
 
-	
-	
-	
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
 	}
 
 	private static Expression[] convertObjectsToExpressions(Object[] parameters) {
-		return toArray(select(parameters,
-				new Function<Object, Expression>() {
+		return toArray(select(parameters, new Function<Object, Expression>() {
 			@Override
 			public Expression eval(Object value) {
 				return constant(value);

@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+import static org.crossv.expressions.ExpressionClass.CInteger;
+import static org.crossv.expressions.ExpressionClass.CLong;
 import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
@@ -13,16 +16,16 @@ public abstract class BitwiseExpression extends BinaryExpression {
 	}
 
 	private void verifyResultClass() {
-		if (resultClass == null || !Integer.class.isAssignableFrom(resultClass)
-				&& !Long.class.isAssignableFrom(resultClass)
-				&& !Boolean.class.isAssignableFrom(resultClass))
+		if (resultClass == null || !CInteger.isAssignableFrom(resultClass)
+				&& !CLong.isAssignableFrom(resultClass)
+				&& !CBoolean.isAssignableFrom(resultClass))
 			throw illegalOperand();
 	}
 
 	private Class<?> calculateResultClass() {
-		if (left.isAssignableTo(Boolean.class)
-				&& right.isAssignableTo(Boolean.class))
-			return Boolean.class;
+		if (left.isAssignableTo(CBoolean)
+				&& right.isAssignableTo(CBoolean))
+			return CBoolean;
 		else if (canPromoteNumbers(leftClass, rightClass))
 			return getNumericPromotion(leftClass, rightClass);
 		return null;

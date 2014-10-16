@@ -1,6 +1,8 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.*;
+import static org.crossv.expressions.ExpressionClass.CString;
+import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
+import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
 public class Add extends AdditiveExpression {
 	private Class<?> resultClass;
@@ -14,12 +16,12 @@ public class Add extends AdditiveExpression {
 	private Class<?> calculateResultClass() {
 		if (canPromoteNumbers(leftClass, rightClass))
 			return getNumericPromotion(leftClass, rightClass);
-		return String.class;
+		return CString;
 	}
 
 	private void verifyOperands() {
-		if (!left.isAssignableTo(String.class)
-				&& !right.isAssignableTo(String.class)
+		if (!left.isAssignableTo(CString)
+				&& !right.isAssignableTo(CString)
 				&& !canPromoteNumbers(leftClass, rightClass))
 			throw illegalOperand();
 	}

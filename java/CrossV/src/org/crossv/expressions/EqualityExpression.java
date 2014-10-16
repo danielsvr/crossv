@@ -1,5 +1,6 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
 import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 
 public abstract class EqualityExpression extends BinaryExpression {
@@ -18,6 +19,6 @@ public abstract class EqualityExpression extends BinaryExpression {
 
 	@Override
 	public Class<?> getResultClass() {
-		return Boolean.class;
+		return CBoolean;
 	}
 }

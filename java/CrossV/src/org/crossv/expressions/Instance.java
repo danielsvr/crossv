@@ -1,9 +1,11 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CObject;
+
 public final class Instance extends Expression {
 	@Override
 	public Class<?> getResultClass() {
-		return Object.class;
+		return CObject;
 	}
 	
 	@Override

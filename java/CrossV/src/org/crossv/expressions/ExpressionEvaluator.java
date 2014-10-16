@@ -1,6 +1,15 @@
 package org.crossv.expressions;
 
 import static java.text.MessageFormat.format;
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+import static org.crossv.expressions.ExpressionClass.CDouble;
+import static org.crossv.expressions.ExpressionClass.CEnumeration;
+import static org.crossv.expressions.ExpressionClass.CFloat;
+import static org.crossv.expressions.ExpressionClass.CInteger;
+import static org.crossv.expressions.ExpressionClass.CIterable;
+import static org.crossv.expressions.ExpressionClass.CLong;
+import static org.crossv.expressions.ExpressionClass.CNumber;
+import static org.crossv.expressions.ExpressionClass.CString;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 import static org.crossv.primitives.Iterables.count;
@@ -69,28 +78,28 @@ public class ExpressionEvaluator {
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
+		if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
 			else if (op == EvalOp.SUBTRACT)
 				stack.push(left - right);
-		} else if (expression.isAssignableTo(Long.class)) {
+		} else if (expression.isAssignableTo(CLong)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
 			else if (op == EvalOp.SUBTRACT)
 				stack.push(left - right);
-		} else if (expression.isAssignableTo(Float.class)) {
+		} else if (expression.isAssignableTo(CFloat)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
 			else if (op == EvalOp.SUBTRACT)
 				stack.push(left - right);
-		} else if (expression.isAssignableTo(Double.class)) {
+		} else if (expression.isAssignableTo(CDouble)) {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
 			if (op == EvalOp.PLUS)
@@ -112,7 +121,7 @@ public class ExpressionEvaluator {
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Boolean.class)) {
+		if (expression.isAssignableTo(CBoolean)) {
 			boolean left = ((Boolean) leftPop).booleanValue();
 			boolean right = ((Boolean) rightPop).booleanValue();
 			if (op == EvalOp.AND)
@@ -121,7 +130,7 @@ public class ExpressionEvaluator {
 				stack.push(left | right);
 			else if (op == EvalOp.XOR)
 				stack.push(left ^ right);
-		} else if (expression.isAssignableTo(Integer.class)) {
+		} else if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
 			if (op == EvalOp.AND)
@@ -179,7 +188,7 @@ public class ExpressionEvaluator {
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
+		if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
 			if (op == EvalOp.DEVIDE)
@@ -188,7 +197,7 @@ public class ExpressionEvaluator {
 				stack.push(left % right);
 			else if (op == EvalOp.MULTIPLY)
 				stack.push(left * right);
-		} else if (expression.isAssignableTo(Long.class)) {
+		} else if (expression.isAssignableTo(CLong)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.DEVIDE)
@@ -197,7 +206,7 @@ public class ExpressionEvaluator {
 				stack.push(left % right);
 			else if (op == EvalOp.MULTIPLY)
 				stack.push(left * right);
-		} else if (expression.isAssignableTo(Float.class)) {
+		} else if (expression.isAssignableTo(CFloat)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
 			if (op == EvalOp.DEVIDE)
@@ -228,7 +237,7 @@ public class ExpressionEvaluator {
 		Class<?> leftClass = expression.getLeft().getResultClass();
 		Class<?> rightClass = expression.getRight().getResultClass();
 		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
-		if (Integer.class.isAssignableFrom(promotion)) {
+		if (CInteger.isAssignableFrom(promotion)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
 			if (op == EvalOp.GREATER_THAN)
@@ -239,7 +248,7 @@ public class ExpressionEvaluator {
 				stack.push(left < right);
 			else if (op == EvalOp.LESS_THAN_OR_EQUAL)
 				stack.push(left <= right);
-		} else if (Long.class.isAssignableFrom(promotion)) {
+		} else if (CLong.isAssignableFrom(promotion)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.GREATER_THAN)
@@ -250,7 +259,7 @@ public class ExpressionEvaluator {
 				stack.push(left < right);
 			else if (op == EvalOp.LESS_THAN_OR_EQUAL)
 				stack.push(left <= right);
-		} else if (Float.class.isAssignableFrom(promotion)) {
+		} else if (CFloat.isAssignableFrom(promotion)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
 			if (op == EvalOp.GREATER_THAN)
@@ -281,7 +290,7 @@ public class ExpressionEvaluator {
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
+		if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.LEFT_SHIFT)
@@ -375,7 +384,7 @@ public class ExpressionEvaluator {
 		else if ((isChr || isNo) && transformedResultClass.equals(Double.TYPE))
 			stack.push(isChr ? (double) chr : no.doubleValue());
 		else if (isBool && transformedResultClass.equals(Character.TYPE)
-				|| Number.class.isAssignableFrom(resultClass)) {
+				|| CNumber.isAssignableFrom(resultClass)) {
 			String message = "Cannot cast a boolean value to {0}.";
 			message = format(message, transformedResultClass.getName());
 			Throwable cause = new ClassCastException(message);
@@ -479,13 +488,13 @@ public class ExpressionEvaluator {
 		eval(expression.getOperand());
 
 		Object opPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
+		if (expression.isAssignableTo(CInteger)) {
 			int op = ((Number) opPop).intValue();
 			stack.push(-op);
-		} else if (expression.isAssignableTo(Long.class)) {
+		} else if (expression.isAssignableTo(CLong)) {
 			long op = ((Number) opPop).longValue();
 			stack.push(-op);
-		} else if (expression.isAssignableTo(Float.class)) {
+		} else if (expression.isAssignableTo(CFloat)) {
 			float op = ((Number) opPop).floatValue();
 			stack.push(-op);
 		} else {
@@ -539,7 +548,7 @@ public class ExpressionEvaluator {
 		eval(expression.getOperand());
 
 		Object opPop = stack.pop();
-		if (expression.isAssignableTo(Integer.class)) {
+		if (expression.isAssignableTo(CInteger)) {
 			int op = ((Number) opPop).intValue();
 			stack.push(~op);
 		} else {
@@ -554,13 +563,13 @@ public class ExpressionEvaluator {
 		Object opPop = stack.pop();
 		if (opExp.isArray()) {
 			stack.push(Array.getLength(opPop));
-		} else if (opExp.isAssignableTo(String.class)) {
+		} else if (opExp.isAssignableTo(CString)) {
 			String string = (String) opPop;
 			stack.push(string.length());
-		} else if (opExp.isAssignableTo(Iterable.class)) {
+		} else if (opExp.isAssignableTo(CIterable)) {
 			Iterable<?> iterable = (Iterable<?>) opPop;
 			stack.push(count(iterable));
-		} else if (opExp.isAssignableTo(Enumeration.class)) {
+		} else if (opExp.isAssignableTo(CEnumeration)) {
 			Enumeration<?> enumeration = (Enumeration<?>) opPop;
 			stack.push(count(enumeration));
 		}
@@ -571,19 +580,19 @@ public class ExpressionEvaluator {
 		Expression indexExp = expression.getRight();
 		eval(seqExp);
 		eval(indexExp);
-		
-		int indexPop = (Integer)stack.pop();
+
+		int indexPop = (Integer) stack.pop();
 		Object seqPop = stack.pop();
-		
+
 		if (seqExp.isArray()) {
 			stack.push(Array.get(seqPop, indexPop));
-		} else if (seqExp.isAssignableTo(String.class)) {
+		} else if (seqExp.isAssignableTo(CString)) {
 			String string = (String) seqPop;
 			stack.push(string.charAt(indexPop));
-		} else if (seqExp.isAssignableTo(Iterable.class)) {
+		} else if (seqExp.isAssignableTo(CIterable)) {
 			Iterable<?> iterable = (Iterable<?>) seqPop;
 			stack.push(elementAt(iterable, indexPop));
-		} else if (seqExp.isAssignableTo(Enumeration.class)) {
+		} else if (seqExp.isAssignableTo(CEnumeration)) {
 			Enumeration<?> iterable = (Enumeration<?>) seqPop;
 			stack.push(elementAt(iterable, indexPop));
 		}

@@ -1,9 +1,10 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CEnumeration;
+import static org.crossv.expressions.ExpressionClass.CIterable;
 import static org.crossv.primitives.Iterables.toIterable;
 
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
 import org.crossv.primitives.ArgumentNullException;
 
@@ -81,13 +82,13 @@ public class ExpressionWriter {
 	protected void printConstant(Constant expression) {
 		Object value = expression.getValue();
 
-		if (value != null && expression.isAssignableTo(Iterable.class)) {
+		if (value != null && expression.isAssignableTo(CIterable)) {
 			printArray((Iterable<?>) value);
 			return;
 		}
 		if (value != null
 				&& (expression.isArray() || expression
-						.isAssignableTo(Enumeration.class))) {
+						.isAssignableTo(CEnumeration))) {
 			printArray(toIterable(value));
 			return;
 		}

@@ -1,6 +1,11 @@
 package org.crossv.expressions;
 
-import java.util.Enumeration;
+import static org.crossv.expressions.ExpressionClass.CCharacter;
+import static org.crossv.expressions.ExpressionClass.CEnumeration;
+import static org.crossv.expressions.ExpressionClass.CInteger;
+import static org.crossv.expressions.ExpressionClass.CIterable;
+import static org.crossv.expressions.ExpressionClass.CObject;
+import static org.crossv.expressions.ExpressionClass.CString;
 import static org.crossv.primitives.ClassDescriptor.transformToClassIfPrimitive;
 
 public class SequenceIndex extends BinaryExpression {
@@ -15,24 +20,24 @@ public class SequenceIndex extends BinaryExpression {
 	}
 
 	private Class<?> calculateResultClass() {
-		if (left.isAssignableTo(String.class))
-			return Character.class;
-		if(left.isArray())
-			return transformToClassIfPrimitive(left.getResultClass().getComponentType());
-		if (left.isAssignableToAny(Enumeration.class, Iterable.class))
-			return Object.class;
+		if (left.isAssignableTo(CString))
+			return CCharacter;
+		if (left.isArray())
+			return transformToClassIfPrimitive(left.getResultClass()
+					.getComponentType());
+		if (left.isAssignableToAny(CEnumeration, CIterable))
+			return CObject;
 		return null;
 	}
 
 	private void verifyIndex() {
-		if (!right.isAssignableTo(Integer.class))
+		if (!right.isAssignableTo(CInteger))
 			throw illegalOperand();
 	}
 
 	private void verifySequence() {
 		if (!left.isArray()
-				&& !left.isAssignableToAny(String.class, Enumeration.class,
-						Iterable.class))
+				&& !left.isAssignableToAny(CString, CEnumeration, CIterable))
 			throw illegalOperand();
 	}
 

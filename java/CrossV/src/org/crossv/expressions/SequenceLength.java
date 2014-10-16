@@ -1,6 +1,9 @@
 package org.crossv.expressions;
 
-import java.util.Enumeration;
+import static org.crossv.expressions.ExpressionClass.CEnumeration;
+import static org.crossv.expressions.ExpressionClass.CInteger;
+import static org.crossv.expressions.ExpressionClass.CIterable;
+import static org.crossv.expressions.ExpressionClass.CString;
 
 public class SequenceLength extends UnaryExpression {
 	private Class<?> resultClass;
@@ -8,12 +11,12 @@ public class SequenceLength extends UnaryExpression {
 	public SequenceLength(Expression operand) {
 		super(operand);
 		verifyOperand();
-		resultClass = Integer.class;
+		resultClass = CInteger;
 	}
 
 	private void verifyOperand() {
-		if (!operand.isAssignableToAny(String.class, Iterable.class,
-				Enumeration.class) && !operand.isArray())
+		if (!operand.isAssignableToAny(CString, CIterable, CEnumeration)
+				&& !operand.isArray())
 			throw illegalOperand();
 	}
 

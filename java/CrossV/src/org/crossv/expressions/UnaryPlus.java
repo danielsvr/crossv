@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CNumber;
+
 public class UnaryPlus extends UnaryExpression {
 	public UnaryPlus(Expression operand) {
 		super(operand);
@@ -7,7 +9,7 @@ public class UnaryPlus extends UnaryExpression {
 	}
 
 	private void verifyOperand() {
-		if (!operand.isAssignableTo(Number.class))
+		if (!operand.isAssignableTo(CNumber))
 			throw illegalOperand();
 	}
 

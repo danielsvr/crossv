@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+import static org.crossv.expressions.ExpressionClass.CClass;
+
 public class InstanceOf extends RelationalExpression {
 	public InstanceOf(Expression left, Expression right) {
 		super(left, right);
@@ -7,13 +10,13 @@ public class InstanceOf extends RelationalExpression {
 	}
 
 	private void verifyOperands() {
-		if (left.returnsPrimitiveType() || !right.isAssignableTo(Class.class))
+		if (left.returnsPrimitiveType() || !right.isAssignableTo(CClass))
 			throw illegalOperand();
 	}
 
 	@Override
 	public Class<?> getResultClass() {
-		return Boolean.class;
+		return CBoolean;
 	}
 
 	@Override

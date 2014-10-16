@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+
 public abstract class ConditionalBinaryExpression extends BinaryExpression {
 
 	public ConditionalBinaryExpression(Expression left, Expression right) {
@@ -8,13 +10,12 @@ public abstract class ConditionalBinaryExpression extends BinaryExpression {
 	}
 
 	private void verifyOperands() {
-		if (!left.isAssignableTo(Boolean.class)
-				|| !right.isAssignableTo(Boolean.class))
+		if (!left.isAssignableTo(CBoolean) || !right.isAssignableTo(CBoolean))
 			throw illegalOperand();
 	}
 
 	@Override
 	public Class<?> getResultClass() {
-		return Boolean.class;
+		return CBoolean;
 	}
 }

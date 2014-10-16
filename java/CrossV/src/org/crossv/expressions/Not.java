@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+
 public class Not extends UnaryExpression {
 	public Not(Expression operand) {
 		super(operand);
@@ -7,13 +9,13 @@ public class Not extends UnaryExpression {
 	}
 
 	private void verifyOperand() {
-		if (!operand.isAssignableTo(Boolean.class))
+		if (!operand.isAssignableTo(CBoolean))
 			throw illegalOperand();
 	}
 
 	@Override
 	public Class<?> getResultClass() {
-		return Boolean.class;
+		return CBoolean;
 	}
 
 	@Override

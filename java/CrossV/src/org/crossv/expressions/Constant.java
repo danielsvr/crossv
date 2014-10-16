@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CObject;
+
 public class Constant extends Expression {
 	private final Object value;
 
@@ -15,7 +17,7 @@ public class Constant extends Expression {
 
 	@Override
 	public Class<?> getResultClass() {
-		return value != null ? value.getClass() : Object.class;
+		return value != null ? value.getClass() : CObject;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
 import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 
 public abstract class NumericalComparisonExpression extends
@@ -17,6 +18,6 @@ public abstract class NumericalComparisonExpression extends
 
 	@Override
 	public Class<?> getResultClass() {
-		return Boolean.class;
+		return CBoolean;
 	}
 }

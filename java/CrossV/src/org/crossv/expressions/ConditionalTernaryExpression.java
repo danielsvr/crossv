@@ -1,5 +1,10 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.ExpressionClass.CBoolean;
+import static org.crossv.expressions.ExpressionClass.CByte;
+import static org.crossv.expressions.ExpressionClass.CInteger;
+import static org.crossv.expressions.ExpressionClass.CObject;
+import static org.crossv.expressions.ExpressionClass.CShort;
 import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 
@@ -11,7 +16,8 @@ public class ConditionalTernaryExpression extends Expression {
 	private Expression ifFalse;
 	private Class<?> resultClass;
 
-	public ConditionalTernaryExpression(Expression test, Expression ifTrue, Expression ifFalse) {
+	public ConditionalTernaryExpression(Expression test, Expression ifTrue,
+			Expression ifFalse) {
 		if (test == null)
 			throw new ArgumentNullException("test");
 		if (ifTrue == null)
@@ -21,17 +27,15 @@ public class ConditionalTernaryExpression extends Expression {
 		this.test = test;
 		this.ifTrue = ifTrue;
 		this.ifFalse = ifFalse;
-		
+
 		verifyOperands();
 		resultClass = calculateResultClass();
 	}
 
 	private void verifyOperands() {
-		// @formatter:off
-		if (!test.isAssignableTo(Boolean.class) 
-			 || ifTrue.isNullConstant() && ifFalse.isNullConstant())
+		if (!test.isAssignableTo(CBoolean) || ifTrue.isNullConstant()
+				&& ifFalse.isNullConstant())
 			throw illegalOperand();
-		// @formatter:on
 	}
 
 	private Class<?> calculateResultClass() {
@@ -46,20 +50,19 @@ public class ConditionalTernaryExpression extends Expression {
 		// @formatter:off
 		
 		if (ifTrueClass.equals(ifFalseClass)
-			|| (ifTrue.isAssignableToAny(Byte.class, Short.class) && ifFalse.isAssignableTo(Integer.class))
-			|| (ifTrue.isAssignableTo(Short.class) && ifFalse.isAssignableTo(Byte.class)))			
+			|| (ifTrue.isAssignableToAny(CByte, CShort) && ifFalse.isAssignableTo(CInteger))
+			|| (ifTrue.isAssignableTo(CShort) && ifFalse.isAssignableTo(CByte)))			
 			return ifTrueClass;
 
-		if ((ifTrue.isAssignableTo(Integer.class) && ifFalse.isAssignableToAny(Byte.class, Short.class))
-			|| (ifTrue.isAssignableTo(Byte.class) && ifFalse.isAssignableTo(Short.class)))			
+		if ((ifTrue.isAssignableTo(CInteger) && ifFalse.isAssignableToAny(CByte, CShort))
+			|| (ifTrue.isAssignableTo(CByte) && ifFalse.isAssignableTo(CShort)))			
 			return ifFalseClass;
 		
 		// @formatter:on
-
 		if (canPromoteNumbers(ifTrueClass, ifFalseClass))
 			return getNumericPromotion(ifTrueClass, ifFalseClass);
 
-		return Object.class;
+		return CObject;
 	}
 
 	@Override
