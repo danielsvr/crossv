@@ -226,4 +226,8 @@ public class ExpressionWriter {
 	public void printSequenceLength(SequenceLength expression) {
 		print("(", expression.getOperand(), ").length");
 	}
+
+	public void printSequenceIndex(SequenceIndex expression) {
+		print("(", expression.getLeft(), ")[", expression.getRight(), "]");
+	}
 }

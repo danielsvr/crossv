@@ -95,6 +95,7 @@ public class ClassDescriptor {
 			return primitiveTypesToClasses.get(clazz);
 		return clazz;
 	}
+
 	public static Class<?> transformToTypeIfPrimitive(Class<?> clazz) {
 		if (primitiveClassesToTypes.containsKey(clazz))
 			return primitiveClassesToTypes.get(clazz);

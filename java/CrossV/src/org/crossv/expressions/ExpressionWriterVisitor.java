@@ -166,4 +166,9 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitSequenceLength(SequenceLength expression) {
 		printer.printSequenceLength(expression);
 	}
+	
+	@Override
+	public void visitSequenceIndex(SequenceIndex expression) {
+		printer.printSequenceIndex(expression);
+	}
 }

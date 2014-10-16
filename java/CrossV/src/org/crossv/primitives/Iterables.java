@@ -209,16 +209,21 @@ public final class Iterables {
 
 	public static <E> E elementAt(Iterable<E> iterable, int index) {
 		int i = -1;
-		for (E e : iterable) {
-			i++;
-			if (i == index)
-				return e;
-		}
+		if (index > -1)
+			for (E e : iterable) {
+				i++;
+				if (i == index)
+					return e;
+			}
 
 		String message;
 		message = "Provided index exceeds the boundary of the iterable instance.";
 		message = String.format("%sIndex: %d.", message, index);
 		throw new IndexOutOfBoundsException(message);
+	}
+
+	public static <E> E elementAt(Enumeration<E> iterable, int index) {
+		return elementAt(toIterable(iterable), index);
 	}
 
 	public static <E> boolean containsAll(Iterable<E> iterable, Iterable<E> objs) {

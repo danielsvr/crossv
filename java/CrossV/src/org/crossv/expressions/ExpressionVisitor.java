@@ -65,4 +65,6 @@ public interface ExpressionVisitor {
 	void visitComplement(Complement expression);
 
 	void visitSequenceLength(SequenceLength expression);
+
+	void visitSequenceIndex(SequenceIndex expression);
 }

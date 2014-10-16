@@ -4,6 +4,7 @@ import static java.text.MessageFormat.format;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 import static org.crossv.primitives.Iterables.count;
+import static org.crossv.primitives.Iterables.elementAt;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
@@ -562,6 +563,29 @@ public class ExpressionEvaluator {
 		} else if (opExp.isAssignableTo(Enumeration.class)) {
 			Enumeration<?> enumeration = (Enumeration<?>) opPop;
 			stack.push(count(enumeration));
+		}
+	}
+
+	public void evaluateSequenceIndex(SequenceIndex expression) {
+		Expression seqExp = expression.getLeft();
+		Expression indexExp = expression.getRight();
+		eval(seqExp);
+		eval(indexExp);
+		
+		int indexPop = (Integer)stack.pop();
+		Object seqPop = stack.pop();
+		
+		if (seqExp.isArray()) {
+			stack.push(Array.get(seqPop, indexPop));
+		} else if (seqExp.isAssignableTo(String.class)) {
+			String string = (String) seqPop;
+			stack.push(string.charAt(indexPop));
+		} else if (seqExp.isAssignableTo(Iterable.class)) {
+			Iterable<?> iterable = (Iterable<?>) seqPop;
+			stack.push(elementAt(iterable, indexPop));
+		} else if (seqExp.isAssignableTo(Enumeration.class)) {
+			Enumeration<?> iterable = (Enumeration<?>) seqPop;
+			stack.push(elementAt(iterable, indexPop));
 		}
 	}
 }

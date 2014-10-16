@@ -166,4 +166,9 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	public void visitSequenceLength(SequenceLength expression) {
 		evaluator.evaluateSequenceLength(expression);
 	}
+	
+	@Override
+	public void visitSequenceIndex(SequenceIndex expression) {
+		evaluator.evaluateSequenceIndex(expression);
+	}
 }

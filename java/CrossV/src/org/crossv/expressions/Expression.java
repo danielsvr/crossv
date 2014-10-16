@@ -612,6 +612,54 @@ public abstract class Expression {
 		return sequenceLength(constant(operand));
 	}
 
+
+	public static Expression sequenceIndex(Expression operand, Expression index) {
+		return new SequenceIndex(operand, index);
+	}
+	
+	public static Expression sequenceIndex(Expression operand, int index) {
+		return sequenceIndex(operand, constant(index));
+	}
+
+	public static Expression sequenceIndex(byte[] operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static Expression sequenceIndex(short[] operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static Expression sequenceIndex(int[] operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static Expression sequenceIndex(long[] operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static Expression sequenceIndex(double[] operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static Expression sequenceIndex(String[] operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static Expression sequenceIndex(String operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static <E> Expression sequenceIndex(Iterable<E> operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	public static <E> Expression sequenceIndex(Enumeration<E> operand, int index) {
+		return sequenceIndex(constant(operand), index);
+	}
+
+	
+	
+	
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
 	}
