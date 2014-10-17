@@ -407,7 +407,7 @@ public class ExpressionEvaluator {
 		evaluateConverableExpression(expression);
 	}
 
-	protected void evaluateConditional(ConditionalTernaryExpression expression) {
+	protected void evaluateConditional(ConditionalTernary expression) {
 		eval(expression.getTest());
 		Object popedValue = stack.pop();
 		if (popedValue.equals(true))
@@ -576,8 +576,8 @@ public class ExpressionEvaluator {
 	}
 
 	public void evaluateSequenceIndex(SequenceIndex expression) {
-		Expression seqExp = expression.getLeft();
-		Expression indexExp = expression.getRight();
+		Expression seqExp = expression.getSequence();
+		Expression indexExp = expression.getIndex();
 		eval(seqExp);
 		eval(indexExp);
 

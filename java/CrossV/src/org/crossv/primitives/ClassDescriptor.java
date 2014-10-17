@@ -1,7 +1,10 @@
 package org.crossv.primitives;
 
 import static java.text.MessageFormat.format;
+import static org.crossv.primitives.Strings.toPascalCase;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -9,11 +12,13 @@ import java.util.Hashtable;
 
 public class ClassDescriptor {
 	private Method[] methods;
+	private Field[] fields;
 
 	public ClassDescriptor(Class<?> clazz) {
 		if (clazz == null)
 			throw new ArgumentNullException("clazz");
 		this.methods = clazz.getMethods();
+		this.fields = clazz.getFields();
 	}
 
 	public Object execute(Object obj, Method method, Object... parameters)
@@ -62,6 +67,29 @@ public class ClassDescriptor {
 		throw new NoSuchMethodException(format("Can't find method {0}", method));
 	}
 
+	public AccessibleObject findMember(String member) {
+		AccessibleObject aproxMatch = null;
+		for (Method m : methods) {
+			int parameterTypesLength = m.getParameterTypes().length;
+			if (parameterTypesLength > 0)
+				continue;
+			if (m.getName().equals(member))
+				return m;
+			else {
+				String getMember = toPascalCase(member);
+				if (m.getName().equals("get" + getMember)) {
+					aproxMatch = m;
+				}
+			}
+		}
+
+		for (Field f : fields) {
+			if (f.getName().equals(member))
+				return f;
+		}
+		return aproxMatch;
+	}
+
 	public static final Class<Float> CFloat = Float.class;
 	public static final Class<Double> CDouble = Double.class;
 	@SuppressWarnings("rawtypes")
@@ -108,7 +136,7 @@ public class ClassDescriptor {
 		table.put(Double.class, Double.TYPE);
 		return table;
 	}
-	
+
 	public static boolean canPromoteNumbers(Class<?>... clazzes) {
 		for (Class<?> clazz : clazzes)
 			if (!canPerformNumericPromotion(clazz))
@@ -127,19 +155,19 @@ public class ClassDescriptor {
 		if (!ClassDescriptor.canPerformNumericPromotion(second))
 			throw new ArgumentException("second");
 		Class<?> promotion = Integer.class;
-	
+
 		if (Double.class.isAssignableFrom(first)
 				|| Double.class.isAssignableFrom(second))
 			promotion = Double.class;
-	
+
 		else if (Float.class.isAssignableFrom(first)
 				|| Float.class.isAssignableFrom(second))
 			promotion = Float.class;
-	
+
 		else if (Long.class.isAssignableFrom(first)
 				|| Long.class.isAssignableFrom(second))
 			promotion = Long.class;
-	
+
 		return promotion;
 	}
 

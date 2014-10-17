@@ -43,7 +43,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitConditional(ConditionalTernaryExpression expression) {
+	public void visitConditional(ConditionalTernary expression) {
 		evaluator.evaluateConditional(expression);
 	}
 

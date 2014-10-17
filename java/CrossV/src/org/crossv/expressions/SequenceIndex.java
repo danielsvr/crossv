@@ -8,42 +8,61 @@ import static org.crossv.primitives.ClassDescriptor.CObject;
 import static org.crossv.primitives.ClassDescriptor.CString;
 import static org.crossv.primitives.ClassDescriptor.transformToClassIfPrimitive;
 
-public class SequenceIndex extends BinaryExpression {
+import org.crossv.primitives.ArgumentNullException;
 
+public class SequenceIndex extends Expression {
 	private Class<?> resultClass;
+	private Expression seq;
+	private Expression idx;
 
-	public SequenceIndex(Expression left, Expression right) {
-		super(left, right);
+	public SequenceIndex(Expression sequence, Expression index) {
+		if (sequence == null)
+			throw new ArgumentNullException("sequence");
+		if (index == null)
+			throw new ArgumentNullException("index");
+		this.seq = sequence;
+		this.idx = index;
 		verifySequence();
 		verifyIndex();
 		resultClass = calculateResultClass();
 	}
 
 	private Class<?> calculateResultClass() {
-		if (left.isAssignableTo(CString))
+		if (seq.isAssignableTo(CString))
 			return CCharacter;
-		if (left.isArray())
-			return transformToClassIfPrimitive(left.getResultClass()
-					.getComponentType());
-		if (left.isAssignableToAny(CEnumeration, CIterable))
+		if (seq.isArray()) {
+			Class<?> clazz = seq.getResultClass();
+			clazz = clazz.getComponentType();
+			clazz = transformToClassIfPrimitive(clazz);
+			return clazz;
+		}
+		if (seq.isAssignableToAny(CEnumeration, CIterable))
 			return CObject;
 		return null;
 	}
 
 	private void verifyIndex() {
-		if (!right.isAssignableTo(CInteger))
+		if (!idx.isAssignableTo(CInteger))
 			throw illegalOperand();
 	}
 
 	private void verifySequence() {
-		if (!left.isArray()
-				&& !left.isAssignableToAny(CString, CEnumeration, CIterable))
+		if (!seq.isArray()
+				&& !seq.isAssignableToAny(CString, CEnumeration, CIterable))
 			throw illegalOperand();
 	}
 
 	@Override
 	public Class<?> getResultClass() {
 		return resultClass;
+	}
+
+	public Expression getSequence() {
+		return seq;
+	}
+
+	public Expression getIndex() {
+		return idx;
 	}
 
 	@Override

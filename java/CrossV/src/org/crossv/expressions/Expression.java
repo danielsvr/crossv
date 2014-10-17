@@ -11,6 +11,7 @@ import static org.crossv.primitives.Iterables.toArray;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 
@@ -533,7 +534,7 @@ public abstract class Expression {
 
 	public static Expression conditional(Expression test, Expression ifTrue,
 			Expression ifFalse) {
-		return new ConditionalTernaryExpression(test, ifTrue, ifFalse);
+		return new ConditionalTernary(test, ifTrue, ifFalse);
 	}
 
 	public static Expression conditional(boolean test, Expression ifTrue,
@@ -615,8 +616,8 @@ public abstract class Expression {
 		return sequenceLength(constant(operand));
 	}
 
-	public static Expression sequenceIndex(Expression operand, Expression index) {
-		return new SequenceIndex(operand, index);
+	public static Expression sequenceIndex(Expression sequence, Expression index) {
+		return new SequenceIndex(sequence, index);
 	}
 
 	public static Expression sequenceIndex(Expression operand, int index) {
@@ -659,6 +660,18 @@ public abstract class Expression {
 		return sequenceIndex(constant(operand), index);
 	}
 
+	public static Expression memberAccess(Expression instance, AccessibleObject member) {
+		return new MemberAccess(instance, member);
+	}
+
+	public static Expression memberAccess(Expression instance, String member) {
+		return new MemberAccess(instance, member);
+	}
+	
+	public static Expression memberAccess(Object instance, String member) {
+		return memberAccess(constant(instance), member);
+	}
+	
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
 	}

@@ -153,7 +153,7 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitConditional(ConditionalTernaryExpression expression) {
+	public void visitConditional(ConditionalTernary expression) {
 		printer.printConditional(expression);
 	}
 

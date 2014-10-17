@@ -4,7 +4,11 @@ import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
+
+import java.lang.reflect.AccessibleObject;
 
 import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.ClassDescriptor;
@@ -249,5 +253,33 @@ public class ClassDescriptorTests {
 	@Test(expected = ArgumentException.class)
 	public void promote_FirstIsByteSecondString_ReturnsDouble() {
 		getNumericPromotion(Byte.class, String.class);
+	}
+
+	@Test
+	public void findMember_nickname_retruns(){
+		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
+		AccessibleObject result = descriptor.findMember("nickname");
+		assertThat(result, is(not(nullValue())));
+	}
+
+	@Test
+	public void findMember_Name_retruns(){
+		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
+		AccessibleObject result = descriptor.findMember("Name");
+		assertThat(result, is(not(nullValue())));
+	}
+	
+	@Test
+	public void findMember_name_retruns(){
+		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
+		AccessibleObject result = descriptor.findMember("name");
+		assertThat(result, is(not(nullValue())));
+	}
+	
+	@Test
+	public void findMember_getName_retruns(){
+		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
+		AccessibleObject result = descriptor.findMember("getName");
+		assertThat(result, is(not(nullValue())));
 	}
 }

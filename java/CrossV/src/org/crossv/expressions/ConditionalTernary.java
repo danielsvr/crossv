@@ -10,13 +10,13 @@ import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
 import org.crossv.primitives.ArgumentNullException;
 
-public class ConditionalTernaryExpression extends Expression {
+public class ConditionalTernary extends Expression {
 	private Expression test;
 	private Expression ifTrue;
 	private Expression ifFalse;
 	private Class<?> resultClass;
 
-	public ConditionalTernaryExpression(Expression test, Expression ifTrue,
+	public ConditionalTernary(Expression test, Expression ifTrue,
 			Expression ifFalse) {
 		if (test == null)
 			throw new ArgumentNullException("test");

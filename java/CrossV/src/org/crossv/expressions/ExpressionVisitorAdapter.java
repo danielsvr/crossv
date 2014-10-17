@@ -27,7 +27,7 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 	}
 
 	@Override
-	public void visitConditional(ConditionalTernaryExpression expression) {
+	public void visitConditional(ConditionalTernary expression) {
 		visit(expression);
 	}
 

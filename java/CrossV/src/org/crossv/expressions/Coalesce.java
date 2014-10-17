@@ -3,15 +3,15 @@ package org.crossv.expressions;
 import org.crossv.primitives.ConvertibleTo;
 
 public class Coalesce extends BinaryExpression implements
-		ConvertibleTo<ConditionalTernaryExpression> {
+		ConvertibleTo<ConditionalTernary> {
 
-	private ConditionalTernaryExpression innerExpression;
+	private ConditionalTernary innerExpression;
 
 	public Coalesce(Expression left, Expression right) {
 		super(left, right);
 		verifyOperands();
 		Expression coalesceTest = notEqual(left, constant(null));
-		innerExpression = new ConditionalTernaryExpression(coalesceTest, left, right);
+		innerExpression = new ConditionalTernary(coalesceTest, left, right);
 	}
 
 	private void verifyOperands() {
@@ -34,7 +34,7 @@ public class Coalesce extends BinaryExpression implements
 	}
 
 	@Override
-	public ConditionalTernaryExpression convert() {
+	public ConditionalTernary convert() {
 		return innerExpression;
 	}
 }

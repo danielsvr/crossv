@@ -29,4 +29,8 @@ public final class Strings {
 		t.printStackTrace(pw);
 		return sw.toString();
 	}
+
+	public static String toPascalCase(String string) {
+		return Character.toUpperCase(string.charAt(0)) + string.substring(1);
+	}
 }

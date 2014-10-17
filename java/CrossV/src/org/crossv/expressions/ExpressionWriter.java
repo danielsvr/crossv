@@ -215,7 +215,7 @@ public class ExpressionWriter {
 		print("!", expression.getOperand());
 	}
 
-	protected void printConditional(ConditionalTernaryExpression expression) {
+	protected void printConditional(ConditionalTernary expression) {
 		print(expression.getTest(), " ? ", expression.getIfTrue(), " : ",
 				expression.getIfFalse());
 	}
@@ -229,6 +229,6 @@ public class ExpressionWriter {
 	}
 
 	public void printSequenceIndex(SequenceIndex expression) {
-		print("(", expression.getLeft(), ")[", expression.getRight(), "]");
+		print("(", expression.getSequence(), ")[", expression.getIndex(), "]");
 	}
 }
