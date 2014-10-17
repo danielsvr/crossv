@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
-import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
+import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
 public abstract class MultiplicityExpression extends BinaryExpression {
 	private Class<?> resultClass;

@@ -1,10 +1,10 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CDouble;
-import static org.crossv.expressions.ExpressionClass.CFloat;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CLong;
-import static org.crossv.expressions.ExpressionClass.CNumber;
+import static org.crossv.primitives.ClassDescriptor.CDouble;
+import static org.crossv.primitives.ClassDescriptor.CFloat;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CLong;
+import static org.crossv.primitives.ClassDescriptor.CNumber;
 
 public abstract class ShiftExpression extends BinaryExpression {
 	private Class<?> resultClass;

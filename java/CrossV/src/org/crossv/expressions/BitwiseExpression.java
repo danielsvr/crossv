@@ -1,10 +1,10 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CBoolean;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CLong;
-import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
-import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CLong;
+import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
+import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
 public abstract class BitwiseExpression extends BinaryExpression {
 	private Class<?> resultClass;
@@ -23,8 +23,7 @@ public abstract class BitwiseExpression extends BinaryExpression {
 	}
 
 	private Class<?> calculateResultClass() {
-		if (left.isAssignableTo(CBoolean)
-				&& right.isAssignableTo(CBoolean))
+		if (left.isAssignableTo(CBoolean) && right.isAssignableTo(CBoolean))
 			return CBoolean;
 		else if (canPromoteNumbers(leftClass, rightClass))
 			return getNumericPromotion(leftClass, rightClass);

@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CNumber;
+import static org.crossv.primitives.ClassDescriptor.CNumber;
 
 public class Negate extends UnaryExpression {
 	public Negate(Expression operand) {

@@ -1,17 +1,17 @@
 package org.crossv.expressions;
 
 import static java.text.MessageFormat.format;
-import static org.crossv.expressions.ExpressionClass.CBoolean;
-import static org.crossv.expressions.ExpressionClass.CDouble;
-import static org.crossv.expressions.ExpressionClass.CEnumeration;
-import static org.crossv.expressions.ExpressionClass.CFloat;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CIterable;
-import static org.crossv.expressions.ExpressionClass.CLong;
-import static org.crossv.expressions.ExpressionClass.CNumber;
-import static org.crossv.expressions.ExpressionClass.CString;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CDouble;
+import static org.crossv.primitives.ClassDescriptor.CEnumeration;
+import static org.crossv.primitives.ClassDescriptor.CFloat;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CIterable;
+import static org.crossv.primitives.ClassDescriptor.CLong;
+import static org.crossv.primitives.ClassDescriptor.CNumber;
+import static org.crossv.primitives.ClassDescriptor.CString;
+import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
-import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
 import static org.crossv.primitives.Iterables.count;
 import static org.crossv.primitives.Iterables.elementAt;
 

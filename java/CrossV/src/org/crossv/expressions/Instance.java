@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CObject;
+import static org.crossv.primitives.ClassDescriptor.CObject;
 
 public final class Instance extends Expression {
 	@Override

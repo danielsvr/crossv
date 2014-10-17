@@ -1,9 +1,11 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CByte;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CLong;
-import static org.crossv.expressions.ExpressionClass.CShort;
+import static org.crossv.primitives.ClassDescriptor.CByte;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CLong;
+import static org.crossv.primitives.ClassDescriptor.CShort;
+
+import org.crossv.primitives.ClassDescriptor;
 
 public class Complement extends UnaryExpression {
 	private Class<?> resultClass;
@@ -11,7 +13,7 @@ public class Complement extends UnaryExpression {
 	public Complement(Expression operand) {
 		super(operand);
 		verifyOperand();
-		if (operand.isAssignableTo(CLong))
+		if (operand.isAssignableTo(ClassDescriptor.CLong))
 			resultClass = CLong;
 		else
 			resultClass = CInteger;

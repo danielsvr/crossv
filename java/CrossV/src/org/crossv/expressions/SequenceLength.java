@@ -1,9 +1,9 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CEnumeration;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CIterable;
-import static org.crossv.expressions.ExpressionClass.CString;
+import static org.crossv.primitives.ClassDescriptor.CEnumeration;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CIterable;
+import static org.crossv.primitives.ClassDescriptor.CString;
 
 public class SequenceLength extends UnaryExpression {
 	private Class<?> resultClass;

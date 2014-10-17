@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CBoolean;
-import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
 
 public abstract class NumericalComparisonExpression extends
 		RelationalExpression {

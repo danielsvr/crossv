@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CEnumeration;
-import static org.crossv.expressions.ExpressionClass.CIterable;
+import static org.crossv.primitives.ClassDescriptor.CEnumeration;
+import static org.crossv.primitives.ClassDescriptor.CIterable;
 import static org.crossv.primitives.Iterables.toIterable;
 
 import java.io.PrintWriter;

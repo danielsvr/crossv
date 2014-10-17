@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CBoolean;
-import static org.crossv.expressions.ExpressionClass.CClass;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CClass;
 
 public class InstanceOf extends RelationalExpression {
 	public InstanceOf(Expression left, Expression right) {

@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
 
 public abstract class ConditionalBinaryExpression extends BinaryExpression {
 

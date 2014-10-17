@@ -1,11 +1,11 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CCharacter;
-import static org.crossv.expressions.ExpressionClass.CEnumeration;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CIterable;
-import static org.crossv.expressions.ExpressionClass.CObject;
-import static org.crossv.expressions.ExpressionClass.CString;
+import static org.crossv.primitives.ClassDescriptor.CCharacter;
+import static org.crossv.primitives.ClassDescriptor.CEnumeration;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CIterable;
+import static org.crossv.primitives.ClassDescriptor.CObject;
+import static org.crossv.primitives.ClassDescriptor.CString;
 import static org.crossv.primitives.ClassDescriptor.transformToClassIfPrimitive;
 
 public class SequenceIndex extends BinaryExpression {

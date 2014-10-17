@@ -1,8 +1,9 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CBoolean;
-import static org.crossv.expressions.ExpressionClass.CCharacter;
-import static org.crossv.expressions.ExpressionClass.CNumber;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CCharacter;
+import static org.crossv.primitives.ClassDescriptor.CNumber;
+import static org.crossv.primitives.ClassDescriptor.TVoid;
 import static org.crossv.expressions.ExpressionEvaluator.NO_CONTEXT;
 import static org.crossv.expressions.ExpressionEvaluator.NO_INSTANCE;
 import static org.crossv.primitives.Iterables.select;
@@ -103,7 +104,7 @@ public abstract class Expression {
 	}
 
 	protected boolean returnsPrimitiveType() {
-		return isAssignableToAny(Void.TYPE, CNumber, CCharacter, CBoolean);
+		return isAssignableToAny(TVoid, CNumber, CCharacter, CBoolean);
 	}
 
 	public void accept(ExpressionVisitor visitor) {

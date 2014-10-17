@@ -1,12 +1,12 @@
 package org.crossv.expressions;
 
-import static org.crossv.expressions.ExpressionClass.CBoolean;
-import static org.crossv.expressions.ExpressionClass.CByte;
-import static org.crossv.expressions.ExpressionClass.CInteger;
-import static org.crossv.expressions.ExpressionClass.CObject;
-import static org.crossv.expressions.ExpressionClass.CShort;
-import static org.crossv.primitives.ExpressionUtil.canPromoteNumbers;
-import static org.crossv.primitives.ExpressionUtil.getNumericPromotion;
+import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CByte;
+import static org.crossv.primitives.ClassDescriptor.CInteger;
+import static org.crossv.primitives.ClassDescriptor.CObject;
+import static org.crossv.primitives.ClassDescriptor.CShort;
+import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
+import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
 import org.crossv.primitives.ArgumentNullException;
 
@@ -48,16 +48,16 @@ public class ConditionalTernaryExpression extends Expression {
 			return ifTrueClass;
 
 		// @formatter:off
-		
+
 		if (ifTrueClass.equals(ifFalseClass)
-			|| (ifTrue.isAssignableToAny(CByte, CShort) && ifFalse.isAssignableTo(CInteger))
-			|| (ifTrue.isAssignableTo(CShort) && ifFalse.isAssignableTo(CByte)))			
+				|| (ifTrue.isAssignableToAny(CByte, CShort) && ifFalse.isAssignableTo(CInteger))
+				|| (ifTrue.isAssignableTo(CShort) && ifFalse.isAssignableTo(CByte)))
 			return ifTrueClass;
 
 		if ((ifTrue.isAssignableTo(CInteger) && ifFalse.isAssignableToAny(CByte, CShort))
-			|| (ifTrue.isAssignableTo(CByte) && ifFalse.isAssignableTo(CShort)))			
+				|| (ifTrue.isAssignableTo(CByte) && ifFalse.isAssignableTo(CShort)))
 			return ifFalseClass;
-		
+
 		// @formatter:on
 		if (canPromoteNumbers(ifTrueClass, ifFalseClass))
 			return getNumericPromotion(ifTrueClass, ifFalseClass);
