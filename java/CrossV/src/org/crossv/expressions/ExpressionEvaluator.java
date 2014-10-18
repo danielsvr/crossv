@@ -15,7 +15,9 @@ import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.Iterables.count;
 import static org.crossv.primitives.Iterables.elementAt;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -595,6 +597,31 @@ public class ExpressionEvaluator {
 		} else if (seqExp.isAssignableTo(CEnumeration)) {
 			Enumeration<?> iterable = (Enumeration<?>) seqPop;
 			stack.push(elementAt(iterable, indexPop));
+		}
+	}
+
+	public void evaluateMemberAccess(MemberAccess expression) {
+		eval(expression.getInstance());
+		Object instance = stack.pop();
+		AccessibleObject member = expression.getMember();
+		if (member instanceof Method) {
+			Method method = (Method) member;
+			Object value = null;
+			try {
+				value = method.invoke(instance);
+			} catch (ReflectiveOperationException e) {
+				throw new RuntimeEvaluationException(e);
+			}
+			stack.push(value);
+		} else {
+			Field field = (Field) member;
+			Object value = null;
+			try {
+				value = field.get(instance);
+			} catch (ReflectiveOperationException e) {
+				throw new RuntimeEvaluationException(e);
+			}
+			stack.push(value);
 		}
 	}
 }

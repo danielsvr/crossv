@@ -67,4 +67,6 @@ public interface ExpressionVisitor {
 	void visitSequenceLength(SequenceLength expression);
 
 	void visitSequenceIndex(SequenceIndex expression);
+
+	void visitMemberAccess(MemberAccess expression);
 }

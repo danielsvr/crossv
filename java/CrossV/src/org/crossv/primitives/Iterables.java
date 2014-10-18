@@ -1,6 +1,7 @@
 package org.crossv.primitives;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -31,11 +32,7 @@ public final class Iterables {
 	public static <E> List<E> toList(E[] iterable) {
 		if (iterable == null)
 			throw new ArgumentNullException("iterable");
-
-		List<E> list = new ArrayList<E>();
-		for (E item : iterable)
-			list.add(item);
-		return list;
+		return Arrays.asList(iterable);
 	}
 
 	public static <E> List<E> asList(Iterable<E> iterable) {
@@ -199,6 +196,7 @@ public final class Iterables {
 		return new ArrayIterable<E>(null, objs);
 	}
 
+	@SafeVarargs
 	public static <E> Iterable<E> toIterable(E firstItem, E... otherItems) {
 		return new ArrayIterable<E>(firstItem, otherItems);
 	}

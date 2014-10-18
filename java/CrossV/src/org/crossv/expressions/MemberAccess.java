@@ -19,7 +19,6 @@ public class MemberAccess extends Expression {
 			throw new ArgumentNullException("member");
 		this.instance = instance;
 		this.member = member;
-		verifyInstance();
 		verifyMember();
 		resultClass = calculateResultClass();
 	}
@@ -37,11 +36,24 @@ public class MemberAccess extends Expression {
 	}
 
 	private void verifyMember() {
-		throw illegalOperand();
-	}
+		Class<?> instanceClass = instance.getResultClass();
+		Class<?> declaringClass;
+		Class<?> memberClass;
+		int memberParametersCount = 0;
+		if (member instanceof Field) {
+			Field field = (Field) member;
+			declaringClass = field.getDeclaringClass();
+			memberClass = field.getType();
+		} else {
+			Method method = (Method) member;
+			declaringClass = method.getDeclaringClass();
+			memberClass = method.getReturnType();
+			memberParametersCount = method.getParameterTypes().length;
+		}
 
-	private void verifyInstance() {
-		throw illegalOperand();
+		if (!declaringClass.isAssignableFrom(instanceClass)
+				|| memberClass.equals(Void.TYPE) || memberParametersCount != 0)
+			throw illegalOperand();
 	}
 
 	public Class<?> calculateResultClass() {
@@ -55,4 +67,16 @@ public class MemberAccess extends Expression {
 		return resultClass;
 	}
 
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitMemberAccess(this);
+	}
+
+	public Expression getInstance() {
+		return instance;
+	}
+
+	public AccessibleObject getMember() {
+		return member;
+	}
 }

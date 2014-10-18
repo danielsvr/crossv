@@ -5,6 +5,9 @@ import static org.crossv.primitives.ClassDescriptor.CIterable;
 import static org.crossv.primitives.Iterables.toIterable;
 
 import java.io.PrintWriter;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.crossv.primitives.ArgumentNullException;
 
@@ -230,5 +233,18 @@ public class ExpressionWriter {
 
 	public void printSequenceIndex(SequenceIndex expression) {
 		print("(", expression.getSequence(), ")[", expression.getIndex(), "]");
+	}
+
+	public void printMemberAccess(MemberAccess expression) {
+		AccessibleObject member = expression.getMember();
+		String memberName = "";
+		if (member instanceof Method)
+			memberName = ((Method) member).getName();
+		else
+			memberName = ((Field) member).getName();
+		memberName = memberName.replace("get", "");
+		memberName = Character.toLowerCase(memberName.charAt(0))
+				+ memberName.substring(1);
+		print(expression.getInstance(), ".", memberName);
 	}
 }
