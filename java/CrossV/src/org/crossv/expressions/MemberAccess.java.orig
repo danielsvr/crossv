@@ -19,7 +19,11 @@ public class MemberAccess extends Expression {
 			throw new ArgumentNullException("member");
 		this.instance = instance;
 		this.member = member;
+<<<<<<< HEAD
 		verifyOperands();
+=======
+		verifyMember();
+>>>>>>> ea15b28f991c9042d6d461e1368e0ea52da7ee76
 		resultClass = calculateResultClass();
 	}
 
@@ -35,6 +39,7 @@ public class MemberAccess extends Expression {
 		return descriptor.findMember(member);
 	}
 
+<<<<<<< HEAD
 	private void verifyOperands() {
 		Class<?> memberDeclaringClass;
 		Class<?> memberReturnClass;
@@ -44,6 +49,19 @@ public class MemberAccess extends Expression {
 			memberDeclaringClass = method.getDeclaringClass();
 			memberReturnClass = method.getReturnType();
 			if (method.getParameterTypes().length > 0)
+				throw illegalOperand();
+		} else {
+			Field field = (Field) member;
+			memberDeclaringClass = field.getDeclaringClass();
+			memberReturnClass = field.getType();
+		}
+
+		Class<?> instaceClass = instance.getResultClass();
+
+		if (!memberDeclaringClass.isAssignableFrom(instaceClass)
+				|| memberReturnClass.equals(Void.TYPE))
+=======
+	private void verifyMember() {
 		Class<?> instanceClass = instance.getResultClass();
 		Class<?> declaringClass;
 		Class<?> memberClass;
@@ -57,16 +75,11 @@ public class MemberAccess extends Expression {
 			declaringClass = method.getDeclaringClass();
 			memberClass = method.getReturnType();
 			memberParametersCount = method.getParameterTypes().length;
-		} else {
-			Field field = (Field) member;
-			memberDeclaringClass = field.getDeclaringClass();
-			memberReturnClass = field.getType();
 		}
 
-		Class<?> instaceClass = instance.getResultClass();
-
-		if (!memberDeclaringClass.isAssignableFrom(instaceClass)
-				|| memberReturnClass.equals(Void.TYPE))
+		if (!declaringClass.isAssignableFrom(instanceClass)
+				|| memberClass.equals(Void.TYPE) || memberParametersCount != 0)
+>>>>>>> ea15b28f991c9042d6d461e1368e0ea52da7ee76
 			throw illegalOperand();
 	}
 
@@ -81,6 +94,14 @@ public class MemberAccess extends Expression {
 		return resultClass;
 	}
 
+<<<<<<< HEAD
+=======
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitMemberAccess(this);
+	}
+
+>>>>>>> ea15b28f991c9042d6d461e1368e0ea52da7ee76
 	public Expression getInstance() {
 		return instance;
 	}
@@ -88,9 +109,12 @@ public class MemberAccess extends Expression {
 	public AccessibleObject getMember() {
 		return member;
 	}
+<<<<<<< HEAD
 
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitMemberAccess(this);
 	}
+=======
+>>>>>>> ea15b28f991c9042d6d461e1368e0ea52da7ee76
 }

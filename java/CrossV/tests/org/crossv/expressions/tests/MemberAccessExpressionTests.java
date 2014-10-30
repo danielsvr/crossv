@@ -47,6 +47,13 @@ public class MemberAccessExpressionTests {
 	}
 
 	@Test
+	public void createMemberAccessNicknameExpressionForMonkey_callingToString_getsFieldAccessLikeExpression()
+			throws Exception {
+		Expression e = memberAccess(context(Monkey.class), "nickname");
+		assertThat(e.toString(), is("context.nickname"));
+	}
+	
+	@Test
 	public void createMemberAccessBytesExpressionForString_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {
 		Expression e = memberAccess("123", "Bytes");
