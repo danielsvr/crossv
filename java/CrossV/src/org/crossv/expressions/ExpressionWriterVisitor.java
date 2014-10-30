@@ -171,4 +171,9 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitSequenceIndex(SequenceIndex expression) {
 		printer.printSequenceIndex(expression);
 	}
+	
+	@Override
+	public void visitMemberAccess(MemberAccess expression) {
+		printer.printMemberAccess(expression);
+	}
 }

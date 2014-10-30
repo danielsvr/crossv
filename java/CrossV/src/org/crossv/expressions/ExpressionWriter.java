@@ -5,6 +5,9 @@ import static org.crossv.primitives.ClassDescriptor.CIterable;
 import static org.crossv.primitives.Iterables.toIterable;
 
 import java.io.PrintWriter;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.crossv.primitives.ArgumentNullException;
 
@@ -25,7 +28,9 @@ public class ExpressionWriter {
 
 	protected void print(Object... expressions) {
 		for (Object expression : expressions)
-			if (expression instanceof Expression)
+			if (expression instanceof Constant)
+				printConstant((Constant) expression);
+			else if (expression instanceof Expression)
 				print((Expression) expression);
 			else
 				print(expression.toString());
@@ -225,10 +230,24 @@ public class ExpressionWriter {
 	}
 
 	public void printSequenceLength(SequenceLength expression) {
-		print("(", expression.getOperand(), ").length");
+		print(expression.getOperand(), ".length");
 	}
 
 	public void printSequenceIndex(SequenceIndex expression) {
-		print("(", expression.getSequence(), ")[", expression.getIndex(), "]");
+		print(expression.getSequence(), "[", expression.getIndex(), "]");
+	}
+
+	public void printMemberAccess(MemberAccess expression) {
+		AccessibleObject member = expression.getMember();
+		String name = "";
+
+		if (member instanceof Method) {
+			Method method = (Method) member;
+			name = method.getName() + "()";
+		} else {
+			Field field = (Field) member;
+			name = field.getName();
+		}
+		print(expression.getInstance(), ".", name);
 	}
 }

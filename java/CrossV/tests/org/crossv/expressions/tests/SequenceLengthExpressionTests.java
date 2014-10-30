@@ -61,7 +61,7 @@ public class SequenceLengthExpressionTests {
 		Iterable<Integer> instance = repeat(1, 3);
 		Expression e = sequenceLength(instance);
 
-		String stringExpression = "(new java.lang.Integer[] { 1, 1, 1 }).length";
+		String stringExpression = "new java.lang.Integer[] { 1, 1, 1 }.length";
 		assertThat(e.toString(), is(stringExpression));
 	}
 
@@ -71,7 +71,7 @@ public class SequenceLengthExpressionTests {
 		String instance = "123";
 		Expression e = sequenceLength(instance);
 
-		assertThat(e.toString(), is("(\"123\").length"));
+		assertThat(e.toString(), is("\"123\".length"));
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class SequenceLengthExpressionTests {
 		int[] instance = new int[] { 1, 2, 3 };
 		Expression e = sequenceLength(instance);
 
-		String stringExpression = "(new java.lang.Integer[] { 1, 2, 3 }).length";
+		String stringExpression = "new java.lang.Integer[] { 1, 2, 3 }.length";
 		assertThat(e.toString(), is(stringExpression));
 	}
 
@@ -90,7 +90,7 @@ public class SequenceLengthExpressionTests {
 		Enumeration<Object> instance = new StringTokenizer("1,2,3", ",");
 		Expression e = sequenceLength(instance);
 
-		String stringExpression = "(new java.lang.String[] { \"1\", \"2\", \"3\" }).length";
+		String stringExpression = "new java.lang.String[] { \"1\", \"2\", \"3\" }.length";
 		assertThat(e.toString(), is(stringExpression));
 	}
 }

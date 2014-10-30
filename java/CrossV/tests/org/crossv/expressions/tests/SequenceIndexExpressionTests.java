@@ -71,7 +71,7 @@ public class SequenceIndexExpressionTests {
 		Iterable<Integer> instance = repeat(1, 3);
 		Expression e = sequenceIndex(instance, 1);
 
-		String stringExpression = "(new java.lang.Integer[] { 1, 1, 1 })[1]";
+		String stringExpression = "new java.lang.Integer[] { 1, 1, 1 }[1]";
 		assertThat(e.toString(), is(stringExpression));
 	}
 
@@ -81,7 +81,7 @@ public class SequenceIndexExpressionTests {
 		String instance = "123";
 		Expression e = sequenceIndex(instance, 1);
 
-		assertThat(e.toString(), is("(\"123\")[1]"));
+		assertThat(e.toString(), is("\"123\"[1]"));
 	}
 
 	@Test
@@ -90,7 +90,7 @@ public class SequenceIndexExpressionTests {
 		int[] instance = new int[] { 1, 2, 3 };
 		Expression e = sequenceIndex(instance, 1);
 
-		String stringExpression = "(new java.lang.Integer[] { 1, 2, 3 })[1]";
+		String stringExpression = "new java.lang.Integer[] { 1, 2, 3 }[1]";
 		assertThat(e.toString(), is(stringExpression));
 	}
 
@@ -100,7 +100,7 @@ public class SequenceIndexExpressionTests {
 		Enumeration<Object> instance = new StringTokenizer("1,2,3", ",");
 		Expression e = sequenceIndex(instance, 1);
 
-		String stringExpression = "(new java.lang.String[] { \"1\", \"2\", \"3\" })[1]";
+		String stringExpression = "new java.lang.String[] { \"1\", \"2\", \"3\" }[1]";
 		assertThat(e.toString(), is(stringExpression));
 	}
 
@@ -111,7 +111,7 @@ public class SequenceIndexExpressionTests {
 		Expression e = sequenceIndex(constant(instance),
 				sequenceIndex(constant(instance), 0));
 
-		String stringExpression = "(new java.lang.Integer[] { 1, 2, 3 })[(new java.lang.Integer[] { 1, 2, 3 })[0]]";
+		String stringExpression = "new java.lang.Integer[] { 1, 2, 3 }[new java.lang.Integer[] { 1, 2, 3 }[0]]";
 		assertThat(e.toString(), is(stringExpression));
 	}
 }

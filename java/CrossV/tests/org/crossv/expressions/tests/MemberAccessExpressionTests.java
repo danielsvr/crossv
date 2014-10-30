@@ -50,7 +50,7 @@ public class MemberAccessExpressionTests {
 	public void createMemberAccessBytesExpressionForString_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {
 		Expression e = memberAccess("123", "Bytes");
-		assertThat(e.toString(), is("\"123\".bytes"));
+		assertThat(e.toString(), is("\"123\".getBytes()"));
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class MemberAccessExpressionTests {
 			throws Exception {
 		Expression e = equal(memberAccess(context(Monkey.class), "name"),
 				"name");
-		assertThat(e.toString(), is("context.name == \"name\""));
+		assertThat(e.toString(), is("context.getName() == \"name\""));
 	}
 
 	@Test
