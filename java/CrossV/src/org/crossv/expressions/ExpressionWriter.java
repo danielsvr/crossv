@@ -250,17 +250,4 @@ public class ExpressionWriter {
 		}
 		print(expression.getInstance(), ".", name);
 	}
-
-	public void printMemberAccess(MemberAccess expression) {
-		AccessibleObject member = expression.getMember();
-		String memberName = "";
-		if (member instanceof Method)
-			memberName = ((Method) member).getName();
-		else
-			memberName = ((Field) member).getName();
-		memberName = memberName.replace("get", "");
-		memberName = Character.toLowerCase(memberName.charAt(0))
-				+ memberName.substring(1);
-		print(expression.getInstance(), ".", memberName);
-	}
 }

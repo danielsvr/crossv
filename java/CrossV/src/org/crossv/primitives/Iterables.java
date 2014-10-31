@@ -196,7 +196,6 @@ public final class Iterables {
 		return new ArrayIterable<E>(null, objs);
 	}
 
-	@SafeVarargs
 	public static <E> Iterable<E> toIterable(E firstItem, E... otherItems) {
 		return new ArrayIterable<E>(firstItem, otherItems);
 	}

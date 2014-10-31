@@ -1,6 +1,6 @@
 //validation
-<MEMBER_ACCESS> validif <BOOLEAN> else <msg:STRING>
-<MEMBER_ACCESS> warnif <BOOLEAN> then <msg:STRING>
+<MEMBER_ACCESS|CALL> validif <BOOLEAN> else <msg:STRING>
+<MEMBER_ACCESS|CALL> warnif <BOOLEAN> then <msg:STRING>
  
 <PROP|STRING> is_valid_if [context_is <CLASS> &&] <BOOLEAN> [THEN <STRING>] ELSE <STRING>
 	// IfEvaluationExpression

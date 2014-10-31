@@ -36,33 +36,21 @@ public class MemberAccess extends Expression {
 	}
 
 	private void verifyOperands() {
-		Class<?> memberDeclaringClass;
-		Class<?> memberReturnClass;
+		Class<?> memberDeclaringClass = null;
+		Class<?> memberReturnClass = null;
 
-		if (member instanceof Method) {
-			Method method = (Method) member;
-			memberDeclaringClass = method.getDeclaringClass();
-			memberReturnClass = method.getReturnType();
-			if (method.getParameterTypes().length > 0)
-		Class<?> instanceClass = instance.getResultClass();
-		Class<?> declaringClass;
-		Class<?> memberClass;
-		int memberParametersCount = 0;
 		if (member instanceof Field) {
-			Field field = (Field) member;
-			declaringClass = field.getDeclaringClass();
-			memberClass = field.getType();
-		} else {
-			Method method = (Method) member;
-			declaringClass = method.getDeclaringClass();
-			memberClass = method.getReturnType();
-			memberParametersCount = method.getParameterTypes().length;
-		} else {
 			Field field = (Field) member;
 			memberDeclaringClass = field.getDeclaringClass();
 			memberReturnClass = field.getType();
+		} else {
+			Method method = (Method) member;
+			memberDeclaringClass = method.getDeclaringClass();
+			memberReturnClass = method.getReturnType();
+			int memberParametersCount = method.getParameterTypes().length;
+			if(memberParametersCount > 0)
+				throw illegalOperand();
 		}
-
 		Class<?> instaceClass = instance.getResultClass();
 
 		if (!memberDeclaringClass.isAssignableFrom(instaceClass)
