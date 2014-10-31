@@ -1,12 +1,31 @@
+MEMBER_ACCESS as literal ;alias expression
+	- eg: when evaluating "obj.Name as n" returns and instance of Variable with {Name = "n", Value = obj.Name, Type = obj.Name.getClass()} 
+	
 //validation
-<MEMBER_ACCESS|CALL> validif <BOOLEAN> else <msg:STRING>
-<MEMBER_ACCESS|CALL> warnif <BOOLEAN> then <msg:STRING>
- 
-<PROP|STRING> is_valid_if [context_is <CLASS> &&] <BOOLEAN> [THEN <STRING>] ELSE <STRING>
-	// IfEvaluationExpression
-<PROP|STRING> warn_if [context_is <CLASS> &&] <BOOLEAN> THEN <STRING>
-	// IfEvaluationExpression
+<MEMBER_ACCESS|CALL|AS|STRING literal> validif <cond:BOOLEAN> else <msg:STRING>
+<MEMBER_ACCESS|CALL|AS|STRING literal> warnif <cond:BOOLEAN> then <msg:STRING>
+when <obj INSTANCEOF> [&& <context INSTANCEOF>] <ENUMERATION of <VALIDIF|WARNIF>>
 
-for_instance_of <CLASS> <n:IfEvaluationExpression>
-fault(<STRING>)		//:string
-warn(<STRING>)		//:string
+cond: - if the first operand is not string literal, obj presence is illegal beacuase the scope of the evaluation will be the member|call 
+         - eg: obj.Name validif context instanceof MyClass && obj instanceof MyOtherClass else "wrong context and intance class"
+															  ^-- illegal operand: obj.Name does not have the 'obj' member 
+         - eg: obj.Name validif context instanceof MyClass && obj.Address == null else "wrong context and address"
+															  ^-- illegal operand: obj.Name does not have the 'obj' member 
+	  - if the first operand is a string literal, the scope of the evaluation will be the obj
+         - eg: "the name" validif context instanceof MyClass && obj instanceof MyOtherClass else "wrong context and intance class" - compiles ok 
+         - eg: "the name" validif context instanceof MyClass && obj.Address == null else "wrong context and address"
+
+
+when obj intanceof MyPerson && context instanceof Collection [
+	obj.Name as n validif !context.contains(n) else "error msg",
+	obj.Name warnif !context.contains(Name) then "warning msg",
+	"address validation" validif !context.contains(obj.Address) else "error msg"
+	...
+]
+
+when obj intanceof MyPerson [
+	obj.Name as n validif n.length > 10 else "error msg",
+	obj.Name warnif Name.length < 15 then "warn msg",
+	"address" validif obj.Address.length > 15 else "error msg",
+	...
+]
