@@ -672,6 +672,10 @@ public abstract class Expression {
 		return memberAccess(constant(instance), member);
 	}
 	
+	public static Expression validIf(Expression scope, Expression test, String ifFalseMessage) {
+		return new ValidIf(scope, test, ifFalseMessage);
+	}
+	
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
 	}

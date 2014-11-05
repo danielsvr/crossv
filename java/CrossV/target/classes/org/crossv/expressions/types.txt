@@ -1,9 +1,8 @@
-MEMBER_ACCESS as literal ;alias expression
-	- eg: when evaluating "obj.Name as n" returns and instance of Variable with {Name = "n", Value = obj.Name, Type = obj.Name.getClass()} 
+
 	
 //validation
-<MEMBER_ACCESS|CALL|AS|STRING literal> validif <cond:BOOLEAN> else <msg:STRING>
-<MEMBER_ACCESS|CALL|AS|STRING literal> warnif <cond:BOOLEAN> then <msg:STRING>
+<MEMBER_ACCESS|CALL|STRING literal> validif <cond:BOOLEAN> else <msg:STRING>
+<MEMBER_ACCESS|CALL|STRING literal> warnif <cond:BOOLEAN> then <msg:STRING>
 when <obj INSTANCEOF> [&& <context INSTANCEOF>] <ENUMERATION of <VALIDIF|WARNIF>>
 
 cond: - if the first operand is not string literal, obj presence is illegal beacuase the scope of the evaluation will be the member|call 
@@ -17,15 +16,23 @@ cond: - if the first operand is not string literal, obj presence is illegal beac
 
 
 when obj intanceof MyPerson && context instanceof Collection [
-	obj.Name as n validif !context.contains(n) else "error msg",
+	//--not now-- obj.Name as n validif !context.contains(n) else "error msg",
 	obj.Name warnif !context.contains(Name) then "warning msg",
 	"address validation" validif !context.contains(obj.Address) else "error msg"
 	...
 ]
 
 when obj intanceof MyPerson [
-	obj.Name as n validif n.length > 10 else "error msg",
+	//--not now-- obj.Name as n validif n.length > 10 else "error msg",
 	obj.Name warnif Name.length < 15 then "warn msg",
 	"address" validif obj.Address.length > 15 else "error msg",
 	...
 ]
+
+
+latter 
+EXPRESSION as literal ;alias expression
+	- eg: when evaluating "obj.Name as n" puts the value of obj.Name on the evaluation stack and the variable on context stack 
+	- eg: "value" as v instanceof String && v == "value"
+
+
