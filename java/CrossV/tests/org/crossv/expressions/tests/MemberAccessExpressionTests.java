@@ -89,6 +89,15 @@ public class MemberAccessExpressionTests {
 	}
 
 	@Test
+	public void evaluateMemberAccessNicknameExpressionForAnonymousInstance_InstanceKnownAtRuntimeAsMonkey_ReturnsTheNickname()
+			throws Exception {
+		Expression e = memberAccess(instance(), "nickname");
+		Monkey instance = new Monkey();
+		instance.nickname = "Runtime known value";
+		Object result = e.evaluate(instance);
+		assertThat(result, is(equalTo("Runtime known value")));
+	}
+
 	public void evaluateMemberAccessExpression_NameOfMonkeyConstant_ReturnsName()
 			throws Exception {
 		Monkey monkey = TestObjectFactory.createMonkey();

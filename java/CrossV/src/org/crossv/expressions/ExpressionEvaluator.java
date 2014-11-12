@@ -607,7 +607,10 @@ public class ExpressionEvaluator {
 		try {
 			Object value = null;
 			AccessibleObject member = expression.getMember();
-			if (member instanceof Method) {
+			if (member instanceof RuntimeMember) {
+				RuntimeMember runtimeMember = (RuntimeMember) member;
+				value = runtimeMember.invoke(getExpressionEvaluator());
+			} else if (member instanceof Method) {
 				Method method = (Method) member;
 				value = method.invoke(instance);
 			} else {
@@ -620,6 +623,10 @@ public class ExpressionEvaluator {
 		} catch (InvocationTargetException e) {
 			throw new RuntimeEvaluationException(e);
 		}
+	}
+
+	protected ExpressionEvaluator getExpressionEvaluator() {
+		return new ExpressionEvaluator(instance, context);
 	}
 
 	public void evaluateValidIf(ValidIf expression) {
