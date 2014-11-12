@@ -67,14 +67,14 @@ public class ClassDescriptor {
 		throw new NoSuchMethodException(format("Can't find method {0}", method));
 	}
 
-	public AccessibleObject findMember(String member) {
+	public MemberDescriptor findMember(String member) {
 		AccessibleObject aproxMatch = null;
 		for (Method m : methods) {
 			int parameterTypesLength = m.getParameterTypes().length;
 			if (parameterTypesLength > 0)
 				continue;
 			if (m.getName().equals(member))
-				return m;
+				return new MemberDescriptor(m);
 			else {
 				String getMember = toPascalCase(member);
 				if (m.getName().equals("get" + getMember)) {
@@ -85,9 +85,9 @@ public class ClassDescriptor {
 
 		for (Field f : fields) {
 			if (f.getName().equals(member))
-				return f;
+				return new MemberDescriptor(f);
 		}
-		return aproxMatch;
+		return aproxMatch != null ? new MemberDescriptor(aproxMatch) : null;
 	}
 
 	public static final Class<Float> CFloat = Float.class;

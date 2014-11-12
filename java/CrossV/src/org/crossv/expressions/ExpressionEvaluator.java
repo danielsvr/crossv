@@ -15,9 +15,7 @@ import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.Iterables.count;
 import static org.crossv.primitives.Iterables.elementAt;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
@@ -25,6 +23,7 @@ import java.util.Stack;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ConvertibleTo;
+import org.crossv.primitives.MemberDescriptor;
 
 public class ExpressionEvaluator {
 
@@ -606,17 +605,12 @@ public class ExpressionEvaluator {
 
 		try {
 			Object value = null;
-			AccessibleObject member = expression.getMember();
+			MemberDescriptor member = expression.getMember();
 			if (member instanceof RuntimeMember) {
 				RuntimeMember runtimeMember = (RuntimeMember) member;
 				value = runtimeMember.invoke(getExpressionEvaluator());
-			} else if (member instanceof Method) {
-				Method method = (Method) member;
-				value = method.invoke(instance);
-			} else {
-				Field field = (Field) member;
-				value = field.get(instance);
-			}
+			} else
+				value = member.invoke(instance);
 			stack.push(value);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeEvaluationException(e);
@@ -644,18 +638,8 @@ public class ExpressionEvaluator {
 			scopeText = (String) popedScope;
 		else if (scopeE instanceof MemberAccess) {
 			MemberAccess access = (MemberAccess) scopeE;
-			AccessibleObject member = access.getMember();
-			String name;
-			if (member instanceof RuntimeMember) {
-				RuntimeMember runtimeMember = (RuntimeMember) member;
-				name = runtimeMember.getName();
-			} else if (member instanceof Field) {
-				Field field = (Field) member;
-				name = field.getName();
-			} else {
-				Method method = (Method) member;
-				name = method.getName();
-			}
+			MemberDescriptor member = access.getMember();
+			String name = member.getName();
 			scopeText = name;
 		} else if (scopeE instanceof Call) {
 			Call call = (Call) scopeE;

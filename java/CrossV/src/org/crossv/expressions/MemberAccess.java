@@ -1,31 +1,35 @@
 package org.crossv.expressions;
 
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
+import org.crossv.primitives.MemberDescriptor;
 
 public class MemberAccess extends Expression {
 	private Expression instance;
-	private AccessibleObject member;
+	private MemberDescriptor member;
 	private Class<?> resultClass;
 
 	public MemberAccess(Expression instance, AccessibleObject member) {
+		init(instance, new MemberDescriptor(member));
+	}
+
+	public MemberAccess(Expression instance, MemberDescriptor member) {
 		init(instance, member);
 	}
 
 	public MemberAccess(Expression instance, String memberName) {
-		AccessibleObject member = findMember(instance.getResultClass(),
-				memberName);
-		if (member == null
-				&& (instance instanceof Instance || instance instanceof Context))
+		Class<?> instanceResultClass = instance.getResultClass();
+		MemberDescriptor member = findMember(instanceResultClass, memberName);
+		boolean isSpecialExpression = instance instanceof Instance
+				|| instance instanceof Context;
+		if (member == null && isSpecialExpression)
 			member = new RuntimeMember(instance, memberName);
 		init(instance, member);
 	}
 
-	private void init(Expression instance, AccessibleObject member) {
+	private void init(Expression instance, MemberDescriptor member) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
 		if (member == null)
@@ -33,10 +37,10 @@ public class MemberAccess extends Expression {
 		this.instance = instance;
 		this.member = member;
 		verifyOperands();
-		resultClass = calculateResultClass();
+		resultClass = member.getMemberClass();
 	}
 
-	private static AccessibleObject findMember(Class<?> instanceClass,
+	private static MemberDescriptor findMember(Class<?> instanceClass,
 			String member) {
 		ClassDescriptor descriptor;
 		descriptor = new ClassDescriptor(instanceClass);
@@ -48,34 +52,16 @@ public class MemberAccess extends Expression {
 		Class<?> memberDeclaringClass = null;
 		Class<?> memberReturnClass = null;
 
-		if (member instanceof RuntimeMember) {
-			memberDeclaringClass = Object.class;
-			memberReturnClass = Object.class;
-		} else if (member instanceof Field) {
-			Field field = (Field) member;
-			memberDeclaringClass = field.getDeclaringClass();
-			memberReturnClass = field.getType();
-		} else {
-			Method method = (Method) member;
-			memberDeclaringClass = method.getDeclaringClass();
-			memberReturnClass = method.getReturnType();
-			int memberParametersCount = method.getParameterTypes().length;
-			if (memberParametersCount > 0)
-				throw illegalOperand();
-		}
-		Class<?> instaceClass = instance.getResultClass();
+		memberDeclaringClass = member.getDeclaringClass();
+		memberReturnClass = member.getMemberClass();
 
+		if (member.isMethod() && member.getParametersCount() > 0)
+			throw illegalOperand();
+
+		Class<?> instaceClass = instance.getResultClass();
 		if (!memberDeclaringClass.isAssignableFrom(instaceClass)
 				|| memberReturnClass.equals(Void.TYPE))
 			throw illegalOperand();
-	}
-
-	public Class<?> calculateResultClass() {
-		if (member instanceof RuntimeMember)
-			return Object.class;
-		if (member instanceof Field)
-			return ((Field) member).getType();
-		return ((Method) member).getReturnType();
 	}
 
 	@Override
@@ -87,7 +73,7 @@ public class MemberAccess extends Expression {
 		return instance;
 	}
 
-	public AccessibleObject getMember() {
+	public MemberDescriptor getMember() {
 		return member;
 	}
 

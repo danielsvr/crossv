@@ -5,11 +5,9 @@ import static org.crossv.primitives.ClassDescriptor.CIterable;
 import static org.crossv.primitives.Iterables.toIterable;
 
 import java.io.PrintWriter;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import org.crossv.primitives.ArgumentNullException;
+import org.crossv.primitives.MemberDescriptor;
 
 public class ExpressionWriter {
 	private final PrintWriter out;
@@ -238,19 +236,10 @@ public class ExpressionWriter {
 	}
 
 	public void printMemberAccess(MemberAccess expression) {
-		AccessibleObject member = expression.getMember();
-		String name = "";
-
-		if (member instanceof RuntimeMember) {
-			RuntimeMember runtimeMember = (RuntimeMember) member;
-			name = runtimeMember.getName();
-		} else if (member instanceof Method) {
-			Method method = (Method) member;
-			name = method.getName() + "()";
-		} else {
-			Field field = (Field) member;
-			name = field.getName();
-		}
+		MemberDescriptor member = expression.getMember();
+		String name = member.getName();
+		if (member.isMethod())
+			name += "()";
 		Expression instance = expression.getInstance();
 		print(instance, ".", name);
 	}

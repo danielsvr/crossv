@@ -4,14 +4,13 @@ import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
-
-import java.lang.reflect.AccessibleObject;
 
 import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.ClassDescriptor;
+import org.crossv.primitives.MemberDescriptor;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
@@ -256,30 +255,30 @@ public class ClassDescriptorTests {
 	}
 
 	@Test
-	public void findMember_nickname_retruns(){
+	public void findMember_nickname_retruns() {
 		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
-		AccessibleObject result = descriptor.findMember("nickname");
+		MemberDescriptor result = descriptor.findMember("nickname");
 		assertThat(result, is(not(nullValue())));
 	}
 
 	@Test
-	public void findMember_Name_retruns(){
+	public void findMember_Name_retruns() {
 		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
-		AccessibleObject result = descriptor.findMember("Name");
+		MemberDescriptor result = descriptor.findMember("Name");
 		assertThat(result, is(not(nullValue())));
 	}
-	
+
 	@Test
-	public void findMember_name_retruns(){
+	public void findMember_name_retruns() {
 		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
-		AccessibleObject result = descriptor.findMember("name");
+		MemberDescriptor result = descriptor.findMember("name");
 		assertThat(result, is(not(nullValue())));
 	}
-	
+
 	@Test
-	public void findMember_getName_retruns(){
+	public void findMember_getName_retruns() {
 		ClassDescriptor descriptor = new ClassDescriptor(Monkey.class);
-		AccessibleObject result = descriptor.findMember("getName");
+		MemberDescriptor result = descriptor.findMember("getName");
 		assertThat(result, is(not(nullValue())));
 	}
 }
