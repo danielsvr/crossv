@@ -170,4 +170,9 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 	public void visitMemberAccess(MemberAccess expression) {
 		visit(expression);
 	}
+	
+	@Override
+	public void visitValidIf(ValidIf expression) {
+		visit(expression);
+	}
 }

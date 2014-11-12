@@ -664,6 +664,10 @@ public abstract class Expression {
 		return new MemberAccess(instance, member);
 	}
 
+	public static Expression memberAccess(Object instance, AccessibleObject member) {
+		return new MemberAccess(constant(instance), member);
+	}
+
 	public static Expression memberAccess(Expression instance, String member) {
 		return new MemberAccess(instance, member);
 	}

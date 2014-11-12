@@ -621,4 +621,8 @@ public class ExpressionEvaluator {
 			throw new RuntimeEvaluationException(e);
 		}
 	}
+
+	public void evaluateValidIf(ValidIf expression) {
+		
+	}
 }

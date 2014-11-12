@@ -1,5 +1,6 @@
 package org.crossv.expressions.tests;
 
+import static org.crossv.expressions.Expression.instance;
 import static org.crossv.expressions.Expression.constant;
 import static org.crossv.expressions.Expression.context;
 import static org.crossv.expressions.Expression.equal;
@@ -42,17 +43,29 @@ public class MemberAccessExpressionTests {
 			throws Exception {
 		Monkey monkney = TestObjectFactory.createMonkey();
 
-		memberAccess(constant(monkney),
+		memberAccess(monkney,
 				Monkey.class.getMethod("getRelativeByIndex", Integer.TYPE));
 	}
 
+	public void createMemberAccessGetNameForInstance_ReturnClassIsObject()
+			throws Exception {
+		Expression e = memberAccess(instance(), "Name");
+		assertThat(e.getResultClass(), is(equalTo(Object.class)));
+	}
+
+	public void createMemberAccessGetNameForInstance_callingToString_getsFieldAccessLikeExpression()
+			throws Exception {
+		Expression e = memberAccess(instance(), "Name");
+		assertThat(e.toString(), is("instance.Name"));
+	}
+
 	@Test
-	public void createMemberAccessNicknameExpressionForMonkey_callingToString_getsFieldAccessLikeExpression()
+	public void createMemberAccessNicknameExpressionForMonkeyContext_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {
 		Expression e = memberAccess(context(Monkey.class), "nickname");
 		assertThat(e.toString(), is("context.nickname"));
 	}
-	
+
 	@Test
 	public void createMemberAccessBytesExpressionForString_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {
@@ -69,11 +82,18 @@ public class MemberAccessExpressionTests {
 	}
 
 	@Test
+	public void createMemberAccessNameExpressionForAnonymousContext_callingToString_getsJavaLikeExpression()
+			throws Exception {
+		Expression e = equal(memberAccess(context(), "name"), "name");
+		assertThat(e.toString(), is("context.name == \"name\""));
+	}
+
+	@Test
 	public void evaluateMemberAccessExpression_NameOfMonkeyConstant_ReturnsName()
 			throws Exception {
 		Monkey monkey = TestObjectFactory.createMonkey();
 		monkey.setName("John");
-		Expression e = memberAccess(constant(monkey), "Name");
+		Expression e = memberAccess(monkey, "Name");
 		assertThat(e.evaluate(), is(equalTo("John")));
 	}
 }

@@ -69,4 +69,6 @@ public interface ExpressionVisitor {
 	void visitSequenceIndex(SequenceIndex expression);
 
 	void visitMemberAccess(MemberAccess expression);
+
+	void visitValidIf(ValidIf expression);
 }

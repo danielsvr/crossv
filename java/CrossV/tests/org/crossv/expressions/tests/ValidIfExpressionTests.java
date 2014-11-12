@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class ValidIfExpressionTests {
 
-	@Test(expected = IllegalOperandException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void createValidIfExpression_NullScope_ThrowsIllegalOperandException() {
 		Expression scope = null;
 		Expression test = constant(true);
@@ -25,7 +25,7 @@ public class ValidIfExpressionTests {
 		validIf(scope, test, ifFalseMessage);
 	}
 
-	@Test(expected = IllegalOperandException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void createValidIfExpression_NullTest_ThrowsIllegalOperandException() {
 		Expression scope = memberAccess(new Monkey(), "nickname");
 		Expression test = null;

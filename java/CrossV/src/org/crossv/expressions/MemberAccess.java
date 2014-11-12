@@ -13,6 +13,19 @@ public class MemberAccess extends Expression {
 	private Class<?> resultClass;
 
 	public MemberAccess(Expression instance, AccessibleObject member) {
+		init(instance, member);
+	}
+
+	public MemberAccess(Expression instance, String memberName) {
+		AccessibleObject member = findMember(instance.getResultClass(),
+				memberName);
+		if (member == null
+				&& (instance instanceof Instance || instance instanceof Context))
+			member = new RuntimeMember(instance, memberName);
+		init(instance, member);
+	}
+
+	private void init(Expression instance, AccessibleObject member) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
 		if (member == null)
@@ -21,10 +34,6 @@ public class MemberAccess extends Expression {
 		this.member = member;
 		verifyOperands();
 		resultClass = calculateResultClass();
-	}
-
-	public MemberAccess(Expression instance, String member) {
-		this(instance, findMember(instance.getResultClass(), member));
 	}
 
 	private static AccessibleObject findMember(Class<?> instanceClass,
@@ -39,7 +48,10 @@ public class MemberAccess extends Expression {
 		Class<?> memberDeclaringClass = null;
 		Class<?> memberReturnClass = null;
 
-		if (member instanceof Field) {
+		if (member instanceof RuntimeMember) {
+			memberDeclaringClass = Object.class;
+			memberReturnClass = Object.class;
+		} else if (member instanceof Field) {
 			Field field = (Field) member;
 			memberDeclaringClass = field.getDeclaringClass();
 			memberReturnClass = field.getType();
@@ -48,7 +60,7 @@ public class MemberAccess extends Expression {
 			memberDeclaringClass = method.getDeclaringClass();
 			memberReturnClass = method.getReturnType();
 			int memberParametersCount = method.getParameterTypes().length;
-			if(memberParametersCount > 0)
+			if (memberParametersCount > 0)
 				throw illegalOperand();
 		}
 		Class<?> instaceClass = instance.getResultClass();
@@ -59,6 +71,8 @@ public class MemberAccess extends Expression {
 	}
 
 	public Class<?> calculateResultClass() {
+		if (member instanceof RuntimeMember)
+			return Object.class;
 		if (member instanceof Field)
 			return ((Field) member).getType();
 		return ((Method) member).getReturnType();

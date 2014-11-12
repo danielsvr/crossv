@@ -176,4 +176,9 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	public void visitMemberAccess(MemberAccess expression) {
 		evaluator.evaluateMemberAccess(expression);
 	}
+
+	@Override
+	public void visitValidIf(ValidIf expression) {
+		evaluator.evaluateValidIf(expression);
+	}
 }

@@ -241,13 +241,17 @@ public class ExpressionWriter {
 		AccessibleObject member = expression.getMember();
 		String name = "";
 
-		if (member instanceof Method) {
+		if (member instanceof RuntimeMember) {
+			RuntimeMember runtimeMember = (RuntimeMember) member;
+			name = runtimeMember.getName();
+		} else if (member instanceof Method) {
 			Method method = (Method) member;
 			name = method.getName() + "()";
 		} else {
 			Field field = (Field) member;
 			name = field.getName();
 		}
-		print(expression.getInstance(), ".", name);
+		Expression instance = expression.getInstance();
+		print(instance, ".", name);
 	}
 }
