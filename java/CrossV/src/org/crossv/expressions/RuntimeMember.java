@@ -1,6 +1,7 @@
 package org.crossv.expressions;
 
 import static java.text.MessageFormat.format;
+import static org.crossv.primitives.ClassDescriptor.CObject;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -23,12 +24,12 @@ public class RuntimeMember extends MemberDescriptor {
 
 	@Override
 	public Class<?> getDeclaringClass() {
-		return Object.class;
+		return CObject;
 	}
 
 	@Override
 	public Class<?> getMemberClass() {
-		return Object.class;
+		return CObject;
 	}
 
 	public Expression getInstance() {

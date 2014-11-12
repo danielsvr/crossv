@@ -1,5 +1,6 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.ClassDescriptor.CEvaluatorDescriptor;
 import org.crossv.primitives.ArgumentException;
 
 public class ValidIf extends Expression {
@@ -22,7 +23,7 @@ public class ValidIf extends Expression {
 
 	@Override
 	public Class<?> getResultClass() {
-		return EvaluatorDescriptor.class;
+		return CEvaluatorDescriptor;
 	}
 
 	@Override
