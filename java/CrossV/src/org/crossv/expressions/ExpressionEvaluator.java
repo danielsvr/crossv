@@ -623,6 +623,20 @@ public class ExpressionEvaluator {
 	}
 
 	public void evaluateValidIf(ValidIf expression) {
-		
+		Expression scopeExpression = expression.getScope();
+		Expression test = expression.getTest();
+		Expression ifFalseExpression = expression.getIfFalse();
+
+		eval(scopeExpression);
+		Object popedScope = stack.pop();
+		eval(ifFalseExpression);
+		String ifFalseMessage = (String) stack.pop();
+
+		String scopeText = "scope name";
+		EvaluatorDescriptor descriptor;
+		EvaluatorScope scope;
+		scope = new EvaluatorScope(popedScope, scopeText);
+		descriptor = new EvaluatorDescriptor(scope, test, ifFalseMessage);
+		stack.push(descriptor);
 	}
 }

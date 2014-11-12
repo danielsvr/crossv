@@ -53,24 +53,26 @@ public class ValidIfExpressionTests {
 	}
 
 	@Test
-	public void evaluateValidIfExpression_ForInstanceNickname_ReturnsDescriptorWithScopeTextNickname()
+	public void evaluateValidIfExpressionForMockeyInstance_ForInstanceNickname_ReturnsDescriptorWithScopeTextNickname()
 			throws Exception {
 		Expression scope = memberAccess(instance(), "nickname");
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor = (EvaluatorDescriptor) e.evaluate();
-		assertThat(descriptor.getScopeText(), is(equalTo("nickname")));
+		EvaluatorDescriptor descriptor;
+		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		assertThat(descriptor.getScopeDescription(), is(equalTo("nickname")));
 	}
 
 	@Test
-	public void evaluateValidIfExpression_WithErrorAsIfFalseMessage_ReturnsDescriptorWithIfFalseMessageError()
+	public void evaluateValidIfExpressionForMockeyInstance_WithErrorAsIfFalseMessage_ReturnsDescriptorWithIfFalseMessageError()
 			throws Exception {
 		Expression scope = memberAccess(instance(), "nickname");
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor = (EvaluatorDescriptor) e.evaluate();
+		EvaluatorDescriptor descriptor;
+		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getIfFalseMessage(), is(equalTo("error")));
 	}
 

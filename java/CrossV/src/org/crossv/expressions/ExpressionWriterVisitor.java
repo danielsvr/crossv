@@ -176,4 +176,9 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitMemberAccess(MemberAccess expression) {
 		printer.printMemberAccess(expression);
 	}
+	
+	@Override
+	public void visitValidIf(ValidIf expression) {
+		printer.printValidIf(expression);
+	}
 }

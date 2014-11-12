@@ -8,18 +8,18 @@ public class ValidIf extends Expression {
 
 	private Expression scope;
 	private Expression test;
-	private String ifFalseMessage;
+	private Expression ifFalse;
 
-	public ValidIf(Expression scope, Expression test, String ifFalseMessage) {
+	public ValidIf(Expression scope, Expression test, Expression ifFalse) {
 		if (scope == null)
 			throw new ArgumentException("scope");
 		if (test == null)
 			throw new ArgumentException("test");
-		if (isNullOrWhitespace(ifFalseMessage))
-			throw new ArgumentException("ifFalseMessage");
+		if (ifFalse == null)
+			throw new ArgumentException("ifFalse");
 		this.scope = scope;
 		this.test = test;
-		this.ifFalseMessage = ifFalseMessage;
+		this.ifFalse = ifFalse;
 	}
 
 	@Override
@@ -30,5 +30,17 @@ public class ValidIf extends Expression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitValidIf(this);
+	}
+
+	public Expression getScope() {
+		return scope;
+	}
+
+	public Expression getTest() {
+		return test;
+	}
+
+	public Expression getIfFalse() {
+		return ifFalse;
 	}
 }

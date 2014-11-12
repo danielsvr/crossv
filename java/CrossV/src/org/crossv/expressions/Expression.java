@@ -660,26 +660,29 @@ public abstract class Expression {
 		return sequenceIndex(constant(operand), index);
 	}
 
-	public static Expression memberAccess(Expression instance, AccessibleObject member) {
+	public static Expression memberAccess(Expression instance,
+			AccessibleObject member) {
 		return new MemberAccess(instance, member);
 	}
 
-	public static Expression memberAccess(Object instance, AccessibleObject member) {
+	public static Expression memberAccess(Object instance,
+			AccessibleObject member) {
 		return new MemberAccess(constant(instance), member);
 	}
 
 	public static Expression memberAccess(Expression instance, String member) {
 		return new MemberAccess(instance, member);
 	}
-	
+
 	public static Expression memberAccess(Object instance, String member) {
 		return memberAccess(constant(instance), member);
 	}
-	
-	public static Expression validIf(Expression scope, Expression test, String ifFalseMessage) {
-		return new ValidIf(scope, test, ifFalseMessage);
+
+	public static Expression validIf(Expression scope, Expression test,
+			String ifFalseMessage) {
+		return new ValidIf(scope, test, constant(ifFalseMessage));
 	}
-	
+
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
 	}

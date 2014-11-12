@@ -1,15 +1,26 @@
 package org.crossv.expressions;
 
 public class EvaluatorDescriptor {
-	public String getScopeText() {
-		return null;
+	private String ifFalseMessage;
+	private Expression test;
+	private EvaluatorScope scope;
+
+	public EvaluatorDescriptor(EvaluatorScope scope, Expression test,
+			String ifFalseMessage) {
+		this.scope = scope;
+		this.test = test;
+		this.ifFalseMessage = ifFalseMessage;
+	}
+
+	public String getScopeDescription() {
+		return scope.getDescription();
 	}
 
 	public String getIfFalseMessage() {
-		return null;
+		return ifFalseMessage;
 	}
 
 	public Expression getTest() {
-		return null;
+		return test;
 	}
 }
