@@ -1,9 +1,9 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.validIf;
-import static org.crossv.expressions.Expression.memberAccess;
-import static org.crossv.expressions.Expression.instance;
 import static org.crossv.expressions.Expression.constant;
+import static org.crossv.expressions.Expression.instance;
+import static org.crossv.expressions.Expression.memberAccess;
+import static org.crossv.expressions.Expression.validIf;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -11,7 +11,6 @@ import static org.junit.Assert.assertThat;
 
 import org.crossv.expressions.EvaluatorDescriptor;
 import org.crossv.expressions.Expression;
-import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
@@ -83,7 +82,8 @@ public class ValidIfExpressionTests {
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor = (EvaluatorDescriptor) e.evaluate();
+		EvaluatorDescriptor descriptor;
+		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getTest(), is(equalTo(test)));
 	}
 }

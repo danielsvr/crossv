@@ -1,7 +1,5 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.Strings.isNullOrWhitespace;
-
 import org.crossv.primitives.ArgumentException;
 
 public class ValidIf extends Expression {

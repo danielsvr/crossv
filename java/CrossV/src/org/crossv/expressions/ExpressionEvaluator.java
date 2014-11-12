@@ -630,16 +630,39 @@ public class ExpressionEvaluator {
 	}
 
 	public void evaluateValidIf(ValidIf expression) {
-		Expression scopeExpression = expression.getScope();
+		Expression scopeE = expression.getScope();
 		Expression test = expression.getTest();
 		Expression ifFalseExpression = expression.getIfFalse();
 
-		eval(scopeExpression);
+		eval(scopeE);
 		Object popedScope = stack.pop();
 		eval(ifFalseExpression);
 		String ifFalseMessage = (String) stack.pop();
 
-		String scopeText = "scope name";
+		String scopeText = null;
+		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString))
+			scopeText = (String) popedScope;
+		else if (scopeE instanceof MemberAccess) {
+			MemberAccess access = (MemberAccess) scopeE;
+			AccessibleObject member = access.getMember();
+			String name;
+			if (member instanceof RuntimeMember) {
+				RuntimeMember runtimeMember = (RuntimeMember) member;
+				name = runtimeMember.getName();
+			} else if (member instanceof Field) {
+				Field field = (Field) member;
+				name = field.getName();
+			} else {
+				Method method = (Method) member;
+				name = method.getName();
+			}
+			scopeText = name;
+		} else if (scopeE instanceof Call) {
+			Call call = (Call) scopeE;
+			Method method = call.getMethod();
+			scopeText = method.getName();
+		}
+
 		EvaluatorDescriptor descriptor;
 		EvaluatorScope scope;
 		scope = new EvaluatorScope(popedScope, scopeText);
