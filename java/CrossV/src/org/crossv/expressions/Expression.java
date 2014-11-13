@@ -692,6 +692,16 @@ public abstract class Expression {
 		return new WarnIf(scope, test, constant(ifTrueMessage));
 	}
 
+	public static Expression evaluation(Expression scope,
+			Expression... evaluators) {
+		return new Evaluation(scope, evaluators);
+	}
+
+	public static Expression evaluation(Expression scope,
+			Iterable<Expression> evaluators) {
+		return evaluation(scope, toArray(evaluators, new Expression[0]));
+	}
+
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
 	}
