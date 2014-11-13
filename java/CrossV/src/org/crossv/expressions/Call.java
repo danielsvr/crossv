@@ -4,36 +4,50 @@ import java.lang.reflect.Method;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
+import org.crossv.primitives.MemberDescriptor;
 
 public class Call extends Expression {
 	private Expression instance;
-	private Method method;
+	private MemberDescriptor member;
 	private Expression[] parameters;
 
 	public Call(Expression instance, String method, Expression... parameters)
 			throws SecurityException, NoSuchMethodException {
-		this(instance, findMethod(instance, method, parameters), parameters);
+		MemberDescriptor member;
+		if (instance.isKnownAtRuntime()) {
+			member = new RuntimeMethod(instance, method);
+		} else {
+			Method foundMethod = findMethod(instance, method, parameters);
+			member = new MemberDescriptor(foundMethod);
+		}
+
+		init(instance, member, parameters);
 	}
 
 	public Call(Expression instance, Method method, Expression... parameters) {
+		init(instance, new MemberDescriptor(method), parameters);
+	}
+
+	private void init(Expression instance, MemberDescriptor method,
+			Expression... parameters) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
 		if (method == null)
 			throw new ArgumentNullException("method");
 
 		this.instance = instance;
-		this.method = method;
+		this.member = method;
 		this.parameters = parameters;
-		
+
 		verifyOperands();
 	}
 
 	private void verifyOperands() {
-		Class<?> declaringClass = method.getDeclaringClass();
+		Class<?> declaringClass = member.getDeclaringClass();
 		Class<?> resultClass = instance.getResultClass();
 
-		if (!declaringClass.isAssignableFrom(resultClass)
-				|| method.getReturnType().equals(Void.TYPE))
+		if (!member.isMethod() || !declaringClass.isAssignableFrom(resultClass)
+				|| member.getMemberClass().equals(Void.TYPE))
 			throw illegalOperand();
 	}
 
@@ -56,8 +70,8 @@ public class Call extends Expression {
 		return instance;
 	}
 
-	public Method getMethod() {
-		return method;
+	public MemberDescriptor getMethod() {
+		return member;
 	}
 
 	public Expression[] getParameters() {
@@ -66,11 +80,15 @@ public class Call extends Expression {
 
 	@Override
 	public Class<?> getResultClass() {
-		return method.getReturnType();
+		return member.getMemberClass();
 	}
 
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitCall(this);
+	}
+
+	public String getMethodName() {
+		return member.getName();
 	}
 }

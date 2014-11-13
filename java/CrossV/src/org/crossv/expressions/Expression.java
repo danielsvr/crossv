@@ -104,6 +104,10 @@ public abstract class Expression {
 		return resultClass.isArray();
 	}
 
+	protected boolean isKnownAtRuntime() {
+		return false;
+	}
+
 	protected boolean returnsPrimitiveType() {
 		return isAssignableToAny(TVoid, CNumber, CCharacter, CBoolean);
 	}
@@ -681,6 +685,11 @@ public abstract class Expression {
 	public static Expression validIf(Expression scope, Expression test,
 			String ifFalseMessage) {
 		return new ValidIf(scope, test, constant(ifFalseMessage));
+	}
+
+	public static Expression warnIf(Expression scope, Expression test,
+			String ifTrueMessage) {
+		return new WarnIf(scope, test, constant(ifTrueMessage));
 	}
 
 	protected static IllegalOperandException illegalOperand() {

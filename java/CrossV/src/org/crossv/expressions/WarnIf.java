@@ -2,15 +2,16 @@ package org.crossv.expressions;
 
 import static org.crossv.primitives.ClassDescriptor.CEvaluatorDescriptor;
 import static org.crossv.primitives.ClassDescriptor.CString;
+
 import org.crossv.primitives.ArgumentException;
 
-public class ValidIf extends Expression {
+public class WarnIf extends Expression {
 
 	private Expression scope;
 	private Expression test;
 	private Expression ifFalse;
 
-	public ValidIf(Expression scope, Expression test, Expression ifFalse) {
+	public WarnIf(Expression scope, Expression test, Expression ifFalse) {
 		if (scope == null)
 			throw new ArgumentException("scope");
 
@@ -37,7 +38,7 @@ public class ValidIf extends Expression {
 
 	@Override
 	public void accept(ExpressionVisitor visitor) {
-		visitor.visitValidIf(this);
+		visitor.visitWarnIf(this);
 	}
 
 	public Expression getScope() {

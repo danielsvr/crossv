@@ -66,7 +66,7 @@ public class ClassDescriptor {
 					return m;
 			}
 		}
-		throw new NoSuchMethodException(format("Can't find method {0}", method));
+		throw new NoSuchMethodException(format("Can''t find method \"{0}\".", method));
 	}
 
 	public MemberDescriptor findMember(String member) {

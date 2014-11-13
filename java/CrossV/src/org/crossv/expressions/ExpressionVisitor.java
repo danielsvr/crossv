@@ -71,4 +71,6 @@ public interface ExpressionVisitor {
 	void visitMemberAccess(MemberAccess expression);
 
 	void visitValidIf(ValidIf expression);
+
+	void visitWarnIf(WarnIf expression);
 }

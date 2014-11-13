@@ -75,4 +75,8 @@ public class MemberDescriptor {
 	public int getParametersCount() {
 		return methodParameterTypes.length;
 	}
+
+	public Method toMethod() {
+		return (Method) member;
+	}
 }

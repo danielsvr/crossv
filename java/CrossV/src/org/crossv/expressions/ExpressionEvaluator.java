@@ -17,7 +17,6 @@ import static org.crossv.primitives.Iterables.elementAt;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Stack;
 
@@ -334,8 +333,8 @@ public class ExpressionEvaluator {
 			params[i] = stack.pop();
 		}
 		try {
-			Method method = expression.getMethod();
-			Object value = method.invoke(instance, params);
+			MemberDescriptor member = expression.getMethod();
+			Object value = member.invoke(instance, params);
 			stack.push(value);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeEvaluationException(e);
@@ -643,7 +642,7 @@ public class ExpressionEvaluator {
 			scopeText = name;
 		} else if (scopeE instanceof Call) {
 			Call call = (Call) scopeE;
-			Method method = call.getMethod();
+			MemberDescriptor method = call.getMethod();
 			scopeText = method.getName();
 		}
 

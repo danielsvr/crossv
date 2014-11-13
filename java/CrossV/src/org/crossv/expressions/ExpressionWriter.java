@@ -189,7 +189,7 @@ public class ExpressionWriter {
 
 	protected void printCall(Call expression) {
 		print(expression.getInstance());
-		print("." + expression.getMethod().getName() + "(");
+		print("." + expression.getMethodName() + "(");
 		boolean anyParameter = false;
 		Expression[] parameters = expression.getParameters();
 		for (Expression parameter : parameters) {

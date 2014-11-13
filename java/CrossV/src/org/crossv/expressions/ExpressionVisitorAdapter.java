@@ -165,14 +165,19 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 	public void visitSequenceIndex(SequenceIndex expression) {
 		visit(expression);
 	}
-	
+
 	@Override
 	public void visitMemberAccess(MemberAccess expression) {
 		visit(expression);
 	}
-	
+
 	@Override
 	public void visitValidIf(ValidIf expression) {
+		visit(expression);
+	}
+
+	@Override
+	public void visitWarnIf(WarnIf expression) {
 		visit(expression);
 	}
 }
