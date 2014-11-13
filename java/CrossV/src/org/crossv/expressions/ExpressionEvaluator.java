@@ -649,7 +649,38 @@ public class ExpressionEvaluator {
 		EvaluatorDescriptor descriptor;
 		EvaluatorScope scope;
 		scope = new EvaluatorScope(popedScope, scopeText);
-		descriptor = new EvaluatorDescriptor(scope, test, ifFalseMessage);
+		descriptor = new EvaluatorDescriptor(scope, test, null, ifFalseMessage);
+		stack.push(descriptor);
+	}
+
+	public void evaluateWarnIf(WarnIf expression) {
+		Expression scopeE = expression.getScope();
+		Expression test = expression.getTest();
+		Expression ifTrueExpression = expression.getIfFalse();
+
+		eval(scopeE);
+		Object popedScope = stack.pop();
+		eval(ifTrueExpression);
+		String ifTrueMessage = (String) stack.pop();
+
+		String scopeText = null;
+		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString))
+			scopeText = (String) popedScope;
+		else if (scopeE instanceof MemberAccess) {
+			MemberAccess access = (MemberAccess) scopeE;
+			MemberDescriptor member = access.getMember();
+			String name = member.getName();
+			scopeText = name;
+		} else if (scopeE instanceof Call) {
+			Call call = (Call) scopeE;
+			MemberDescriptor method = call.getMethod();
+			scopeText = method.getName();
+		}
+
+		EvaluatorDescriptor descriptor;
+		EvaluatorScope scope;
+		scope = new EvaluatorScope(popedScope, scopeText);
+		descriptor = new EvaluatorDescriptor(scope, test, ifTrueMessage, null);
 		stack.push(descriptor);
 	}
 }

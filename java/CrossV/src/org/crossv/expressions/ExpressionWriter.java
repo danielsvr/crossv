@@ -250,4 +250,11 @@ public class ExpressionWriter {
 		Expression ifFalse = expression.getIfFalse();
 		print(scope, " validif ", test, " else ", ifFalse);
 	}
+
+	public void printWarnIf(WarnIf expression) {
+		Expression scope = expression.getScope();
+		Expression test = expression.getTest();
+		Expression ifFalse = expression.getIfFalse();
+		print(scope, " warnif ", test, " then ", ifFalse);
+	}
 }

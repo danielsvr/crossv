@@ -181,4 +181,9 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitValidIf(ValidIf expression) {
 		printer.printValidIf(expression);
 	}
+	
+	@Override
+	public void visitWarnIf(WarnIf expression) {
+		printer.printWarnIf(expression);
+	}
 }

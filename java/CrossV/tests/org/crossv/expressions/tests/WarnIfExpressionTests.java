@@ -31,7 +31,7 @@ public class WarnIfExpressionTests {
 	public void createWarnIfExpression_NullTest_ThrowsArgumentOperandException() {
 		Expression scope = memberAccess(new Monkey(), "nickname");
 		Expression test = null;
-		String ifTrueMessage = "error";
+		String ifTrueMessage = "warning";
 		warnIf(scope, test, ifTrueMessage);
 	}
 
@@ -39,8 +39,8 @@ public class WarnIfExpressionTests {
 	public void createWarnIfExpression_ScopeOtherThanMemberAccessCallOrStringConstant_ThrowsIllegalOperandException() {
 		Expression scope = add(1, 2);
 		Expression test = constant(true);
-		String ifFalseMessage = "error";
-		warnIf(scope, test, ifFalseMessage);
+		String ifTrueMessage = "warning";
+		warnIf(scope, test, ifTrueMessage);
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class WarnIfExpressionTests {
 		Class<?> expectedClass = EvaluatorDescriptor.class;
 		Expression scope = memberAccess(new Monkey(), "nickname");
 		Expression test = constant(true);
-		String ifTrueMessage = "error";
+		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
 		assertThat(e.getResultClass(), is(assignableTo(expectedClass)));
 	}
@@ -57,9 +57,10 @@ public class WarnIfExpressionTests {
 	public void createWarnIfExpressionForMemberAccess_callingToString_getsJavaLikeExpression() {
 		Expression scope = memberAccess(instance(), "nickname");
 		Expression test = constant(true);
-		String ifFalseMessage = "error";
-		Expression e = warnIf(scope, test, ifFalseMessage);
-		assertThat(e.toString(), is("obj.nickname warnif true then \"error\""));
+		String ifTrueMessage = "warning";
+		Expression e = warnIf(scope, test, ifTrueMessage);
+		assertThat(e.toString(),
+				is("obj.nickname warnif true then \"warning\""));
 	}
 
 	@Test
@@ -67,10 +68,10 @@ public class WarnIfExpressionTests {
 			throws Exception {
 		Expression scope = call(instance(), "nickname");
 		Expression test = constant(true);
-		String ifFalseMessage = "error";
-		Expression e = warnIf(scope, test, ifFalseMessage);
+		String ifTrueMessage = "warning";
+		Expression e = warnIf(scope, test, ifTrueMessage);
 		assertThat(e.toString(),
-				is("obj.nickname() warnif true then \"error\""));
+				is("obj.nickname() warnif true then \"warning\""));
 	}
 
 	@Test
@@ -78,7 +79,7 @@ public class WarnIfExpressionTests {
 			throws Exception {
 		Expression scope = memberAccess(instance(), "nickname");
 		Expression test = constant(true);
-		String ifTrueMessage = "error";
+		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
 		EvaluatorDescriptor descriptor;
 		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
@@ -90,8 +91,8 @@ public class WarnIfExpressionTests {
 			throws Exception {
 		Expression scope = call(instance(), "getRelativesAsList");
 		Expression test = constant(true);
-		String ifFalseMessage = "error";
-		Expression e = warnIf(scope, test, ifFalseMessage);
+		String ifTrueMessage = "warning";
+		Expression e = warnIf(scope, test, ifTrueMessage);
 		EvaluatorDescriptor descriptor;
 		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getScopeDescription(),
@@ -99,15 +100,15 @@ public class WarnIfExpressionTests {
 	}
 
 	@Test
-	public void evaluateWarnIfExpressionForMockeyInstance_WithErrorAsIfFalseMessage_ReturnsDescriptorWithIfFalseMessageError()
+	public void evaluateWarnIfExpressionForMockeyInstance_WithWarningAsIfFalseMessage_ReturnsDescriptorWithIfTrueMessageWarning()
 			throws Exception {
 		Expression scope = memberAccess(instance(), "nickname");
 		Expression test = constant(true);
-		String ifTrueMessage = "error";
+		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
 		EvaluatorDescriptor descriptor;
 		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
-		assertThat(descriptor.getIfFalseMessage(), is(equalTo("error")));
+		assertThat(descriptor.getIfTrueMessage(), is(equalTo("warning")));
 	}
 
 	@Test
@@ -115,7 +116,7 @@ public class WarnIfExpressionTests {
 			throws Exception {
 		Expression scope = memberAccess(instance(), "nickname");
 		Expression test = constant(true);
-		String ifTrueMessage = "error";
+		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
 		EvaluatorDescriptor descriptor;
 		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
