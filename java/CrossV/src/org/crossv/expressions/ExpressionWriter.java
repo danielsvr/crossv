@@ -215,7 +215,11 @@ public class ExpressionWriter {
 	}
 
 	protected void printNot(Not expression) {
-		print("!", expression.getOperand());
+		Expression operand = expression.getOperand();
+		if (operand instanceof Constant)
+			print("!", operand);
+		else
+			print("!(", operand, ")");
 	}
 
 	protected void printConditional(ConditionalTernary expression) {
@@ -256,5 +260,18 @@ public class ExpressionWriter {
 		Expression test = expression.getTest();
 		Expression ifFalse = expression.getIfFalse();
 		print(scope, " warnif ", test, " then ", ifFalse);
+	}
+
+	public void printEvaluation(Evaluation expression) {
+		Expression scope = expression.getScope();
+		Expression[] evaluators = expression.getEvaluators();
+		print("when ", scope, " [");
+		for (int i = 0; i < evaluators.length; i++) {
+			Expression evaluator = evaluators[i];
+			if (i != 0)
+				print(",");
+			print(evaluator);
+		}
+		print("]");
 	}
 }

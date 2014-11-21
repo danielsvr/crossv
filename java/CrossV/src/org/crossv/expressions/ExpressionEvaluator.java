@@ -607,7 +607,9 @@ public class ExpressionEvaluator {
 			MemberDescriptor member = expression.getMember();
 			if (member instanceof RuntimeMember) {
 				RuntimeMember runtimeMember = (RuntimeMember) member;
-				value = runtimeMember.invoke(getExpressionEvaluator());
+				eval(runtimeMember.getInstance());
+				Object obj = stack.pop();
+				value = runtimeMember.invoke(obj);
 			} else
 				value = member.invoke(instance);
 			stack.push(value);
@@ -616,10 +618,6 @@ public class ExpressionEvaluator {
 		} catch (InvocationTargetException e) {
 			throw new RuntimeEvaluationException(e);
 		}
-	}
-
-	protected ExpressionEvaluator getExpressionEvaluator() {
-		return new ExpressionEvaluator(instance, context);
 	}
 
 	public void evaluateValidIf(ValidIf expression) {
@@ -682,5 +680,10 @@ public class ExpressionEvaluator {
 		scope = new EvaluatorScope(popedScope, scopeText);
 		descriptor = new EvaluatorDescriptor(scope, test, ifTrueMessage, null);
 		stack.push(descriptor);
+	}
+
+	public void evaluateEvaluation(Evaluation expression) {
+		ExpressionBaseEvaluator evaluator = new ExpressionBaseEvaluator(expression);
+		stack.push(evaluator);
 	}
 }

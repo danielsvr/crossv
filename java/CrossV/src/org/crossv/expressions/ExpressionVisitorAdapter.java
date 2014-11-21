@@ -1,10 +1,9 @@
 package org.crossv.expressions;
 
-public class ExpressionVisitorAdapter implements ExpressionVisitor {
+public abstract class ExpressionVisitorAdapter implements ExpressionVisitor {
 
 	@Override
-	public void visit(Expression expression) {
-	}
+	public abstract void visit(Expression expression);
 
 	@Override
 	public void visitContext(Context expression) {
@@ -178,6 +177,11 @@ public class ExpressionVisitorAdapter implements ExpressionVisitor {
 
 	@Override
 	public void visitWarnIf(WarnIf expression) {
+		visit(expression);
+	}
+
+	@Override
+	public void visitEvaluation(Evaluation expression) {
 		visit(expression);
 	}
 }

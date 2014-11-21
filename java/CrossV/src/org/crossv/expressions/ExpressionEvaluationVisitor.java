@@ -186,4 +186,9 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	public void visitWarnIf(WarnIf expression) {
 		evaluator.evaluateWarnIf(expression);
 	}
+	
+	@Override
+	public void visitEvaluation(Evaluation expression) {
+		evaluator.evaluateEvaluation(expression);
+	}
 }

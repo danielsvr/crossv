@@ -12,7 +12,6 @@ public class ExpressionVisitorAdapterTests {
 
 		@Override
 		public void visit(Expression expression) {
-			super.visit(expression);
 			visitExpressionCalled = true;
 		}
 

@@ -4,8 +4,12 @@ import org.crossv.Evaluator;
 
 public class Evaluation extends Expression {
 
+	private Expression scope;
+	private Expression[] evaluators;
+
 	public Evaluation(Expression scope, Expression[] evaluators) {
-		// TODO Auto-generated constructor stub
+		this.scope = scope;
+		this.evaluators = evaluators;
 	}
 
 	@Override
@@ -13,4 +17,16 @@ public class Evaluation extends Expression {
 		return Evaluator.class;
 	}
 
+	@Override
+	public void accept(ExpressionVisitor visitor) {
+		visitor.visitEvaluation(this);
+	}
+
+	public Expression getScope() {
+		return scope;
+	}
+
+	public Expression[] getEvaluators() {
+		return evaluators;
+	}
 }
