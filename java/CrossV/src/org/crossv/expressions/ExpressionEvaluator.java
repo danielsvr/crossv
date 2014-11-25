@@ -649,6 +649,7 @@ public class ExpressionEvaluator {
 		EvaluatorScope scope;
 		scope = new EvaluatorScope(popedScope, scopeText);
 		descriptor = new EvaluationDescriptor(scope, test, null, ifFalseMessage);
+		descriptor.isValidation(true);
 		stack.push(descriptor);
 	}
 
@@ -680,10 +681,48 @@ public class ExpressionEvaluator {
 		EvaluatorScope scope;
 		scope = new EvaluatorScope(popedScope, scopeText);
 		descriptor = new EvaluationDescriptor(scope, test, ifTrueMessage, null);
+		descriptor.isWarning(true);
 		stack.push(descriptor);
 	}
 
-	public void evaluateEvaluation(When expression) {
-		
+	public void evaluateWhen(When expression) {
+		Expression scope;
+		AndAlso andScope;
+		InstanceOf firstScopeExp;
+		InstanceOf additionalScopeExp;
+		Expression[] evals;
+
+		Class<?> objClass = null;
+		Class<?> contextClass = null;
+
+		scope = expression.getScope();
+
+		if (scope instanceof AndAlso) {
+			andScope = (AndAlso) scope;
+			firstScopeExp = (InstanceOf) andScope.getLeft();
+			additionalScopeExp = (InstanceOf) andScope.getRight();
+			if (additionalScopeExp.getLeft() instanceof Instance) {
+				eval(additionalScopeExp.getRight());
+				objClass = (Class<?>) stack.pop();
+			} else if (additionalScopeExp.getLeft() instanceof Context) {
+				eval(additionalScopeExp.getRight());
+				contextClass = (Class<?>) stack.pop();
+			}
+		} else
+			firstScopeExp = (InstanceOf) scope;
+
+		if (firstScopeExp.getLeft() instanceof Instance) {
+			eval(firstScopeExp.getRight());
+			objClass = (Class<?>) stack.pop();
+		} else if (firstScopeExp.getLeft() instanceof Context) {
+			eval(firstScopeExp.getRight());
+			contextClass = (Class<?>) stack.pop();
+		}
+
+		evals = expression.getEvaluators();
+		IterableExpressionEvaluators evaluators;
+		evaluators = new IterableExpressionEvaluators(objClass, contextClass,
+				evals);
+		stack.push(evaluators);
 	}
 }

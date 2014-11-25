@@ -188,7 +188,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 	
 	@Override
-	public void visitEvaluation(When expression) {
-		evaluator.evaluateEvaluation(expression);
+	public void visitWhen(When expression) {
+		evaluator.evaluateWhen(expression);
 	}
 }

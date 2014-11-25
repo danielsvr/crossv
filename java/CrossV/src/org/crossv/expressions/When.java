@@ -19,7 +19,7 @@ public class When extends Expression {
 
 	@Override
 	public void accept(ExpressionVisitor visitor) {
-		visitor.visitEvaluation(this);
+		visitor.visitWhen(this);
 	}
 
 	public Expression getScope() {

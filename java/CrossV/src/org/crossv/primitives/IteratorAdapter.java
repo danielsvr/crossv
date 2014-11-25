@@ -15,8 +15,12 @@ public abstract class IteratorAdapter<E> implements Iterator<E> {
 
 	@Override
 	public E next() {
+		throw NoSuchElement();
+	}
+
+	protected RuntimeException NoSuchElement() {
 		String message = "There are no more elements to iterate.";
-		throw new NoSuchElementException(message);
+		return new NoSuchElementException(message);
 	}
 
 	@Override

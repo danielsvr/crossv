@@ -262,7 +262,7 @@ public class ExpressionWriter {
 		print(scope, " warnif ", test, " then ", ifFalse);
 	}
 
-	public void printEvaluation(When expression) {
+	public void printWhen(When expression) {
 		Expression scope = expression.getScope();
 		Expression[] evaluators = expression.getEvaluators();
 		print("when ", scope, " [");

@@ -161,34 +161,34 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitComplement(Complement expression) {
 		printer.printComplement(expression);
 	}
-	
+
 	@Override
 	public void visitSequenceLength(SequenceLength expression) {
 		printer.printSequenceLength(expression);
 	}
-	
+
 	@Override
 	public void visitSequenceIndex(SequenceIndex expression) {
 		printer.printSequenceIndex(expression);
 	}
-	
+
 	@Override
 	public void visitMemberAccess(MemberAccess expression) {
 		printer.printMemberAccess(expression);
 	}
-	
+
 	@Override
 	public void visitValidIf(ValidIf expression) {
 		printer.printValidIf(expression);
 	}
-	
+
 	@Override
 	public void visitWarnIf(WarnIf expression) {
 		printer.printWarnIf(expression);
 	}
-	
+
 	@Override
-	public void visitEvaluation(When expression) {
-		printer.printEvaluation(expression);
+	public void visitWhen(When expression) {
+		printer.printWhen(expression);
 	}
 }
