@@ -188,7 +188,7 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	}
 	
 	@Override
-	public void visitEvaluation(Evaluation expression) {
+	public void visitEvaluation(When expression) {
 		printer.printEvaluation(expression);
 	}
 }

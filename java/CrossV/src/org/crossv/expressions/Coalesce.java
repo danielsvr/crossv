@@ -1,5 +1,8 @@
 package org.crossv.expressions;
 
+import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.notEqual;
+
 import org.crossv.primitives.ConvertibleTo;
 
 public class Coalesce extends BinaryExpression implements

@@ -22,7 +22,7 @@ public class MemberAccess extends Expression {
 	public MemberAccess(Expression instance, String memberName) {
 		Class<?> instanceResultClass = instance.getResultClass();
 		MemberDescriptor member = findMember(instanceResultClass, memberName);
-		if (member == null && instance.isKnownAtRuntime())
+		if (member == null && instance.isKnownOnlyAtRuntime())
 			member = new RuntimeMember(instance, memberName);
 		init(instance, member);
 	}

@@ -60,10 +60,11 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	public Object getValue() throws EvaluationException {
+	@SuppressWarnings("unchecked")
+	public <E> E getValue() throws EvaluationException {
 		if (stack.size() != 1)
 			throw new EvaluationException("Incorrect evaluation.");
-		return stack.pop();
+		return (E) stack.pop();
 	}
 
 	private EvaluationException evalError(RuntimeEvaluationException e) {
@@ -644,10 +645,10 @@ public class ExpressionEvaluator {
 			scopeText = method.getName();
 		}
 
-		EvaluatorDescriptor descriptor;
+		EvaluationDescriptor descriptor;
 		EvaluatorScope scope;
 		scope = new EvaluatorScope(popedScope, scopeText);
-		descriptor = new EvaluatorDescriptor(scope, test, null, ifFalseMessage);
+		descriptor = new EvaluationDescriptor(scope, test, null, ifFalseMessage);
 		stack.push(descriptor);
 	}
 
@@ -675,15 +676,14 @@ public class ExpressionEvaluator {
 			scopeText = method.getName();
 		}
 
-		EvaluatorDescriptor descriptor;
+		EvaluationDescriptor descriptor;
 		EvaluatorScope scope;
 		scope = new EvaluatorScope(popedScope, scopeText);
-		descriptor = new EvaluatorDescriptor(scope, test, ifTrueMessage, null);
+		descriptor = new EvaluationDescriptor(scope, test, ifTrueMessage, null);
 		stack.push(descriptor);
 	}
 
-	public void evaluateEvaluation(Evaluation expression) {
-		ExpressionBaseEvaluator evaluator = new ExpressionBaseEvaluator(expression);
-		stack.push(evaluator);
+	public void evaluateEvaluation(When expression) {
+		
 	}
 }

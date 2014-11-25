@@ -1,17 +1,17 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.constant;
-import static org.crossv.expressions.Expression.instance;
-import static org.crossv.expressions.Expression.memberAccess;
-import static org.crossv.expressions.Expression.call;
-import static org.crossv.expressions.Expression.add;
-import static org.crossv.expressions.Expression.validIf;
+import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.instance;
+import static org.crossv.expressions.Expressions.memberAccess;
+import static org.crossv.expressions.Expressions.call;
+import static org.crossv.expressions.Expressions.add;
+import static org.crossv.expressions.Expressions.validIf;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.crossv.expressions.EvaluatorDescriptor;
+import org.crossv.expressions.EvaluationDescriptor;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Monkey;
@@ -45,7 +45,7 @@ public class ValidIfExpressionTests {
 
 	@Test
 	public void createValidIfExpression_AnyOperands_ReturnClassIsEvaluatorDescriptor() {
-		Class<?> expectedClass = EvaluatorDescriptor.class;
+		Class<?> expectedClass = EvaluationDescriptor.class;
 		Expression scope = memberAccess(new Monkey(), "nickname");
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
@@ -80,8 +80,8 @@ public class ValidIfExpressionTests {
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getScopeDescription(), is(equalTo("nickname")));
 	}
 
@@ -92,8 +92,8 @@ public class ValidIfExpressionTests {
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getScopeDescription(),
 				is(equalTo("getRelativesAsList")));
 	}
@@ -104,8 +104,8 @@ public class ValidIfExpressionTests {
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getIfFalseMessage(), is(equalTo("error")));
 	}
 
@@ -116,8 +116,8 @@ public class ValidIfExpressionTests {
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		Expression e = validIf(scope, test, ifFalseMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getTest(), is(equalTo(test)));
 	}
 }

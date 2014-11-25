@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import org.crossv.expressions.EvaluatorDescriptor;
+import org.crossv.expressions.EvaluationDescriptor;
 
 public class ClassDescriptor {
 	private Method[] methods;
@@ -109,7 +109,7 @@ public class ClassDescriptor {
 	public static final Class<Long> CLong = Long.class;
 	public static final Class<Integer> CInteger = Integer.class;
 	public static final Class<String> CString = String.class;
-	public static final Class<EvaluatorDescriptor> CEvaluatorDescriptor = EvaluatorDescriptor.class;
+	public static final Class<EvaluationDescriptor> CEvaluatorDescriptor = EvaluationDescriptor.class;
 
 	private final static Hashtable<Class<?>, Class<?>> primitiveTypesToClasses = createPrimitiveToClassesTable();
 

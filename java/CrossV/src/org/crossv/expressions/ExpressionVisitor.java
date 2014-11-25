@@ -74,5 +74,5 @@ public interface ExpressionVisitor {
 
 	void visitWarnIf(WarnIf expression);
 
-	void visitEvaluation(Evaluation expression);
+	void visitEvaluation(When expression);
 }

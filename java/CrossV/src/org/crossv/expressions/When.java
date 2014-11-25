@@ -2,12 +2,12 @@ package org.crossv.expressions;
 
 import org.crossv.Evaluator;
 
-public class Evaluation extends Expression {
+public class When extends Expression {
 
 	private Expression scope;
 	private Expression[] evaluators;
 
-	public Evaluation(Expression scope, Expression[] evaluators) {
+	public When(Expression scope, Expression[] evaluators) {
 		this.scope = scope;
 		this.evaluators = evaluators;
 	}

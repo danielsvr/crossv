@@ -181,7 +181,7 @@ public abstract class ExpressionVisitorAdapter implements ExpressionVisitor {
 	}
 
 	@Override
-	public void visitEvaluation(Evaluation expression) {
+	public void visitEvaluation(When expression) {
 		visit(expression);
 	}
 }

@@ -1,6 +1,6 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.lessThan;
+import static org.crossv.expressions.Expressions.lessThan;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

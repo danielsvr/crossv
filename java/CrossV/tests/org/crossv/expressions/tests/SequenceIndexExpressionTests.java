@@ -1,7 +1,7 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.sequenceIndex;
-import static org.crossv.expressions.Expression.constant;
+import static org.crossv.expressions.Expressions.sequenceIndex;
+import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.primitives.Iterables.repeat;
 import static org.crossv.tests.helpers.Matchers.*;
 import static org.hamcrest.CoreMatchers.is;

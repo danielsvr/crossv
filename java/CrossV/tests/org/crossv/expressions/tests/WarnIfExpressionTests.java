@@ -1,17 +1,17 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.add;
-import static org.crossv.expressions.Expression.call;
-import static org.crossv.expressions.Expression.constant;
-import static org.crossv.expressions.Expression.instance;
-import static org.crossv.expressions.Expression.memberAccess;
-import static org.crossv.expressions.Expression.warnIf;
+import static org.crossv.expressions.Expressions.add;
+import static org.crossv.expressions.Expressions.call;
+import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.instance;
+import static org.crossv.expressions.Expressions.memberAccess;
+import static org.crossv.expressions.Expressions.warnIf;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.crossv.expressions.EvaluatorDescriptor;
+import org.crossv.expressions.EvaluationDescriptor;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Monkey;
@@ -45,7 +45,7 @@ public class WarnIfExpressionTests {
 
 	@Test
 	public void createWarnIfExpression_AnyOperands_ReturnClassIsEvaluatorDescriptor() {
-		Class<?> expectedClass = EvaluatorDescriptor.class;
+		Class<?> expectedClass = EvaluationDescriptor.class;
 		Expression scope = memberAccess(new Monkey(), "nickname");
 		Expression test = constant(true);
 		String ifTrueMessage = "warning";
@@ -81,8 +81,8 @@ public class WarnIfExpressionTests {
 		Expression test = constant(true);
 		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getScopeDescription(), is(equalTo("nickname")));
 	}
 
@@ -93,8 +93,8 @@ public class WarnIfExpressionTests {
 		Expression test = constant(true);
 		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getScopeDescription(),
 				is(equalTo("getRelativesAsList")));
 	}
@@ -106,8 +106,8 @@ public class WarnIfExpressionTests {
 		Expression test = constant(true);
 		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getIfTrueMessage(), is(equalTo("warning")));
 	}
 
@@ -118,8 +118,8 @@ public class WarnIfExpressionTests {
 		Expression test = constant(true);
 		String ifTrueMessage = "warning";
 		Expression e = warnIf(scope, test, ifTrueMessage);
-		EvaluatorDescriptor descriptor;
-		descriptor = (EvaluatorDescriptor) e.evaluate(new Monkey());
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getTest(), is(equalTo(test)));
 	}
 }

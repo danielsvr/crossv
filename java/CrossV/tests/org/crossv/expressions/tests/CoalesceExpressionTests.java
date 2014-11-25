@@ -1,7 +1,7 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.coalesce;
-import static org.crossv.expressions.Expression.constant;
+import static org.crossv.expressions.Expressions.coalesce;
+import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

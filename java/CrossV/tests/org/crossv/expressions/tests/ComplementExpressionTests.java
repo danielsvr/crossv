@@ -1,7 +1,7 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.complemented;
-import static org.crossv.expressions.Expression.context;
+import static org.crossv.expressions.Expressions.complemented;
+import static org.crossv.expressions.Expressions.context;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

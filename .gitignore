@@ -163,3 +163,6 @@ pip-log.txt
 .DS_Store
 clientdb.xml
 java/.recommenders/
+java/CrossV/target/
+java/RemoteSystemsTempFiles/
+

@@ -1,9 +1,9 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.call;
-import static org.crossv.expressions.Expression.constant;
-import static org.crossv.expressions.Expression.context;
-import static org.crossv.expressions.Expression.equal;
+import static org.crossv.expressions.Expressions.call;
+import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.context;
+import static org.crossv.expressions.Expressions.equal;
 import static org.crossv.tests.helpers.Matchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;

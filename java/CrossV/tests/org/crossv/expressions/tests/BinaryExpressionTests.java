@@ -1,6 +1,6 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.constant;
+import static org.crossv.expressions.Expressions.constant;
 
 import org.crossv.expressions.BinaryExpression;
 import org.crossv.expressions.Expression;

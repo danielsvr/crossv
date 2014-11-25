@@ -1,7 +1,7 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.bitwiseXor;
-import static org.crossv.expressions.Expression.constant;
+import static org.crossv.expressions.Expressions.bitwiseXor;
+import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

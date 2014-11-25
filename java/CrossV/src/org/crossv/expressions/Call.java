@@ -14,7 +14,7 @@ public class Call extends Expression {
 	public Call(Expression instance, String method, Expression... parameters)
 			throws SecurityException, NoSuchMethodException {
 		MemberDescriptor member;
-		if (instance.isKnownAtRuntime()) {
+		if (instance.isKnownOnlyAtRuntime()) {
 			member = new RuntimeMethod(instance, method);
 		} else {
 			Method foundMethod = findMethod(instance, method, parameters);

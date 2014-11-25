@@ -1,12 +1,12 @@
 package org.crossv.expressions;
 
-public class EvaluatorDescriptor {
+public class EvaluationDescriptor {
 	private String ifFalseMessage;
 	private String ifTrueMessage;
 	private Expression test;
 	private EvaluatorScope scope;
 
-	public EvaluatorDescriptor(EvaluatorScope scope, Expression test,
+	public EvaluationDescriptor(EvaluatorScope scope, Expression test,
 			String ifTrueMessage, String ifFalseMessage) {
 		this.scope = scope;
 		this.test = test;

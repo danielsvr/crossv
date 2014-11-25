@@ -1,8 +1,8 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.constant;
-import static org.crossv.expressions.Expression.context;
-import static org.crossv.expressions.Expression.plus;
+import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.context;
+import static org.crossv.expressions.Expressions.plus;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;

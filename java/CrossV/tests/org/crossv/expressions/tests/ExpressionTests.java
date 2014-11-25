@@ -1,6 +1,6 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expression.add;
+import static org.crossv.expressions.Expressions.add;
 import static org.crossv.expressions.ExpressionEvaluator.NO_CONTEXT;
 import static org.crossv.expressions.ExpressionEvaluator.NO_INSTANCE;
 

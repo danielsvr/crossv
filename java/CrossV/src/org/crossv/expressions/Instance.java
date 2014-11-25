@@ -14,7 +14,7 @@ public final class Instance extends Expression {
 	}
 	
 	@Override
-	protected boolean isKnownAtRuntime() {
+	protected boolean isKnownOnlyAtRuntime() {
 		return true;
 	}
 }

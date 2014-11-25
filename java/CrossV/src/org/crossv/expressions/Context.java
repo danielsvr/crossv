@@ -25,7 +25,7 @@ public final class Context extends Expression {
 	}
 	
 	@Override
-	protected boolean isKnownAtRuntime() {
+	protected boolean isKnownOnlyAtRuntime() {
 		return true;
 	}
 }
