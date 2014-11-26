@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expressions.call;
 import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.instance;
 import static org.crossv.expressions.Expressions.context;
 import static org.crossv.expressions.Expressions.equal;
 import static org.crossv.tests.helpers.Matchers.*;
@@ -12,36 +13,60 @@ import java.lang.reflect.Method;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.primitives.Action;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
 public class CallExpressionTests {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void createCall_WithNullInstanceAndSomeMethod_ThrowsIllegalArgumentException()
-			throws Exception {
-		call(null, Monkey.class.getMethod("getName"));
+	@Test
+	public void createCall_WithNullInstanceAndSomeMethod_ThrowsIllegalArgumentException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				call(null, Monkey.class.getMethod("getName"));
+			}
+		}, is(throwing(IllegalArgumentException.class)));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void createCall_WithSomeInstanceAndNullMethod_ThrowsIllegalArgumentException()
-			throws Exception {
-		call(constant("instance"), (Method) null);
+	@Test
+	public void createCall_WithSomeInstanceAndNullMethod_ThrowsIllegalArgumentException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				call(constant("instance"), (Method) null);
+			}
+		}, is(throwing(IllegalArgumentException.class)));
 	}
 
-	@Test(expected = IllegalOperandException.class)
-	public void createCallGetRelativesAsListMethodOfMonkeyClassExpressionForString_ThrowsIllegalOperandException()
-			throws Exception {
-		call(constant("123"), Monkey.class.getMethod("getRelativesAsList"));
+	@Test
+	public void createCallGetRelativesAsListMethodOfMonkeyClassExpressionForString_ThrowsIllegalOperandException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				call(constant("123"), Monkey.class.getMethod("getRelativesAsList"));
+			}
+		}, is(throwing(IllegalOperandException.class)));
 	}
 
-	@Test(expected = IllegalOperandException.class)
-	public void createCallSetNameExpressionForMonkey_ThrowsIllegalOperandException()
-			throws Exception {
-		Monkey monkney = TestObjectFactory.createMonkey();
+	@Test
+	public void createCallSetNameExpressionForMonkey_ThrowsIllegalOperandException() {
+		final Monkey monkney = TestObjectFactory.createMonkey();
 
-		call(constant(monkney), Monkey.class.getMethod("setName", String.class));
+		assertThat(new Action() {
+			public void run() throws Exception {
+				call(constant(monkney), Monkey.class.getMethod("setName", String.class));
+			}
+		}, is(throwing(IllegalOperandException.class)));
+	}
+
+	@Test
+	public void createCallSetNameExpressionForMonkeyOnOnjectConstant_ThrowsIllegalOperandException() {
+		final Object obj = new Object();
+
+		assertThat(new Action() {
+			public void run() throws Exception {
+				call(constant(obj), Monkey.class.getMethod("setName", String.class));
+			}
+		}, is(throwing(IllegalOperandException.class)));
 	}
 
 	@Test
@@ -56,6 +81,13 @@ public class CallExpressionTests {
 			throws Exception {
 		Expression e = call("123", "equals", 321);
 		assertThat(e.toString(), is("\"123\".equals(321)"));
+	}
+
+	@Test
+	public void createCallMonkeyGetNameExpressionForInstnace_callingToString_getsJavaLikeExpression()
+			throws Exception {
+		Expression e = call(instance(),Monkey.class.getMethod("getName"));
+		assertThat(e.toString(), is("obj.getName()"));
 	}
 
 	@Test

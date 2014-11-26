@@ -1,6 +1,7 @@
 package org.crossv.tests.helpers;
 
 import org.crossv.Evaluation;
+import org.crossv.primitives.Action;
 import org.crossv.primitives.Iterables;
 import org.hamcrest.Matcher;
 
@@ -47,5 +48,10 @@ public class Matchers {
 	public static <E extends Iterable<?>> Matcher<E> isSequence(
 			Object... objects) {
 		return new IsSequence<E>(objects);
+	}
+	
+
+	public static Matcher<Action> throwing(Class<? extends Throwable> expected) {
+		return new ThrowingException(expected);
 	}
 }

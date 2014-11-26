@@ -10,7 +10,7 @@ public class EvaluatorScope {
 		this.description = description;
 	}
 
-	public Object getScope() {
+	public Object getScopeObject() {
 		return scope;
 	}
 

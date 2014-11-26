@@ -32,8 +32,6 @@ public class Call extends Expression {
 			Expression... parameters) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
-		if (method == null)
-			throw new ArgumentNullException("method");
 
 		this.instance = instance;
 		this.member = method;
@@ -43,10 +41,13 @@ public class Call extends Expression {
 	}
 
 	private void verifyOperands() {
+		if (instance instanceof Instance || instance instanceof Context)
+			return;
+
 		Class<?> declaringClass = member.getDeclaringClass();
 		Class<?> resultClass = instance.getResultClass();
 
-		if (!member.isMethod() || !declaringClass.isAssignableFrom(resultClass)
+		if (!declaringClass.isAssignableFrom(resultClass)
 				|| member.getMemberClass().equals(Void.TYPE))
 			throw illegalOperand();
 	}
