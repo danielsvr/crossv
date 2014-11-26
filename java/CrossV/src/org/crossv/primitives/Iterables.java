@@ -261,10 +261,6 @@ public final class Iterables {
 		return new CreateItemIterable<E>(value, max);
 	}
 
-	public static <E> Enumeration<E> toEnumeration(Iterable<E> monkeys) {
-		return new IterableToEnumeration<E>(monkeys);
-	}
-
 	public static <ER> Iterable<ER> ofClass(Class<ER> clazz, Iterable<?> items) {
 		Iterable<Object> objects = cast(items);
 		Iterable<Object> whereIterable = where(objects, new OfClassPredicate(
