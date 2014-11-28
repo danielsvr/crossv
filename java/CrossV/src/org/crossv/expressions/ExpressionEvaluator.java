@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
 import java.util.Stack;
 
+import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ConvertibleTo;
 import org.crossv.primitives.MemberDescriptor;
@@ -39,14 +40,21 @@ public class ExpressionEvaluator {
 	private final Object instance;
 	protected final Stack<Object> stack;
 	private final ExpressionVisitor visitor;
+	private EvaluationOptions options;
 
 	public ExpressionEvaluator(Object instance, Object context) {
+		this(instance, context, new EvaluationOptions());
+	}
+
+	public ExpressionEvaluator(Object instance, Object context,
+			EvaluationOptions options) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
 		if (context == null)
 			throw new ArgumentNullException("context");
 		this.instance = instance;
 		this.context = context;
+		this.options = options;
 		visitor = new ExpressionEvaluationVisitor(this);
 		stack = new Stack<Object>();
 	}
@@ -62,8 +70,24 @@ public class ExpressionEvaluator {
 
 	@SuppressWarnings("unchecked")
 	public <E> E getValue() throws EvaluationException {
-		if (stack.size() != 1)
-			throw new EvaluationException("Incorrect evaluation.");
+		int stackSize = stack.size();
+		if (stackSize != 1) {
+			String message = "Incorrect evaluation.";
+			if (options.printStackCount) {
+				message += format("\nThere are {0} value on the stack.",
+						stackSize);
+				message += "\n";
+			}
+			if (options.printStackValues) {
+				for (int i = 0; i < stackSize; i++) {
+					Object value = stack.pop();
+					message += format("\nStack value at {0} depth: {1}",
+							stackSize - i, value);
+				}
+				message += "\n";
+			}
+			throw new EvaluationException(message);
+		}
 		return (E) stack.pop();
 	}
 
@@ -74,6 +98,11 @@ public class ExpressionEvaluator {
 	}
 
 	private void evaluateAdditivity(AdditiveExpression expression, EvalOp op) {
+		if (!op.isAdditivityOp()) {
+			String message;
+			message = "Valid op values: " + EvalOp.getAdditivityOpsToString();
+			throw new ArgumentException("op", message);
+		}
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -84,30 +113,34 @@ public class ExpressionEvaluator {
 			int right = ((Number) rightPop).intValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
-			else if (op == EvalOp.SUBTRACT)
+			else { // EvalOp.SUBTRACT
 				stack.push(left - right);
+			}
 		} else if (expression.isAssignableTo(CLong)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
-			else if (op == EvalOp.SUBTRACT)
+			else { // EvalOp.SUBTRACT
 				stack.push(left - right);
+			}
 		} else if (expression.isAssignableTo(CFloat)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
-			else if (op == EvalOp.SUBTRACT)
+			else { // EvalOp.SUBTRACT
 				stack.push(left - right);
+			}
 		} else if (expression.isAssignableTo(CDouble)) {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
 			if (op == EvalOp.PLUS)
 				stack.push(left + right);
-			else if (op == EvalOp.SUBTRACT)
+			else {// EvalOp.SUBTRACT
 				stack.push(left - right);
-		} else if (op == EvalOp.PLUS) {
+			}
+		} else {// EvalOp.PLUS
 			// @formatter:off
 			String left = leftPop == null ? "null" : leftPop.toString();
 			String right = rightPop == null ? "null" : rightPop.toString();
@@ -117,6 +150,11 @@ public class ExpressionEvaluator {
 	}
 
 	private void evaluateBitwise(BitwiseExpression expression, EvalOp op) {
+		if (!op.isBitwiseOp()) {
+			String message;
+			message = "Valid op values: " + EvalOp.getBitwiseOpsToString();
+			throw new ArgumentException("op", message);
+		}
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -129,8 +167,9 @@ public class ExpressionEvaluator {
 				stack.push(left & right);
 			else if (op == EvalOp.OR)
 				stack.push(left | right);
-			else if (op == EvalOp.XOR)
+			else {// EvalOp.XOR
 				stack.push(left ^ right);
+			}
 		} else if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
@@ -138,8 +177,9 @@ public class ExpressionEvaluator {
 				stack.push(left & right);
 			else if (op == EvalOp.OR)
 				stack.push(left | right);
-			else if (op == EvalOp.XOR)
+			else {// EvalOp.XOR
 				stack.push(left ^ right);
+			}
 		} else {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
@@ -147,13 +187,21 @@ public class ExpressionEvaluator {
 				stack.push(left & right);
 			else if (op == EvalOp.OR)
 				stack.push(left | right);
-			else if (op == EvalOp.XOR)
+			else {// EvalOp.XOR
 				stack.push(left ^ right);
+			}
 		}
 	}
 
 	private void evaluateConditionalBinary(
 			ConditionalBinaryExpression expression, EvalOp op) {
+		if (!op.isBinaryConditionalOp()) {
+			String message;
+			message = "Valid op values: "
+					+ EvalOp.getBinaryConditionalOpsToString();
+			throw new ArgumentException("op", message);
+		}
+
 		eval(expression.getLeft());
 		boolean obj = op == EvalOp.AND_ALSO;
 		if (stack.peek().equals(obj)) {
@@ -169,6 +217,11 @@ public class ExpressionEvaluator {
 	}
 
 	private void evaluateEquality(EqualityExpression expression, EvalOp op) {
+		if (!op.isEqualityOp()) {
+			String message;
+			message = "Valid op values: " + EvalOp.getEqualityOpsToString();
+			throw new ArgumentException("op", message);
+		}
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -177,13 +230,20 @@ public class ExpressionEvaluator {
 		if (op == EvalOp.EQUAL)
 			stack.push((leftPop == null && rightPop == null)
 					|| (leftPop != null && leftPop.equals(rightPop)));
-		else if (op == EvalOp.NOT_EQUAL)
+		else {// EvalOp.NOT_EQUAL
 			stack.push((leftPop == null && rightPop != null)
 					|| (leftPop != null && !leftPop.equals(rightPop)));
+		}
 	}
 
 	private void evaluateMultiplicity(MultiplicityExpression expression,
 			EvalOp op) {
+		if (!op.isMultiplicityOp()) {
+			String message;
+			message = "Valid op values: " + EvalOp.getMultiplicityOpsToString();
+			throw new ArgumentException("op", message);
+		}
+
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -196,8 +256,9 @@ public class ExpressionEvaluator {
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
-			else if (op == EvalOp.MULTIPLY)
+			else {// if EvalOp.MULTIPLY
 				stack.push(left * right);
+			}
 		} else if (expression.isAssignableTo(CLong)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
@@ -205,8 +266,9 @@ public class ExpressionEvaluator {
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
-			else if (op == EvalOp.MULTIPLY)
+			else {// if EvalOp.MULTIPLY
 				stack.push(left * right);
+			}
 		} else if (expression.isAssignableTo(CFloat)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
@@ -214,8 +276,9 @@ public class ExpressionEvaluator {
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
-			else if (op == EvalOp.MULTIPLY)
+			else {// if EvalOp.MULTIPLY
 				stack.push(left * right);
+			}
 		} else {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
@@ -223,13 +286,20 @@ public class ExpressionEvaluator {
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
-			else if (op == EvalOp.MULTIPLY)
+			else {// if EvalOp.MULTIPLY
 				stack.push(left * right);
+			}
 		}
 	}
 
 	private void evaluateNumericalComparison(
 			NumericalComparisonExpression expression, EvalOp op) {
+		if (!op.isNumericalComparisonOp()) {
+			String message;
+			message = "Valid op values: "
+					+ EvalOp.getNumericalComparisonOpsToString();
+			throw new ArgumentException("op", message);
+		}
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -247,8 +317,9 @@ public class ExpressionEvaluator {
 				stack.push(left >= right);
 			else if (op == EvalOp.LESS_THAN)
 				stack.push(left < right);
-			else if (op == EvalOp.LESS_THAN_OR_EQUAL)
+			else {// EvalOp.LESS_THAN_OR_EQUAL
 				stack.push(left <= right);
+			}
 		} else if (CLong.isAssignableFrom(promotion)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
@@ -258,8 +329,9 @@ public class ExpressionEvaluator {
 				stack.push(left >= right);
 			else if (op == EvalOp.LESS_THAN)
 				stack.push(left < right);
-			else if (op == EvalOp.LESS_THAN_OR_EQUAL)
+			else {// EvalOp.LESS_THAN_OR_EQUAL
 				stack.push(left <= right);
+			}
 		} else if (CFloat.isAssignableFrom(promotion)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
@@ -269,8 +341,9 @@ public class ExpressionEvaluator {
 				stack.push(left >= right);
 			else if (op == EvalOp.LESS_THAN)
 				stack.push(left < right);
-			else if (op == EvalOp.LESS_THAN_OR_EQUAL)
+			else {// EvalOp.LESS_THAN_OR_EQUAL
 				stack.push(left <= right);
+			}
 		} else {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
@@ -280,12 +353,18 @@ public class ExpressionEvaluator {
 				stack.push(left >= right);
 			else if (op == EvalOp.LESS_THAN)
 				stack.push(left < right);
-			else if (op == EvalOp.LESS_THAN_OR_EQUAL)
+			else {// EvalOp.LESS_THAN_OR_EQUAL
 				stack.push(left <= right);
+			}
 		}
 	}
 
 	private void evaluateShift(ShiftExpression expression, EvalOp op) {
+		if (!op.isShiftOp()) {
+			String message;
+			message = "Valid op values: " + EvalOp.getShiftOpsToString();
+			throw new ArgumentException("op", message);
+		}
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -296,15 +375,17 @@ public class ExpressionEvaluator {
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.LEFT_SHIFT)
 				stack.push(left << right);
-			else if (op == EvalOp.RIGHT_SHIFT)
+			else {// EvalOp.RIGHT_SHIFT
 				stack.push(left >> right);
+			}
 		} else {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
 			if (op == EvalOp.LEFT_SHIFT)
 				stack.push(left << right);
-			else if (op == EvalOp.RIGHT_SHIFT)
+			else {// EvalOp.RIGHT_SHIFT
 				stack.push(left >> right);
+			}
 		}
 	}
 
@@ -560,46 +641,55 @@ public class ExpressionEvaluator {
 
 	protected void evaluateSequenceLength(SequenceLength expression) {
 		eval(expression.getOperand());
-		Expression opExp = expression.getOperand();
-		Object opPop = stack.pop();
-		if (opExp.isArray()) {
-			stack.push(Array.getLength(opPop));
-		} else if (opExp.isAssignableTo(CString)) {
-			String string = (String) opPop;
-			stack.push(string.length());
-		} else if (opExp.isAssignableTo(CIterable)) {
-			Iterable<?> iterable = (Iterable<?>) opPop;
-			stack.push(count(iterable));
-		} else if (opExp.isAssignableTo(CEnumeration)) {
-			Enumeration<?> enumeration = (Enumeration<?>) opPop;
+		Expression operand = expression.getOperand();
+		if (!operand.isArray()
+				&& !operand.isAssignableToAny(CString, CIterable, CEnumeration))
+			throw new ArgumentException("expression", "Invalid operand type!");
+
+		Object value = stack.pop();
+		if (operand.isAssignableTo(CEnumeration)) {
+			Enumeration<?> enumeration = (Enumeration<?>) value;
 			stack.push(count(enumeration));
+		} else if (operand.isAssignableTo(CString)) {
+			String string = (String) value;
+			stack.push(string.length());
+		} else if (operand.isAssignableTo(CIterable)) {
+			Iterable<?> iterable = (Iterable<?>) value;
+			stack.push(count(iterable));
+		} else {// operand.isArray
+			stack.push(Array.getLength(value));
 		}
 	}
 
-	public void evaluateSequenceIndex(SequenceIndex expression) {
-		Expression seqExp = expression.getSequence();
-		Expression indexExp = expression.getIndex();
-		eval(seqExp);
-		eval(indexExp);
+	protected void evaluateSequenceIndex(SequenceIndex expression) {
+		Expression sequence = expression.getSequence();
+		Expression index = expression.getIndex();
+		if (!sequence.isArray()
+				&& !sequence
+						.isAssignableToAny(CString, CIterable, CEnumeration))
+			throw new ArgumentException("expression", "Invalid operand type!");
 
-		int indexPop = (Integer) stack.pop();
-		Object seqPop = stack.pop();
+		eval(sequence);
+		eval(index);
 
-		if (seqExp.isArray()) {
-			stack.push(Array.get(seqPop, indexPop));
-		} else if (seqExp.isAssignableTo(CString)) {
-			String string = (String) seqPop;
-			stack.push(string.charAt(indexPop));
-		} else if (seqExp.isAssignableTo(CIterable)) {
-			Iterable<?> iterable = (Iterable<?>) seqPop;
-			stack.push(elementAt(iterable, indexPop));
-		} else if (seqExp.isAssignableTo(CEnumeration)) {
-			Enumeration<?> iterable = (Enumeration<?>) seqPop;
-			stack.push(elementAt(iterable, indexPop));
+		int indexValue = (Integer) stack.pop();
+		Object values = stack.pop();
+
+		if (sequence.isAssignableTo(CEnumeration)) {
+			Enumeration<?> iterable = (Enumeration<?>) values;
+			stack.push(elementAt(iterable, indexValue));
+		} else if (sequence.isAssignableTo(CString)) {
+			String string = (String) values;
+			stack.push(string.charAt(indexValue));
+		} else if (sequence.isAssignableTo(CIterable)) {
+			Iterable<?> iterable = (Iterable<?>) values;
+			stack.push(elementAt(iterable, indexValue));
+		} else { // sequence.isArray
+			stack.push(Array.get(values, indexValue));
 		}
 	}
 
-	public void evaluateMemberAccess(MemberAccess expression) {
+	protected void evaluateMemberAccess(MemberAccess expression) {
 		eval(expression.getInstance());
 		Object instance = stack.pop();
 
@@ -621,52 +711,51 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	public void evaluateValidIf(ValidIf expression) {
-		Expression scopeE = expression.getScope();
+	protected void evaluateValidIf(ValidIf expression) {
+		Expression scope = expression.getScope();
 		Expression test = expression.getTest();
-		Expression ifFalseExpression = expression.getIfFalse();
+		Expression ifFalse = expression.getIfFalse();
 
-		eval(scopeE);
-		Object popedScope = stack.pop();
-		eval(ifFalseExpression);
+		eval(ifFalse);
 		String ifFalseMessage = (String) stack.pop();
 
 		String scopeText = null;
-		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString))
-			scopeText = (String) popedScope;
-		else if (scopeE instanceof MemberAccess) {
-			MemberAccess access = (MemberAccess) scopeE;
+		if (scope instanceof Constant && scope.isAssignableTo(CString)) {
+			eval(scope);
+			Object scopeValue = stack.pop();
+			scopeText = (String) scopeValue;
+		} else if (scope instanceof MemberAccess) {
+			MemberAccess access = (MemberAccess) scope;
 			MemberDescriptor member = access.getMember();
 			String name = member.getName();
 			scopeText = name;
-		} else if (scopeE instanceof Call) {
-			Call call = (Call) scopeE;
+		} else if (scope instanceof Call) {
+			Call call = (Call) scope;
 			MemberDescriptor method = call.getMethod();
 			scopeText = method.getName();
 		}
 
 		EvaluationDescriptor descriptor;
-		EvaluatorScope scope;
-		scope = new EvaluatorScope(popedScope, scopeText);
-		descriptor = new EvaluationDescriptor(scope, test, null, ifFalseMessage);
+		descriptor = new EvaluationDescriptor(scopeText, test, null,
+				ifFalseMessage);
 		descriptor.isValidation(true);
 		stack.push(descriptor);
 	}
 
-	public void evaluateWarnIf(WarnIf expression) {
+	protected void evaluateWarnIf(WarnIf expression) {
 		Expression scopeE = expression.getScope();
 		Expression test = expression.getTest();
 		Expression ifTrueExpression = expression.getIfFalse();
 
-		eval(scopeE);
-		Object popedScope = stack.pop();
 		eval(ifTrueExpression);
 		String ifTrueMessage = (String) stack.pop();
 
 		String scopeText = null;
-		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString))
+		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString)) {
+			eval(scopeE);
+			Object popedScope = stack.pop();
 			scopeText = (String) popedScope;
-		else if (scopeE instanceof MemberAccess) {
+		} else if (scopeE instanceof MemberAccess) {
 			MemberAccess access = (MemberAccess) scopeE;
 			MemberDescriptor member = access.getMember();
 			String name = member.getName();
@@ -678,14 +767,13 @@ public class ExpressionEvaluator {
 		}
 
 		EvaluationDescriptor descriptor;
-		EvaluatorScope scope;
-		scope = new EvaluatorScope(popedScope, scopeText);
-		descriptor = new EvaluationDescriptor(scope, test, ifTrueMessage, null);
+		descriptor = new EvaluationDescriptor(scopeText, test, ifTrueMessage,
+				null);
 		descriptor.isWarning(true);
 		stack.push(descriptor);
 	}
 
-	public void evaluateWhen(When expression) {
+	protected void evaluateWhen(When expression) {
 		Expression scope;
 		AndAlso andScope;
 		InstanceOf firstScopeExp;

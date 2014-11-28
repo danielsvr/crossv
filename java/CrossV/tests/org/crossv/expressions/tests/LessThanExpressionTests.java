@@ -68,6 +68,34 @@ public class LessThanExpressionTests {
 	}
 
 	@Test
+	public void evaluateLessThanExpression_IntLeftEqualToIntRight_ReturnsFalse()
+			throws Exception {
+		Expression e = lessThan(2, 2);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_IntLeftGreaterThanIntRight_ReturnsFalse()
+			throws Exception {
+		Expression e = lessThan(2, 1);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_IntLeftEqualToFloatRight_ReturnsFalse()
+			throws Exception {
+		Expression e = lessThan(2, 2f);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateLessThanExpression_FloatLeftGreaterThanIntRight_ReturnsFalse()
+			throws Exception {
+		Expression e = lessThan(2f, 1);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+	
+	@Test
 	public void evaluateLessThanExpression_IntLeftGreaterThanLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = lessThan(2, 1L);

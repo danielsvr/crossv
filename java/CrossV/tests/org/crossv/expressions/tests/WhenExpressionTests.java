@@ -63,6 +63,22 @@ public class WhenExpressionTests {
 	}
 
 	@Test
+	public void evaluatingWhenExpression_ContextAndInstanceInScopeAndNicknameNotNull_EvaluatesOneCrossVEvaluator()
+			throws Exception {
+		Expression scope;
+		scope = and(instanceOf(context(), AnyContext.class),
+				instanceOf(instance(), Monkey.class));
+		Expression validNickname;
+		validNickname = validIf(
+				memberAccess(instance(), "nickname"),
+				not(equal(memberAccess(instance(), "nickname"), constant(null))),
+				"nickname should not be null");
+		Expression e = when(scope, validNickname);
+		Iterable<Evaluator> evaluators = e.evaluate();
+		assertThat(count(evaluators), is(1));
+	}
+
+	@Test
 	public void evaluatingWhenExpression_WithoutContextAndNicknameNotNull_FirstValidationMessageIsNicknameShouldNotBeNull()
 			throws Exception {
 		Expression scope;

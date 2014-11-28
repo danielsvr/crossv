@@ -122,4 +122,17 @@ public class WarnIfExpressionTests {
 		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
 		assertThat(descriptor.getTest(), is(equalTo(test)));
 	}
+
+	@Test
+	public void evaluateWarnIfExpressionForMockeyInstance_ForDescriptiveScopeText_ReturnsDescriptorWithScopeText()
+			throws Exception {
+		Expression scope = constant("Scope text");
+		Expression test = constant(true);
+		String ifTrueMessage = "warning";
+		Expression e = warnIf(scope, test, ifTrueMessage);
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
+		assertThat(descriptor.getScopeDescription(), is(equalTo("Scope text")));
+	}
+
 }

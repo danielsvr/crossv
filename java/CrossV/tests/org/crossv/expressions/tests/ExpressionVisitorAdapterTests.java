@@ -225,4 +225,53 @@ public class ExpressionVisitorAdapterTests {
 		visitor.visitUnaryPlus(null);
 		visitor.assertVisitExpressionCalled();
 	}
+
+	@Test
+	public void visitComplement_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitComplement(null);
+		visitor.assertVisitExpressionCalled();
+	}
+
+	@Test
+	public void visitSequenceLength_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitSequenceLength(null);
+		visitor.assertVisitExpressionCalled();
+	}
+
+	@Test
+	public void visitSequenceIndex_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitSequenceIndex(null);
+		visitor.assertVisitExpressionCalled();
+	}
+
+	@Test
+	public void visitMemberAccess_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitMemberAccess(null);
+		visitor.assertVisitExpressionCalled();
+	}
+
+	@Test
+	public void visitValidIf_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitValidIf(null);
+		visitor.assertVisitExpressionCalled();
+	}
+
+	@Test
+	public void visitWarnIf_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitWarnIf(null);
+		visitor.assertVisitExpressionCalled();
+	}
+
+	@Test
+	public void visitWhen_AnyExpression_VisitExpressionIsCalled() {
+		VisitorMock visitor = new VisitorMock();
+		visitor.visitWhen(null);
+		visitor.assertVisitExpressionCalled();
+	}
 }

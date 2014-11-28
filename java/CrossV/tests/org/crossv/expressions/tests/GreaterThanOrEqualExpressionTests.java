@@ -69,6 +69,50 @@ public class GreaterThanOrEqualExpressionTests {
 	}
 
 	@Test
+	public void evaluateGraterThanOrEqualExpression_IntLeftEqualToIntRight_ReturnsTrue()
+			throws Exception {
+		Expression e = greaterThanOrEqual(2, 2);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateGraterThanOrEqualExpression_IntLeftLessThanIntRight_ReturnsFalse()
+			throws Exception {
+		Expression e = greaterThanOrEqual(1, 2);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateGraterThanOrEqualExpression_IntLeftEqualToFloatRight_ReturnsTrue()
+			throws Exception {
+		Expression e = greaterThanOrEqual(2, 2f);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateGraterThanOrEqualExpression_IntLeftLessThanFloatRight_ReturnsFalse()
+			throws Exception {
+		Expression e = greaterThanOrEqual(1, 2f);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+
+	@Test
+	public void evaluateGraterThanOrEqualExpression_IntLeftEqualToDoubleRight_ReturnsTrue()
+			throws Exception {
+		Expression e = greaterThanOrEqual(2, 2d);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateGraterThanOrEqualExpression_IntLeftLessThanDoubleRight_ReturnsFalse()
+			throws Exception {
+		Expression e = greaterThanOrEqual(1, 2d);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+
+	@Test
 	public void evaluateGraterThanOrEqualExpression_IntLeftLessThanLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = greaterThanOrEqual(1, 2L);

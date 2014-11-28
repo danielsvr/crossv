@@ -15,10 +15,6 @@ public class MemberAccess extends Expression {
 		init(instance, new MemberDescriptor(member));
 	}
 
-	public MemberAccess(Expression instance, MemberDescriptor member) {
-		init(instance, member);
-	}
-
 	public MemberAccess(Expression instance, String memberName) {
 		Class<?> instanceResultClass = instance.getResultClass();
 		MemberDescriptor member = findMember(instanceResultClass, memberName);
@@ -30,8 +26,6 @@ public class MemberAccess extends Expression {
 	private void init(Expression instance, MemberDescriptor member) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
-		if (member == null)
-			throw new ArgumentNullException("member");
 		this.instance = instance;
 		this.member = member;
 		verifyOperands();

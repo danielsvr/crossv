@@ -1,6 +1,7 @@
 package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expressions.equal;
+import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -46,16 +47,23 @@ public class EqualExpressionTests {
 	}
 
 	@Test
-	public void evaluateEqualExpression_SameValueOnLoftAndRight_ReturnsTrue()
+	public void evaluateEqualExpression_SameValueOnLeftAndRight_ReturnsTrue()
 			throws Exception {
 		Expression e = equal(1, 1);
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test
-	public void evaluateEqualExpression_DifferentValueOnLoftAndRight_ReturnsFalse()
+	public void evaluateEqualExpression_DifferentValueOnLeftAndRight_ReturnsFalse()
 			throws Exception {
 		Expression e = equal(2, 1);
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluateEqualExpression_NullOnLeftAndIntOnRight_ReturnsFalse()
+			throws Exception {
+		Expression e = equal(constant(null), 1);
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 }

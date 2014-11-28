@@ -48,6 +48,15 @@ public class SequenceIndexExpressionTests {
 	}
 
 	@Test
+	public void evaluateSequenceExpressionIndex_With42Repeated3TimesAsIterable_Returns42()
+			throws Exception {
+		Iterable<Integer> instance = repeat(42, 3);
+		Expression e = sequenceIndex(instance, 1);
+
+		assertThat(e.evaluate(), is(equalTo(42)));
+	}
+
+	@Test
 	public void evaluateSequenceIndex1_With123CharsString_ReturnsChar2()
 			throws Exception {
 		String instance = "123";

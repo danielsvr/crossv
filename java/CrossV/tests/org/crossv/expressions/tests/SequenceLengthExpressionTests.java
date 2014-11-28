@@ -56,6 +56,15 @@ public class SequenceLengthExpressionTests {
 	}
 
 	@Test
+	public void evaluateSequenceLength_With3ElementsIterable_Returns3()
+			throws Exception {
+		Iterable<String> instance = repeat("1", 3);
+		Expression e = sequenceLength(instance);
+
+		assertThat(e.evaluate(), is(equalTo(3)));
+	}
+
+	@Test
 	public void sequenceLengthToString_With3ElementsIterable_ReturnsArrayLikeExpression()
 			throws Exception {
 		Iterable<Integer> instance = repeat(1, 3);

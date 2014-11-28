@@ -45,7 +45,10 @@ public abstract class Expression {
 			throws EvaluationException {
 		ExpressionEvaluator evaluator;
 		instance = instance != null ? instance : NO_INSTANCE;
-		evaluator = new ExpressionEvaluator(instance, context);
+		EvaluationOptions options = new EvaluationOptions();
+		options.printStackCount = true;
+		options.printStackValues = true;
+		evaluator = new ExpressionEvaluator(instance, context, options);
 		return evaluateWith(evaluator);
 	}
 

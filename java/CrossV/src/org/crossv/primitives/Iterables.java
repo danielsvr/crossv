@@ -224,13 +224,17 @@ public final class Iterables {
 		return elementAt(toIterable(iterable), index);
 	}
 
+	public static <E> boolean contains(Iterable<E> iterable, E obj) {
+		return containsAll(iterable, toIterable(obj));
+	}
+
 	public static <E> boolean containsAll(Iterable<E> iterable, Iterable<E> objs) {
 		objs = emptyIfNull(objs);
 		iterable = emptyIfNull(iterable);
+		if (count(iterable) == 0)
+			return false;
 
 		for (E e : objs) {
-			if (count(iterable) == 0)
-				return false;
 			boolean found = false;
 			for (E e1 : iterable)
 				if ((e == null && e1 == null) || (e != null && e.equals(e1)))

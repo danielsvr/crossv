@@ -86,6 +86,18 @@ public class ValidIfExpressionTests {
 	}
 
 	@Test
+	public void evaluateValidIfExpressionForMockeyInstance_ForDescriptiveScopeText_ReturnsDescriptorWithScopeText()
+			throws Exception {
+		Expression scope = constant("Scope text");
+		Expression test = constant(true);
+		String ifFalseMessage = "error";
+		Expression e = validIf(scope, test, ifFalseMessage);
+		EvaluationDescriptor descriptor;
+		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
+		assertThat(descriptor.getScopeDescription(), is(equalTo("Scope text")));
+	}
+
+	@Test
 	public void evaluateValidIfExpressionForMockeyInstance_CallInstanceGetRelativesAsList_ReturnsDescriptorWithScopeTextGetRelativesAsList()
 			throws Exception {
 		Expression scope = call(instance(), "getRelativesAsList");
@@ -98,6 +110,7 @@ public class ValidIfExpressionTests {
 				is(equalTo("getRelativesAsList")));
 	}
 
+	@Test
 	public void evaluateValidIfExpressionForMockeyInstance_WithErrorAsIfFalseMessage_ReturnsDescriptorWithIfFalseMessageError()
 			throws Exception {
 		Expression scope = memberAccess(instance(), "nickname");

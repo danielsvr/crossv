@@ -6,6 +6,7 @@ import static org.crossv.expressions.Expressions.context;
 import static org.crossv.expressions.Expressions.equal;
 import static org.crossv.expressions.Expressions.memberAccess;
 import static org.crossv.tests.helpers.Matchers.equalTo;
+import static org.crossv.tests.helpers.Matchers.throwing;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -13,50 +14,67 @@ import java.lang.reflect.AccessibleObject;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.primitives.Action;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
 import org.junit.Test;
 
 public class MemberAccessExpressionTests {
 
-	@Test(expected = IllegalArgumentException.class)
-	public void createMemberAccess_WithNullInstanceAndSomeMember_ThrowsIllegalArgumentException()
-			throws Exception {
-		memberAccess(null, Monkey.class.getField("nickname"));
+	@Test
+	public void createMemberAccess_WithNullInstanceAndSomeMember_ThrowsIllegalArgumentException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				memberAccess(null, Monkey.class.getField("nickname"));
+			}
+		}, is(throwing(IllegalArgumentException.class)));
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void createMemberAccess_WithSomeInstanceAndNullMember_ThrowsIllegalArgumentException()
-			throws Exception {
-		memberAccess(constant("instance"), (AccessibleObject) null);
+	@Test
+	public void createMemberAccess_WithSomeInstanceAndNullMember_ThrowsIllegalArgumentException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				memberAccess(constant("instance"), (AccessibleObject) null);
+			}
+		}, is(throwing(IllegalArgumentException.class)));
+
 	}
 
-	@Test(expected = IllegalOperandException.class)
-	public void createMemberAccessGetRelativesAsListMethodOfMonkeyClassExpressionForString_ThrowsIllegalOperandException()
-			throws Exception {
-		memberAccess(constant("123"),
-				Monkey.class.getMethod("getRelativesAsList"));
+	@Test
+	public void createMemberAccessGetRelativesAsListMethodOfMonkeyClassExpressionForString_ThrowsIllegalOperandException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				memberAccess(constant("123"),
+						Monkey.class.getMethod("getRelativesAsList"));
+			}
+		}, is(throwing(IllegalOperandException.class)));
+
 	}
 
-	@Test(expected = IllegalOperandException.class)
-	public void createMemberAccessGetRelativeByIndexExpressionForMonkey_ThrowsIllegalOperandException()
-			throws Exception {
-		Monkey monkney = TestObjectFactory.createMonkey();
+	@Test
+	public void createMemberAccessGetRelativeByIndexExpressionForMonkey_ThrowsIllegalOperandException() {
+		assertThat(new Action() {
+			public void run() throws Exception {
+				Monkey monkney = TestObjectFactory.createMonkey();
 
-		memberAccess(monkney,
-				Monkey.class.getMethod("getRelativeByIndex", Integer.TYPE));
+				memberAccess(monkney, Monkey.class.getMethod(
+						"getRelativeByIndex", Integer.TYPE));
+			}
+		}, is(throwing(IllegalOperandException.class)));
 	}
 
+	@Test
 	public void createMemberAccessGetNameForInstance_ReturnClassIsObject()
 			throws Exception {
 		Expression e = memberAccess(instance(), "Name");
 		assertThat(e.getResultClass(), is(equalTo(Object.class)));
 	}
 
+	@Test
 	public void createMemberAccessGetNameForInstance_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {
 		Expression e = memberAccess(instance(), "Name");
-		assertThat(e.toString(), is("instance.Name"));
+		assertThat(e.toString(), is("obj.Name"));
 	}
 
 	@Test
@@ -98,11 +116,21 @@ public class MemberAccessExpressionTests {
 		assertThat(result, is(equalTo("Runtime known value")));
 	}
 
+	@Test
 	public void evaluateMemberAccessExpression_NameOfMonkeyConstant_ReturnsName()
 			throws Exception {
 		Monkey monkey = TestObjectFactory.createMonkey();
 		monkey.setName("John");
 		Expression e = memberAccess(monkey, "Name");
+		assertThat(e.evaluate(), is(equalTo("John")));
+	}
+
+	@Test
+	public void evaluateMemberAccessExpression_GetNameOfMonkeyConstant_ReturnsName()
+			throws Exception {
+		Monkey monkey = TestObjectFactory.createMonkey();
+		monkey.setName("John");
+		Expression e = memberAccess(monkey, Monkey.class.getMethod("getName"));
 		assertThat(e.evaluate(), is(equalTo("John")));
 	}
 }

@@ -4,20 +4,20 @@ public class EvaluationDescriptor {
 	private String ifFalseMessage;
 	private String ifTrueMessage;
 	private Expression test;
-	private EvaluatorScope scope;
+	private String scopeDescription;
 	private boolean isValidation;
 	private boolean isWarning;
 
-	public EvaluationDescriptor(EvaluatorScope scope, Expression test,
+	public EvaluationDescriptor(String scopeDescription, Expression test,
 			String ifTrueMessage, String ifFalseMessage) {
-		this.scope = scope;
+		this.scopeDescription = scopeDescription;
 		this.test = test;
 		this.ifTrueMessage = ifTrueMessage;
 		this.ifFalseMessage = ifFalseMessage;
 	}
 
 	public String getScopeDescription() {
-		return scope.getDescription();
+		return scopeDescription;
 	}
 
 	public String getIfTrueMessage() {

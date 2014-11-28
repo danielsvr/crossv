@@ -1,5 +1,6 @@
 package org.crossv.expressions.tests;
 
+import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.expressions.Expressions.notEqual;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
@@ -56,6 +57,13 @@ public class NotEqualExpressionTests {
 	public void evaluateNotEqualExpression_DifferentValueOnLoftAndRight_ReturnsTrue()
 			throws Exception {
 		Expression e = notEqual(2, 1);
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluateNotEqualExpression_NullOnLeftAndIntOnRight_ReturnsFalse()
+			throws Exception {
+		Expression e = notEqual(constant(null), 1);
 		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 }
