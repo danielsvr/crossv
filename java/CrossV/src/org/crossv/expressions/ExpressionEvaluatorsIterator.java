@@ -9,12 +9,15 @@ public class ExpressionEvaluatorsIterator extends IteratorAdapter<Evaluator> {
 	private Class<?> objClass;
 	private Class<?> contextClass;
 	private int currentIndex;
+	private ExpressionEvaluationScope evaluationScope;
 
 	public ExpressionEvaluatorsIterator(Class<?> objClass,
-			Class<?> contextClass, Expression[] evaluators) {
+			Class<?> contextClass, Expression[] evaluators,
+			ExpressionEvaluationScope evaluationScope) {
 		this.objClass = objClass;
 		this.contextClass = contextClass;
 		this.evaluators = evaluators;
+		this.evaluationScope = evaluationScope;
 		this.currentIndex = 0;
 	}
 
@@ -27,10 +30,11 @@ public class ExpressionEvaluatorsIterator extends IteratorAdapter<Evaluator> {
 	public Evaluator next() {
 		if (currentIndex >= evaluators.length)
 			throw NoSuchElement();
-		
+
 		Expression current = evaluators[currentIndex];
 		currentIndex++;
-		
-		return new ExpressionBasedEvaluator(objClass, contextClass, current);
+
+		return new ExpressionBasedEvaluator(objClass, contextClass,
+				evaluationScope, current);
 	}
 }

@@ -48,7 +48,7 @@ public abstract class Expression {
 		EvaluationOptions options = new EvaluationOptions();
 		options.printStackCount = true;
 		options.printStackValues = true;
-		evaluator = new ExpressionEvaluator(instance, context, options);
+		evaluator = new BasicExpressionEvaluator(instance, context, options);
 		return evaluateWith(evaluator);
 	}
 
@@ -59,10 +59,6 @@ public abstract class Expression {
 	}
 
 	public abstract Class<?> getResultClass();
-
-	protected boolean isNullConstant() {
-		return false;
-	}
 
 	protected boolean isAssignableTo(Class<?> clazz) {
 		Class<?> resultClass = getResultClass();

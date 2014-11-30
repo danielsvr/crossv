@@ -3,6 +3,7 @@ package org.crossv.expressions.tests;
 import junit.framework.AssertionFailedError;
 
 import org.crossv.expressions.Expression;
+import org.crossv.expressions.ExpressionVisitor;
 import org.crossv.expressions.ExpressionVisitorAdapter;
 import org.junit.Test;
 
@@ -21,6 +22,37 @@ public class ExpressionVisitorAdapterTests {
 						+ "ExpressionVisitorAdapter.visit(Expression) "
 						+ "was not called");
 		}
+	}
+
+	private static class ExpressionMock extends Expression {
+		private boolean acceptWasCalled;
+
+		@Override
+		public Class<?> getResultClass() {
+			return null;
+		}
+
+		@Override
+		public void accept(ExpressionVisitor visitor) {
+			super.accept(visitor);
+			acceptWasCalled = true;
+		}
+
+		public void assertVisitExpressionCalled() {
+			if (!acceptWasCalled) {
+				String message = "org.crossv.expressions.Expression.accept"
+						+ "(org.crossv.expressions.ExpressionVisitor) was "
+						+ "not called";
+				throw new AssertionFailedError(message);
+			}
+		}
+	}
+
+	@Test
+	public void abc() throws Exception {
+		ExpressionMock anyExpression = new ExpressionMock();
+		anyExpression.accept(new VisitorMock());
+		anyExpression.assertVisitExpressionCalled();
 	}
 
 	@Test

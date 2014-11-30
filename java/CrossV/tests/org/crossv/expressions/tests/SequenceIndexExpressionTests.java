@@ -22,10 +22,22 @@ public class SequenceIndexExpressionTests {
 		sequenceIndex((Expression) null, (Expression) null);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void createSequenceIndex_WithNullIndex_ThrowsIllegalArgumentException()
+			throws Exception {
+		sequenceIndex(constant(123), (Expression) null);
+	}
+
 	@Test(expected = IllegalOperandException.class)
 	public void createSequenceIndex_WithNonIterableInstance_ThrowsIllegalArgumentException()
 			throws Exception {
 		sequenceIndex(constant(123), constant(0));
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createSequenceIndex_WithNonIntegerIndex_ThrowsIllegalArgumentException()
+			throws Exception {
+		sequenceIndex(constant(new int[0]), constant("index"));
 	}
 
 	@Test

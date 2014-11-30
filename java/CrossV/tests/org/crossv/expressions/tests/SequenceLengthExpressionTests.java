@@ -29,6 +29,14 @@ public class SequenceLengthExpressionTests {
 	}
 
 	@Test
+	public void createSequenceLength_WithAnyInstance_ReturnClassIsInteger()
+			throws Exception {
+		Expression e = sequenceLength(new int[0]);
+		Class<?> resultClass = e.getResultClass();
+		assertThat(resultClass, is(equalTo(Integer.class)));
+	}
+
+	@Test
 	public void evaluateSequenceLength_With3ElementsArray_Returns3()
 			throws Exception {
 		int[] instance = new int[] { 1, 2, 3 };

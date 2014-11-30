@@ -35,9 +35,25 @@ public class ValidIfExpressionTests {
 		validIf(scope, test, ifFalseMessage);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void createValidIfExpression_NullIfFalse_ThrowsIllegalArgumentException() {
+		Expression scope = memberAccess(new Monkey(), "nickname");
+		Expression test = constant(true);
+		Expression ifFalse = null;
+		validIf(scope, test, ifFalse);
+	}
+
 	@Test(expected = IllegalOperandException.class)
 	public void createValidIfExpression_ScopeOtherThanMemberAccessCallOrStringConstant_ThrowsIllegalOperandException() {
 		Expression scope = add(1, 2);
+		Expression test = constant(true);
+		String ifFalseMessage = "error";
+		validIf(scope, test, ifFalseMessage);
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createValidIfExpression_ScopeIsIntConstant_ThrowsIllegalOperandException() {
+		Expression scope = constant(1);
 		Expression test = constant(true);
 		String ifFalseMessage = "error";
 		validIf(scope, test, ifFalseMessage);
@@ -119,7 +135,7 @@ public class ValidIfExpressionTests {
 		Expression e = validIf(scope, test, ifFalseMessage);
 		EvaluationDescriptor descriptor;
 		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
-		assertThat(descriptor.getIfFalseMessage(), is(equalTo("error")));
+		assertThat(descriptor.getIfFalse().evaluate(), is(equalTo("error")));
 	}
 
 	@Test

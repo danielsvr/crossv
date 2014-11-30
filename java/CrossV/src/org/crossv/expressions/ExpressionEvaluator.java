@@ -24,8 +24,9 @@ import org.crossv.primitives.ArgumentException;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ConvertibleTo;
 import org.crossv.primitives.MemberDescriptor;
+import org.crossv.primitives.RuntimeMember;
 
-public class ExpressionEvaluator {
+public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 
 	private static class Missing {
 		public static final Missing VALUE = new Missing();
@@ -42,11 +43,15 @@ public class ExpressionEvaluator {
 	private final ExpressionVisitor visitor;
 	private EvaluationOptions options;
 
-	public ExpressionEvaluator(Object instance, Object context) {
+	protected ExpressionEvaluator(Object instance, Object context) {
 		this(instance, context, new EvaluationOptions());
 	}
 
-	public ExpressionEvaluator(Object instance, Object context,
+	protected ExpressionEvaluator() {
+		this(NO_INSTANCE, NO_CONTEXT, new EvaluationOptions());
+	}
+
+	protected ExpressionEvaluator(Object instance, Object context,
 			EvaluationOptions options) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
@@ -89,6 +94,14 @@ public class ExpressionEvaluator {
 			throw new EvaluationException(message);
 		}
 		return (E) stack.pop();
+	}
+
+	public Object getInstance() {
+		return instance;
+	}
+
+	public Object getContext() {
+		return context;
 	}
 
 	private EvaluationException evalError(RuntimeEvaluationException e) {
@@ -389,23 +402,23 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void eval(Expression expression) {
+	public void eval(Expression expression) {
 		expression.accept(visitor);
 	}
 
-	protected void evaluateAdd(Add expression) {
+	public void evaluateAdd(Add expression) {
 		evaluateAdditivity(expression, EvalOp.PLUS);
 	}
 
-	protected void evaluateAnd(And expression) {
+	public void evaluateAnd(And expression) {
 		evaluateBitwise(expression, EvalOp.AND);
 	}
 
-	protected void evaluateAndAlso(AndAlso expression) {
+	public void evaluateAndAlso(AndAlso expression) {
 		evaluateConditionalBinary(expression, EvalOp.AND_ALSO);
 	}
 
-	protected void evaluateCall(Call expression) {
+	public void evaluateCall(Call expression) {
 		eval(expression.getInstance());
 		Object instance = stack.pop();
 		Expression[] paramExpressions = expression.getParameters();
@@ -425,7 +438,7 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateCast(Cast expression) {
+	public void evaluateCast(Cast expression) {
 		eval(expression.getOperand());
 		Class<?> resultClass = expression.getResultClass();
 		Class<?> transformedResultClass;
@@ -485,11 +498,11 @@ public class ExpressionEvaluator {
 			}
 	}
 
-	protected void evaluateCoalesce(Coalesce expression) {
+	public void evaluateCoalesce(Coalesce expression) {
 		evaluateConverableExpression(expression);
 	}
 
-	protected void evaluateConditional(ConditionalTernary expression) {
+	public void evaluateConditional(ConditionalTernary expression) {
 		eval(expression.getTest());
 		Object popedValue = stack.pop();
 		if (popedValue.equals(true))
@@ -498,11 +511,11 @@ public class ExpressionEvaluator {
 			eval(expression.getIfFalse());
 	}
 
-	protected void evaluateConstant(Constant expression) {
+	public void evaluateConstant(Constant expression) {
 		stack.push(expression.getValue());
 	}
 
-	protected void evaluateContext(Context expression) {
+	public void evaluateContext(Context expression) {
 		if (context instanceof Missing) {
 			String message = "Context value is missing.";
 			NullPointerException cause = new NullPointerException(message);
@@ -511,23 +524,23 @@ public class ExpressionEvaluator {
 		stack.push(context);
 	}
 
-	protected void evaluateDevide(Devide expression) {
+	public void evaluateDevide(Devide expression) {
 		evaluateMultiplicity(expression, EvalOp.DEVIDE);
 	}
 
-	protected void evaluateEqual(Equal expression) {
+	public void evaluateEqual(Equal expression) {
 		evaluateEquality(expression, EvalOp.EQUAL);
 	}
 
-	protected void evaluateGreaterThan(GreaterThan expression) {
+	public void evaluateGreaterThan(GreaterThan expression) {
 		evaluateNumericalComparison(expression, EvalOp.GREATER_THAN);
 	}
 
-	protected void evaluateGreaterThanOrEqual(GreaterThanOrEqual expression) {
+	public void evaluateGreaterThanOrEqual(GreaterThanOrEqual expression) {
 		evaluateNumericalComparison(expression, EvalOp.GREATER_THAN_OR_EQUAL);
 	}
 
-	protected void evaluateInstance(Instance expression) {
+	public void evaluateInstance(Instance expression) {
 		if (instance instanceof Missing) {
 			String message = "Instance value is missing.";
 			NullPointerException cause = new NullPointerException(message);
@@ -536,7 +549,7 @@ public class ExpressionEvaluator {
 		stack.push(instance);
 	}
 
-	protected void evaluateInstanceOf(InstanceOf expression) {
+	public void evaluateInstanceOf(InstanceOf expression) {
 		eval(expression.getLeft());
 		eval(expression.getRight());
 
@@ -546,27 +559,27 @@ public class ExpressionEvaluator {
 				.getClass()) : false);
 	}
 
-	protected void evaluateLeftShift(LeftShift expression) {
+	public void evaluateLeftShift(LeftShift expression) {
 		evaluateShift(expression, EvalOp.LEFT_SHIFT);
 	}
 
-	protected void evaluateLessThan(LessThan expression) {
+	public void evaluateLessThan(LessThan expression) {
 		evaluateNumericalComparison(expression, EvalOp.LESS_THAN);
 	}
 
-	protected void evaluateLessThanOrEqual(LessThanOrEqual expression) {
+	public void evaluateLessThanOrEqual(LessThanOrEqual expression) {
 		evaluateNumericalComparison(expression, EvalOp.LESS_THAN_OR_EQUAL);
 	}
 
-	protected void evaluateModulo(Modulo expression) {
+	public void evaluateModulo(Modulo expression) {
 		evaluateMultiplicity(expression, EvalOp.MODULO);
 	}
 
-	protected void evaluateMultiply(Multiply expression) {
+	public void evaluateMultiply(Multiply expression) {
 		evaluateMultiplicity(expression, EvalOp.MULTIPLY);
 	}
 
-	protected void evaluateNegate(Negate expression) {
+	public void evaluateNegate(Negate expression) {
 		eval(expression.getOperand());
 
 		Object opPop = stack.pop();
@@ -585,48 +598,48 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateNot(Not expression) {
+	public void evaluateNot(Not expression) {
 		eval(expression.getOperand());
 		boolean op = (Boolean) stack.pop();
 		stack.push(!op);
 	}
 
-	protected void evaluateNotEqual(NotEqual expression) {
+	public void evaluateNotEqual(NotEqual expression) {
 		evaluateEquality(expression, EvalOp.NOT_EQUAL);
 	}
 
-	protected void evaluateOr(Or expression) {
+	public void evaluateOr(Or expression) {
 		evaluateBitwise(expression, EvalOp.OR);
 	}
 
-	protected void evaluateOrElse(OrElse expression) {
+	public void evaluateOrElse(OrElse expression) {
 		evaluateConditionalBinary(expression, EvalOp.OR_ELSE);
 	}
 
-	protected void evaluatePlus(UnaryPlus expression) {
+	public void evaluatePlus(UnaryPlus expression) {
 		eval(expression.getOperand());
 	}
 
-	protected void evaluateRightShift(RightShift expression) {
+	public void evaluateRightShift(RightShift expression) {
 		evaluateShift(expression, EvalOp.RIGHT_SHIFT);
 	}
 
-	protected void evaluateSubtract(Subtract expression) {
+	public void evaluateSubtract(Subtract expression) {
 		evaluateAdditivity(expression, EvalOp.SUBTRACT);
 	}
 
-	protected void evaluateUnrecognizedExpresison(Expression expression) {
+	public void evaluateUnrecognizedExpresison(Expression expression) {
 		Class<?> expressionClass = expression.getClass();
 		String message = "Unrecognized expression of type {0}.";
 		message = format(message, expressionClass.getName());
 		throw new RuntimeEvaluationException(message);
 	}
 
-	protected void evaluateXor(Xor expression) {
+	public void evaluateXor(Xor expression) {
 		evaluateBitwise(expression, EvalOp.XOR);
 	}
 
-	protected void evaluateComplement(Complement expression) {
+	public void evaluateComplement(Complement expression) {
 		eval(expression.getOperand());
 
 		Object opPop = stack.pop();
@@ -639,7 +652,7 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateSequenceLength(SequenceLength expression) {
+	public void evaluateSequenceLength(SequenceLength expression) {
 		eval(expression.getOperand());
 		Expression operand = expression.getOperand();
 		if (!operand.isArray()
@@ -661,7 +674,7 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateSequenceIndex(SequenceIndex expression) {
+	public void evaluateSequenceIndex(SequenceIndex expression) {
 		Expression sequence = expression.getSequence();
 		Expression index = expression.getIndex();
 		if (!sequence.isArray()
@@ -689,20 +702,20 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateMemberAccess(MemberAccess expression) {
-		eval(expression.getInstance());
-		Object instance = stack.pop();
-
+	public void evaluateMemberAccess(MemberAccess expression) {
 		try {
 			Object value = null;
 			MemberDescriptor member = expression.getMember();
 			if (member instanceof RuntimeMember) {
 				RuntimeMember runtimeMember = (RuntimeMember) member;
 				eval(runtimeMember.getInstance());
-				Object obj = stack.pop();
-				value = runtimeMember.invoke(obj);
-			} else
+				Object instance = stack.pop();
+				value = runtimeMember.invoke(instance);
+			} else {
+				eval(expression.getInstance());
+				Object instance = stack.pop();
 				value = member.invoke(instance);
+			}
 			stack.push(value);
 		} catch (IllegalAccessException e) {
 			throw new RuntimeEvaluationException(e);
@@ -711,13 +724,10 @@ public class ExpressionEvaluator {
 		}
 	}
 
-	protected void evaluateValidIf(ValidIf expression) {
+	public void evaluateValidIf(ValidIf expression) {
 		Expression scope = expression.getScope();
 		Expression test = expression.getTest();
 		Expression ifFalse = expression.getIfFalse();
-
-		eval(ifFalse);
-		String ifFalseMessage = (String) stack.pop();
 
 		String scopeText = null;
 		if (scope instanceof Constant && scope.isAssignableTo(CString)) {
@@ -736,19 +746,15 @@ public class ExpressionEvaluator {
 		}
 
 		EvaluationDescriptor descriptor;
-		descriptor = new EvaluationDescriptor(scopeText, test, null,
-				ifFalseMessage);
+		descriptor = new EvaluationDescriptor(scopeText, test, null, ifFalse);
 		descriptor.isValidation(true);
 		stack.push(descriptor);
 	}
 
-	protected void evaluateWarnIf(WarnIf expression) {
+	public void evaluateWarnIf(WarnIf expression) {
 		Expression scopeE = expression.getScope();
 		Expression test = expression.getTest();
-		Expression ifTrueExpression = expression.getIfFalse();
-
-		eval(ifTrueExpression);
-		String ifTrueMessage = (String) stack.pop();
+		Expression ifTrue = expression.getIfFalse();
 
 		String scopeText = null;
 		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString)) {
@@ -767,13 +773,12 @@ public class ExpressionEvaluator {
 		}
 
 		EvaluationDescriptor descriptor;
-		descriptor = new EvaluationDescriptor(scopeText, test, ifTrueMessage,
-				null);
+		descriptor = new EvaluationDescriptor(scopeText, test, ifTrue, null);
 		descriptor.isWarning(true);
 		stack.push(descriptor);
 	}
 
-	protected void evaluateWhen(When expression) {
+	public void evaluateWhen(When expression) {
 		Expression scope;
 		AndAlso andScope;
 		InstanceOf firstScopeExp;
@@ -810,7 +815,7 @@ public class ExpressionEvaluator {
 		evals = expression.getEvaluators();
 		IterableExpressionEvaluators evaluators;
 		evaluators = new IterableExpressionEvaluators(objClass, contextClass,
-				evals);
+				evals, this);
 		stack.push(evaluators);
 	}
 }

@@ -1,31 +1,31 @@
 package org.crossv.expressions;
 
 public class EvaluationDescriptor {
-	private String ifFalseMessage;
-	private String ifTrueMessage;
+	private Expression ifFalse;
+	private Expression ifTrue;
 	private Expression test;
 	private String scopeDescription;
 	private boolean isValidation;
 	private boolean isWarning;
 
 	public EvaluationDescriptor(String scopeDescription, Expression test,
-			String ifTrueMessage, String ifFalseMessage) {
+			Expression ifTrue, Expression ifFalse) {
 		this.scopeDescription = scopeDescription;
 		this.test = test;
-		this.ifTrueMessage = ifTrueMessage;
-		this.ifFalseMessage = ifFalseMessage;
+		this.ifTrue = ifTrue;
+		this.ifFalse = ifFalse;
 	}
 
 	public String getScopeDescription() {
 		return scopeDescription;
 	}
 
-	public String getIfTrueMessage() {
-		return ifTrueMessage;
+	public Expression getIfTrue() {
+		return ifTrue;
 	}
 
-	public String getIfFalseMessage() {
-		return ifFalseMessage;
+	public Expression getIfFalse() {
+		return ifFalse;
 	}
 
 	public Expression getTest() {

@@ -35,9 +35,25 @@ public class WarnIfExpressionTests {
 		warnIf(scope, test, ifTrueMessage);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void createWarnIfExpression_NullIfFalse_ThrowsArgumentOperandException() {
+		Expression scope = memberAccess(new Monkey(), "nickname");
+		Expression test = constant(null);
+		Expression ifTrue = null;
+		warnIf(scope, test, ifTrue);
+	}
+
 	@Test(expected = IllegalOperandException.class)
 	public void createWarnIfExpression_ScopeOtherThanMemberAccessCallOrStringConstant_ThrowsIllegalOperandException() {
 		Expression scope = add(1, 2);
+		Expression test = constant(true);
+		String ifTrueMessage = "warning";
+		warnIf(scope, test, ifTrueMessage);
+	}
+
+	@Test(expected = IllegalOperandException.class)
+	public void createWarnIfExpression_ScopeIsIntConstant_ThrowsIllegalOperandException() {
+		Expression scope = constant(1);
 		Expression test = constant(true);
 		String ifTrueMessage = "warning";
 		warnIf(scope, test, ifTrueMessage);
@@ -108,7 +124,7 @@ public class WarnIfExpressionTests {
 		Expression e = warnIf(scope, test, ifTrueMessage);
 		EvaluationDescriptor descriptor;
 		descriptor = (EvaluationDescriptor) e.evaluate(new Monkey());
-		assertThat(descriptor.getIfTrueMessage(), is(equalTo("warning")));
+		assertThat(descriptor.getIfTrue().evaluate(), is(equalTo("warning")));
 	}
 
 	@Test

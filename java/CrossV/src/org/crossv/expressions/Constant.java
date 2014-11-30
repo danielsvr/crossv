@@ -24,9 +24,4 @@ public class Constant extends Expression {
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitConstant(this);
 	}
-
-	@Override
-	protected boolean isNullConstant() {
-		return value == null;
-	}
 }

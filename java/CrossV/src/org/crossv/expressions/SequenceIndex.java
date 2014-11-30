@@ -12,44 +12,46 @@ import org.crossv.primitives.ArgumentNullException;
 
 public class SequenceIndex extends Expression {
 	private Class<?> resultClass;
-	private Expression seq;
-	private Expression idx;
+	private Expression sequence;
+	private Expression index;
 
 	public SequenceIndex(Expression sequence, Expression index) {
 		if (sequence == null)
 			throw new ArgumentNullException("sequence");
 		if (index == null)
 			throw new ArgumentNullException("index");
-		this.seq = sequence;
-		this.idx = index;
+		this.sequence = sequence;
+		this.index = index;
 		verifySequence();
 		verifyIndex();
 		resultClass = calculateResultClass();
 	}
 
 	private Class<?> calculateResultClass() {
-		if (seq.isAssignableTo(CString))
+		if (sequence.isAssignableTo(CString))
 			return CCharacter;
-		if (seq.isArray()) {
-			Class<?> clazz = seq.getResultClass();
+		if (sequence.isArray()) {
+			Class<?> clazz = sequence.getResultClass();
 			clazz = clazz.getComponentType();
 			clazz = transformToClassIfPrimitive(clazz);
 			return clazz;
 		}
-		if (seq.isAssignableToAny(CEnumeration, CIterable))
-			return CObject;
-		return null;
+		// CEnumeration, CIterable
+		return CObject;
 	}
 
 	private void verifyIndex() {
-		if (!idx.isAssignableTo(CInteger))
+		if (!index.isAssignableTo(CInteger))
 			throw illegalOperand();
 	}
 
 	private void verifySequence() {
-		if (!seq.isArray()
-				&& !seq.isAssignableToAny(CString, CEnumeration, CIterable))
+		if (!sequence.isArray() && !isSequenceAnIndexableClass())
 			throw illegalOperand();
+	}
+
+	private boolean isSequenceAnIndexableClass() {
+		return sequence.isAssignableToAny(CString, CEnumeration, CIterable);
 	}
 
 	@Override
@@ -58,11 +60,11 @@ public class SequenceIndex extends Expression {
 	}
 
 	public Expression getSequence() {
-		return seq;
+		return sequence;
 	}
 
 	public Expression getIndex() {
-		return idx;
+		return index;
 	}
 
 	@Override

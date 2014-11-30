@@ -581,13 +581,23 @@ public final class Expressions {
 	}
 
 	public static Expression validIf(Expression scope, Expression test,
+			Expression ifFalse) {
+		return new ValidIf(scope, test, ifFalse);
+	}
+
+	public static Expression validIf(Expression scope, Expression test,
 			String ifFalseMessage) {
-		return new ValidIf(scope, test, constant(ifFalseMessage));
+		return validIf(scope, test, constant(ifFalseMessage));
+	}
+
+	public static Expression warnIf(Expression scope, Expression test,
+			Expression ifTrue) {
+		return new WarnIf(scope, test, ifTrue);
 	}
 
 	public static Expression warnIf(Expression scope, Expression test,
 			String ifTrueMessage) {
-		return new WarnIf(scope, test, constant(ifTrueMessage));
+		return warnIf(scope, test, constant(ifTrueMessage));
 	}
 
 	public static Expression when(Expression scope, Expression... evaluators) {

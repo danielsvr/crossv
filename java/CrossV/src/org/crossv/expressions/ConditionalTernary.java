@@ -33,8 +33,8 @@ public class ConditionalTernary extends Expression {
 	}
 
 	private void verifyOperands() {
-		if (!test.isAssignableTo(CBoolean) || ifTrue.isNullConstant()
-				&& ifFalse.isNullConstant())
+		if (!test.isAssignableTo(CBoolean) || isNullConstant(ifTrue)
+				&& isNullConstant(ifFalse))
 			throw illegalOperand();
 	}
 
@@ -42,20 +42,24 @@ public class ConditionalTernary extends Expression {
 		Class<?> ifTrueClass = ifTrue.getResultClass();
 		Class<?> ifFalseClass = ifFalse.getResultClass();
 
-		if (ifTrue.isNullConstant())
+		if (isNullConstant(ifTrue))
 			return ifFalseClass;
-		if (ifFalse.isNullConstant())
+		if (isNullConstant(ifFalse))
 			return ifTrueClass;
 
 		// @formatter:off
 
 		if (ifTrueClass.equals(ifFalseClass)
-				|| (ifTrue.isAssignableToAny(CByte, CShort) && ifFalse.isAssignableTo(CInteger))
-				|| (ifTrue.isAssignableTo(CShort) && ifFalse.isAssignableTo(CByte)))
+				|| (ifTrue.isAssignableToAny(CByte, CShort) && ifFalse
+						.isAssignableTo(CInteger))
+				|| (ifTrue.isAssignableTo(CShort) && ifFalse
+						.isAssignableTo(CByte)))
 			return ifTrueClass;
 
-		if ((ifTrue.isAssignableTo(CInteger) && ifFalse.isAssignableToAny(CByte, CShort))
-				|| (ifTrue.isAssignableTo(CByte) && ifFalse.isAssignableTo(CShort)))
+		if ((ifTrue.isAssignableTo(CInteger) && ifFalse.isAssignableToAny(
+				CByte, CShort))
+				|| (ifTrue.isAssignableTo(CByte) && ifFalse
+						.isAssignableTo(CShort)))
 			return ifFalseClass;
 
 		// @formatter:on
@@ -63,6 +67,11 @@ public class ConditionalTernary extends Expression {
 			return getNumericPromotion(ifTrueClass, ifFalseClass);
 
 		return CObject;
+	}
+
+	private boolean isNullConstant(Expression expression) {
+		return expression instanceof Constant
+				&& ((Constant) expression).getValue() == null;
 	}
 
 	@Override

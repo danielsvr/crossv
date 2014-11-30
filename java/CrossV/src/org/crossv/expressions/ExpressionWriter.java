@@ -231,15 +231,15 @@ public class ExpressionWriter {
 		print("~", expression.getOperand());
 	}
 
-	public void printSequenceLength(SequenceLength expression) {
+	protected void printSequenceLength(SequenceLength expression) {
 		print(expression.getOperand(), ".length");
 	}
 
-	public void printSequenceIndex(SequenceIndex expression) {
+	protected void printSequenceIndex(SequenceIndex expression) {
 		print(expression.getSequence(), "[", expression.getIndex(), "]");
 	}
 
-	public void printMemberAccess(MemberAccess expression) {
+	protected void printMemberAccess(MemberAccess expression) {
 		MemberDescriptor member = expression.getMember();
 		String name = member.getName();
 		if (member.isMethod())
@@ -248,21 +248,21 @@ public class ExpressionWriter {
 		print(instance, ".", name);
 	}
 
-	public void printValidIf(ValidIf expression) {
+	protected void printValidIf(ValidIf expression) {
 		Expression scope = expression.getScope();
 		Expression test = expression.getTest();
 		Expression ifFalse = expression.getIfFalse();
 		print(scope, " validif ", test, " else ", ifFalse);
 	}
 
-	public void printWarnIf(WarnIf expression) {
+	protected void printWarnIf(WarnIf expression) {
 		Expression scope = expression.getScope();
 		Expression test = expression.getTest();
 		Expression ifFalse = expression.getIfFalse();
 		print(scope, " warnif ", test, " then ", ifFalse);
 	}
 
-	public void printWhen(When expression) {
+	protected void printWhen(When expression) {
 		Expression scope = expression.getScope();
 		Expression[] evaluators = expression.getEvaluators();
 		print("when ", scope, " [");

@@ -10,34 +10,38 @@ public class ExpressionBasedEvaluator implements Evaluator {
 	private Class<?> objClass;
 	private Class<?> contextClass;
 	private Expression descriptorExp;
+	private ExpressionEvaluationScope evaluationScope;
 
 	public ExpressionBasedEvaluator(Class<?> objClass, Class<?> contextClass,
-			Expression descriptorExp) {
+			ExpressionEvaluationScope evaluationScope, Expression descriptorExp) {
 		this.objClass = objClass;
 		this.contextClass = contextClass;
+		this.evaluationScope = evaluationScope;
 		this.descriptorExp = descriptorExp;
 	}
 
 	@Override
 	public Iterable<Evaluation> evaluate(Object obj, Object context) {
 		EvaluationDescriptor descriptor;
+		ExpressionEvaluator scope;
+		scope = evaluationScope.beginScope(obj, context);
 		try {
-			descriptor = descriptorExp.evaluate(obj, context);
+			descriptor = descriptorExp.evaluateWith(scope);
 		} catch (EvaluationException e) {
 			throw new RuntimeEvaluationException(e);
 		}
 
 		Expression test = descriptor.getTest();
 		try {
-			boolean result = test.evaluate(obj, context);
+			boolean result = test.evaluateWith(scope);
 			if (result) {
 				if (descriptor.isWarning()) {
-					String ifTrueMessage = descriptor.getIfTrueMessage();
+					String ifTrueMessage = descriptor.getIfTrue().evaluateWith(scope);
 					return Evaluation.warning(ifTrueMessage);
 				}
 			} else {
 				if (descriptor.isValidation()) {
-					String ifFalseMessage = descriptor.getIfFalseMessage();
+					String ifFalseMessage = descriptor.getIfFalse().evaluateWith(scope);
 					return Evaluation.fault(ifFalseMessage);
 				}
 			}
@@ -56,5 +60,4 @@ public class ExpressionBasedEvaluator implements Evaluator {
 	public Class<?> getContextClass() {
 		return contextClass;
 	}
-
 }

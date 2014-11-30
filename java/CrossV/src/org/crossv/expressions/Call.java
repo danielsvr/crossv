@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
 import org.crossv.primitives.MemberDescriptor;
+import org.crossv.primitives.RuntimeMethod;
 
 public class Call extends Expression {
 	private Expression instance;

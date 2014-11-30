@@ -5,6 +5,7 @@ import java.lang.reflect.AccessibleObject;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
 import org.crossv.primitives.MemberDescriptor;
+import org.crossv.primitives.RuntimeMember;
 
 public class MemberAccess extends Expression {
 	private Expression instance;
