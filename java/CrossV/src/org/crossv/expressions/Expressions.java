@@ -95,6 +95,16 @@ public final class Expressions {
 		return new InstanceOf(left, right);
 	}
 
+	public static Expression instanceOf(Expression left, String className) {
+		Class<?> clazz;
+		try {
+			clazz = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeEvaluationException(e);
+		}
+		return instanceOf(left, clazz);
+	}
+
 	public static Expression instanceOf(Object left, Class<?> right) {
 		return instanceOf(constant(left), constant(right));
 	}
@@ -184,29 +194,29 @@ public final class Expressions {
 	}
 
 	public static Expression call(Object instance, String methodName,
-			Object... parameters) throws NoSuchMethodException {
+			Object... parameters) {
 		Expression[] params = convertObjectsToExpressions(parameters);
 		return call(constant(instance), methodName, params);
 	}
 
 	public static Expression call(Object instance, String methodName,
-			Expression... parameters) throws NoSuchMethodException {
+			Expression... parameters) {
 		return call(constant(instance), methodName, parameters);
 	}
 
 	public static Expression call(Expression instance, String methodName,
-			Expression... parameters) throws NoSuchMethodException {
+			Expression... parameters) {
 		return new Call(instance, methodName, parameters);
 	}
 
 	public static Expression call(Expression instance, String methodName,
-			Object... parameters) throws NoSuchMethodException {
+			Object... parameters) {
 		Expression[] params = convertObjectsToExpressions(parameters);
 		return call(instance, methodName, params);
 	}
 
 	public static Expression call(Expression instance, Method method,
-			Expression... parameters) throws NoSuchMethodException {
+			Expression... parameters) {
 		return new Call(instance, method, parameters);
 	}
 
@@ -266,6 +276,34 @@ public final class Expressions {
 		return plus(constant(instance));
 	}
 
+	public static Expression minus(Expression instance) {
+		return new UnaryMinus(instance);
+	}
+
+	public static Expression minus(byte instance) {
+		return minus(constant(instance));
+	}
+
+	public static Expression minus(short instance) {
+		return minus(constant(instance));
+	}
+
+	public static Expression minus(int instance) {
+		return minus(constant(instance));
+	}
+
+	public static Expression minus(long instance) {
+		return minus(constant(instance));
+	}
+
+	public static Expression minus(float instance) {
+		return minus(constant(instance));
+	}
+
+	public static Expression minus(double instance) {
+		return minus(constant(instance));
+	}
+
 	public static Expression not(Expression operand) {
 		return new Not(operand);
 	}
@@ -306,20 +344,20 @@ public final class Expressions {
 		return bitwiseAnd(left, constant(right));
 	}
 
-	public static Expression devide(Expression left, Expression right) {
-		return new Devide(left, right);
+	public static Expression divide(Expression left, Expression right) {
+		return new Divide(left, right);
 	}
 
-	public static Expression devide(Object left, Object right) {
-		return devide(constant(left), constant(right));
+	public static Expression divide(Object left, Object right) {
+		return divide(constant(left), constant(right));
 	}
 
-	public static Expression devide(Object left, Expression right) {
-		return devide(constant(left), right);
+	public static Expression divide(Object left, Expression right) {
+		return divide(constant(left), right);
 	}
 
-	public static Expression devide(Expression left, Object right) {
-		return devide(left, constant(right));
+	public static Expression divide(Expression left, Object right) {
+		return divide(left, constant(right));
 	}
 
 	public static Expression bitwiseXor(Expression left, Expression right) {

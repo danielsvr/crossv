@@ -10,6 +10,8 @@ import static org.crossv.primitives.ClassDescriptor.CIterable;
 import static org.crossv.primitives.ClassDescriptor.CLong;
 import static org.crossv.primitives.ClassDescriptor.CNumber;
 import static org.crossv.primitives.ClassDescriptor.CString;
+import static org.crossv.primitives.ClassDescriptor.CByte;
+import static org.crossv.primitives.ClassDescriptor.CShort;
 import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.Iterables.count;
@@ -265,7 +267,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
-			if (op == EvalOp.DEVIDE)
+			if (op == EvalOp.DIVIDE)
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
@@ -275,7 +277,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		} else if (expression.isAssignableTo(CLong)) {
 			long left = ((Number) leftPop).longValue();
 			long right = ((Number) rightPop).longValue();
-			if (op == EvalOp.DEVIDE)
+			if (op == EvalOp.DIVIDE)
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
@@ -285,7 +287,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		} else if (expression.isAssignableTo(CFloat)) {
 			float left = ((Number) leftPop).floatValue();
 			float right = ((Number) rightPop).floatValue();
-			if (op == EvalOp.DEVIDE)
+			if (op == EvalOp.DIVIDE)
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
@@ -295,7 +297,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		} else {
 			double left = ((Number) leftPop).doubleValue();
 			double right = ((Number) rightPop).doubleValue();
-			if (op == EvalOp.DEVIDE)
+			if (op == EvalOp.DIVIDE)
 				stack.push(left / right);
 			else if (op == EvalOp.MODULO)
 				stack.push(left % right);
@@ -524,8 +526,8 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		stack.push(context);
 	}
 
-	public void evaluateDevide(Devide expression) {
-		evaluateMultiplicity(expression, EvalOp.DEVIDE);
+	public void evaluateDivide(Divide expression) {
+		evaluateMultiplicity(expression, EvalOp.DIVIDE);
 	}
 
 	public void evaluateEqual(Equal expression) {
@@ -616,7 +618,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		evaluateConditionalBinary(expression, EvalOp.OR_ELSE);
 	}
 
-	public void evaluatePlus(UnaryPlus expression) {
+	public void evaluateUnaryPlus(UnaryPlus expression) {
 		eval(expression.getOperand());
 	}
 
@@ -817,5 +819,19 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		evaluators = new IterableExpressionEvaluators(objClass, contextClass,
 				evals, this);
 		stack.push(evaluators);
+	}
+
+	public void evaluateUnaryMinus(UnaryMinus expression) {
+		eval(expression.getOperand());
+		Number number = (Number) stack.pop();
+		if (expression.isAssignableToAny(CInteger, CShort, CByte))
+			stack.push(-number.intValue());
+		else if (expression.isAssignableTo(CLong))
+			stack.push(-number.longValue());
+		else if (expression.isAssignableTo(CFloat))
+			stack.push(-number.floatValue());
+		else { // CDouble
+			stack.push(-number.doubleValue());
+		}
 	}
 }

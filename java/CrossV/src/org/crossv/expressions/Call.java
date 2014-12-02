@@ -12,8 +12,7 @@ public class Call extends Expression {
 	private MemberDescriptor member;
 	private Expression[] parameters;
 
-	public Call(Expression instance, String method, Expression... parameters)
-			throws SecurityException, NoSuchMethodException {
+	public Call(Expression instance, String method, Expression... parameters) {
 		MemberDescriptor member;
 		if (instance.isKnownOnlyAtRuntime()) {
 			member = new RuntimeMethod(instance, method);
@@ -54,8 +53,7 @@ public class Call extends Expression {
 	}
 
 	private static Method findMethod(Expression instance, String method,
-			Expression[] parameters) throws SecurityException,
-			NoSuchMethodException {
+			Expression[] parameters) {
 		ClassDescriptor descriptor;
 		Class<?>[] paramTypes;
 		Class<?> instanceClass = instance.getResultClass();
@@ -65,7 +63,11 @@ public class Call extends Expression {
 		for (int i = 0; i < parameters.length; i++)
 			paramTypes[i] = parameters[i].getResultClass();
 
-		return descriptor.findBestOverload(method, paramTypes);
+		try {
+			return descriptor.findBestOverload(method, paramTypes);
+		} catch (NoSuchMethodException e) {
+			throw new RuntimeEvaluationException(e);
+		}
 	}
 
 	public Expression getInstance() {

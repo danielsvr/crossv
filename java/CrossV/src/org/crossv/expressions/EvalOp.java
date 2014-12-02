@@ -4,7 +4,7 @@ import static org.crossv.primitives.Iterables.toIterable;
 import static org.crossv.primitives.Iterables.contains;
 
 enum EvalOp {
-	DEVIDE, MODULO, MULTIPLY, PLUS, SUBTRACT, LEFT_SHIFT, RIGHT_SHIFT, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, EQUAL, NOT_EQUAL, AND, OR, XOR, OR_ELSE, AND_ALSO;
+	DIVIDE, MODULO, MULTIPLY, PLUS, SUBTRACT, LEFT_SHIFT, RIGHT_SHIFT, GREATER_THAN, GREATER_THAN_OR_EQUAL, LESS_THAN, LESS_THAN_OR_EQUAL, EQUAL, NOT_EQUAL, AND, OR, XOR, OR_ELSE, AND_ALSO;
 	public boolean isAdditivityOp() {
 		return contains(toIterable(getAdditivityOps()), this);
 	}
@@ -66,7 +66,7 @@ enum EvalOp {
 	}
 
 	public static EvalOp[] getMultiplicityOps() {
-		return new EvalOp[] { DEVIDE, MODULO, MULTIPLY };
+		return new EvalOp[] { DIVIDE, MODULO, MULTIPLY };
 	}
 
 	public static EvalOp[] getBinaryConditionalOps() {

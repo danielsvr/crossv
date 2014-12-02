@@ -26,7 +26,7 @@ public class ClassDescriptor {
 	public Object execute(Object obj, Method method, Object... parameters)
 			throws IllegalAccessException, InvocationTargetException {
 		Object result = method.invoke(obj, parameters);
-		if (!method.getReturnType().equals(Void.class))
+		if (!method.getReturnType().equals(CVoid))
 			return result;
 		return null;
 	}
@@ -38,7 +38,7 @@ public class ClassDescriptor {
 		Class<?>[] paramTypes = new Class<?>[parameters.length];
 		for (int i = 0; i < parameters.length; i++)
 			paramTypes[i] = parameters[i] != null ? parameters[i].getClass()
-					: Object.class;
+					: CObject;
 
 		Method bestOverload = findBestOverload(method, paramTypes);
 		return execute(obj, bestOverload, parameters);
@@ -66,7 +66,8 @@ public class ClassDescriptor {
 					return m;
 			}
 		}
-		throw new NoSuchMethodException(format("Can''t find method \"{0}\".", method));
+		throw new NoSuchMethodException(format("Can''t find method \"{0}\".",
+				method));
 	}
 
 	public MemberDescriptor findMember(String member) {
@@ -92,16 +93,28 @@ public class ClassDescriptor {
 		return aproxMatch != null ? new MemberDescriptor(aproxMatch) : null;
 	}
 
-	public static final Class<Float> CFloat = Float.class;
-	public static final Class<Double> CDouble = Double.class;
 	@SuppressWarnings("rawtypes")
 	public static final Class<Iterable> CIterable = Iterable.class;
 	@SuppressWarnings("rawtypes")
 	public static final Class<Enumeration> CEnumeration = Enumeration.class;
-	public static final Class<Character> CCharacter = Character.class;
-	public static final Class<Void> TVoid = Void.TYPE;
 	public static final Class<Number> CNumber = Number.class;
 	public static final Class<?> CClass = Class.class;
+	public static final Class<EvaluationDescriptor> CEvaluatorDescriptor = EvaluationDescriptor.class;
+
+	public static final Class<Void> TVoid = Void.TYPE;
+	public static final Class<Float> TFloat = Float.TYPE;
+	public static final Class<Double> TDouble = Double.TYPE;
+	public static final Class<Character> TCharacter = Character.TYPE;
+	public static final Class<Short> TShort = Short.TYPE;
+	public static final Class<Byte> TByte = Byte.TYPE;
+	public static final Class<Boolean> TBoolean = Boolean.TYPE;
+	public static final Class<Long> TLong = Long.TYPE;
+	public static final Class<Integer> TInteger = Integer.TYPE;
+
+	public static final Class<Void> CVoid = Void.class;
+	public static final Class<Float> CFloat = Float.class;
+	public static final Class<Double> CDouble = Double.class;
+	public static final Class<Character> CCharacter = Character.class;
 	public static final Class<Object> CObject = Object.class;
 	public static final Class<Short> CShort = Short.class;
 	public static final Class<Byte> CByte = Byte.class;
@@ -109,20 +122,19 @@ public class ClassDescriptor {
 	public static final Class<Long> CLong = Long.class;
 	public static final Class<Integer> CInteger = Integer.class;
 	public static final Class<String> CString = String.class;
-	public static final Class<EvaluationDescriptor> CEvaluatorDescriptor = EvaluationDescriptor.class;
 
 	private final static Hashtable<Class<?>, Class<?>> primitiveTypesToClasses = createPrimitiveToClassesTable();
 
 	private static Hashtable<Class<?>, Class<?>> createPrimitiveToClassesTable() {
 		Hashtable<Class<?>, Class<?>> table = new Hashtable<Class<?>, Class<?>>();
-		table.put(Character.TYPE, Character.class);
-		table.put(Boolean.TYPE, Boolean.class);
-		table.put(Byte.TYPE, Byte.class);
-		table.put(Short.TYPE, Short.class);
-		table.put(Integer.TYPE, Integer.class);
-		table.put(Long.TYPE, Long.class);
-		table.put(Float.TYPE, Float.class);
-		table.put(Double.TYPE, Double.class);
+		table.put(TCharacter, CCharacter);
+		table.put(TBoolean, CBoolean);
+		table.put(TByte, CByte);
+		table.put(TShort, CShort);
+		table.put(TInteger, CInteger);
+		table.put(TLong, CLong);
+		table.put(TFloat, CFloat);
+		table.put(TDouble, CDouble);
 		return table;
 	}
 
@@ -130,14 +142,14 @@ public class ClassDescriptor {
 
 	private static Hashtable<Class<?>, Class<?>> createPrimitiveToTypesTable() {
 		Hashtable<Class<?>, Class<?>> table = new Hashtable<Class<?>, Class<?>>();
-		table.put(Character.class, Character.TYPE);
-		table.put(Boolean.class, Boolean.TYPE);
-		table.put(Byte.class, Byte.TYPE);
-		table.put(Short.class, Short.TYPE);
-		table.put(Integer.class, Integer.TYPE);
-		table.put(Long.class, Long.TYPE);
-		table.put(Float.class, Float.TYPE);
-		table.put(Double.class, Double.TYPE);
+		table.put(CCharacter, TCharacter);
+		table.put(CBoolean, TBoolean);
+		table.put(CByte, TByte);
+		table.put(CShort, TShort);
+		table.put(CInteger, TInteger);
+		table.put(CLong, TLong);
+		table.put(CFloat, TFloat);
+		table.put(CDouble, TDouble);
 		return table;
 	}
 
@@ -149,8 +161,8 @@ public class ClassDescriptor {
 	}
 
 	public static boolean canPerformNumericPromotion(Class<?> clazz) {
-		return Number.class.isAssignableFrom(clazz)
-				|| Character.class.isAssignableFrom(clazz);
+		return CNumber.isAssignableFrom(clazz)
+				|| CCharacter.isAssignableFrom(clazz);
 	}
 
 	public static Class<?> getNumericPromotion(Class<?> first, Class<?> second) {
@@ -158,19 +170,18 @@ public class ClassDescriptor {
 			throw new ArgumentException("fisrt");
 		if (!ClassDescriptor.canPerformNumericPromotion(second))
 			throw new ArgumentException("second");
-		Class<?> promotion = Integer.class;
+		Class<?> promotion = CInteger;
 
-		if (Double.class.isAssignableFrom(first)
-				|| Double.class.isAssignableFrom(second))
-			promotion = Double.class;
+		if (CDouble.isAssignableFrom(first) || CDouble.isAssignableFrom(second))
+			promotion = CDouble;
 
-		else if (Float.class.isAssignableFrom(first)
-				|| Float.class.isAssignableFrom(second))
-			promotion = Float.class;
+		else if (CFloat.isAssignableFrom(first)
+				|| CFloat.isAssignableFrom(second))
+			promotion = CFloat;
 
-		else if (Long.class.isAssignableFrom(first)
-				|| Long.class.isAssignableFrom(second))
-			promotion = Long.class;
+		else if (CLong.isAssignableFrom(first)
+				|| CLong.isAssignableFrom(second))
+			promotion = CLong;
 
 		return promotion;
 	}

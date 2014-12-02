@@ -22,7 +22,7 @@ public interface ExpressionVisitor {
 
 	void visitContext(Context expression);
 
-	void visitDevide(Devide expression);
+	void visitDivide(Divide expression);
 
 	void visitEqual(Equal expression);
 
@@ -75,4 +75,6 @@ public interface ExpressionVisitor {
 	void visitWarnIf(WarnIf expression);
 
 	void visitWhen(When expression);
+
+	void visitUnaryMinus(UnaryMinus expression);
 }

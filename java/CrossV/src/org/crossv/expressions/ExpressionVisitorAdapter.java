@@ -86,7 +86,7 @@ public abstract class ExpressionVisitorAdapter implements ExpressionVisitor {
 	}
 
 	@Override
-	public void visitDevide(Devide expression) {
+	public void visitDivide(Divide expression) {
 		visit(expression);
 	}
 
@@ -182,6 +182,11 @@ public abstract class ExpressionVisitorAdapter implements ExpressionVisitor {
 
 	@Override
 	public void visitWhen(When expression) {
+		visit(expression);
+	}
+
+	@Override
+	public void visitUnaryMinus(UnaryMinus expression) {
 		visit(expression);
 	}
 }

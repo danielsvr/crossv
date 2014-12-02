@@ -151,7 +151,7 @@ public class ExpressionWriter {
 		print(expression.getLeft(), " != ", expression.getRight());
 	}
 
-	protected void printDevide(Devide expression) {
+	protected void printDivide(Divide expression) {
 		print(expression.getLeft(), " / ", expression.getRight());
 	}
 
@@ -273,5 +273,9 @@ public class ExpressionWriter {
 			print(evaluator);
 		}
 		print("]");
+	}
+
+	public void printUnaryMinus(UnaryMinus expression) {
+		print("-", expression.getOperand());
 	}
 }

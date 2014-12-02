@@ -12,7 +12,7 @@ import org.crossv.expressions.Complement;
 import org.crossv.expressions.ConditionalTernary;
 import org.crossv.expressions.Constant;
 import org.crossv.expressions.Context;
-import org.crossv.expressions.Devide;
+import org.crossv.expressions.Divide;
 import org.crossv.expressions.Equal;
 import org.crossv.expressions.EvaluationException;
 import org.crossv.expressions.Expression;
@@ -118,9 +118,9 @@ public class TrackEvaluation extends ExpressionEvaluator {
 	}
 
 	@Override
-	public void evaluateDevide(Devide expression) {
+	public void evaluateDivide(Divide expression) {
 		track(expression);
-		super.evaluateDevide(expression);
+		super.evaluateDivide(expression);
 	}
 
 	@Override
@@ -214,9 +214,9 @@ public class TrackEvaluation extends ExpressionEvaluator {
 	}
 
 	@Override
-	public void evaluatePlus(UnaryPlus expression) {
+	public void evaluateUnaryPlus(UnaryPlus expression) {
 		track(expression);
-		super.evaluatePlus(expression);
+		super.evaluateUnaryPlus(expression);
 	}
 
 	@Override

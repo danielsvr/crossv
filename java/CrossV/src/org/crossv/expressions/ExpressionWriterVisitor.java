@@ -77,8 +77,8 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitDevide(Devide expression) {
-		printer.printDevide(expression);
+	public void visitDivide(Divide expression) {
+		printer.printDivide(expression);
 	}
 
 	@Override
@@ -190,5 +190,10 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	@Override
 	public void visitWhen(When expression) {
 		printer.printWhen(expression);
+	}
+	
+	@Override
+	public void visitUnaryMinus(UnaryMinus expression) {
+		printer.printUnaryMinus(expression);
 	}
 }

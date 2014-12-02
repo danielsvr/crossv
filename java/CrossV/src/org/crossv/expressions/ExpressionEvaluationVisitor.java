@@ -58,8 +58,8 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	}
 
 	@Override
-	public void visitDevide(Devide expression) {
-		evaluator.evaluateDevide(expression);
+	public void visitDivide(Divide expression) {
+		evaluator.evaluateDivide(expression);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 
 	@Override
 	public void visitUnaryPlus(UnaryPlus expression) {
-		evaluator.evaluatePlus(expression);
+		evaluator.evaluateUnaryPlus(expression);
 	}
 
 	@Override
@@ -190,5 +190,10 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	@Override
 	public void visitWhen(When expression) {
 		evaluator.evaluateWhen(expression);
+	}
+	
+	@Override
+	public void visitUnaryMinus(UnaryMinus expression) {
+		evaluator.evaluateUnaryMinus(expression);
 	}
 }

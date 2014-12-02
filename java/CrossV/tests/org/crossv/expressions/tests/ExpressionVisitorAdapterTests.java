@@ -168,9 +168,9 @@ public class ExpressionVisitorAdapterTests {
 	}
 
 	@Test
-	public void visitDevide_AnyExpression_VisitExpressionIsCalled() {
+	public void visitDivide_AnyExpression_VisitExpressionIsCalled() {
 		VisitorMock visitor = new VisitorMock();
-		visitor.visitDevide(null);
+		visitor.visitDivide(null);
 		visitor.assertVisitExpressionCalled();
 	}
 
