@@ -162,7 +162,7 @@ pip-log.txt
 # Mac crap
 .DS_Store
 clientdb.xml
-java/.recommenders/
-java/CrossV/target/
-java/RemoteSystemsTempFiles/
+target/
 
+java/.recommenders/
+java/RemoteSystemsTempFiles/

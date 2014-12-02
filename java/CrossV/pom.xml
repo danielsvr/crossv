@@ -2,6 +2,8 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>crossv</groupId>
   <artifactId>crossv-core</artifactId>
+  
+  
   <version>0.0.b1</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -29,9 +31,9 @@
   <description>cross site/platform validation framework</description>
   <dependencies>
   	<dependency>
-  		<groupId>org.mockito</groupId>
-  		<artifactId>mockito-all</artifactId>
-  		<version>1.9.5</version>
+  		<groupId>org.antlr</groupId>
+  		<artifactId>antlr4-runtime</artifactId>
+  		<version>4.3</version>
   	</dependency>
   </dependencies>
   <organization>
