@@ -4,9 +4,6 @@ import static org.crossv.primitives.ClassDescriptor.CString;
 import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
 import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
-import java.io.Reader;
-import java.io.StringReader;
-
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
 import org.crossv.parsing.grammars.antlr4.CrossVParser.AddContext;
 
@@ -42,8 +39,7 @@ public class Add extends AdditiveExpression {
 	}
 
 	public static Add parse(String text) {
-		Reader reader = new StringReader(text);
-		CrossVParser parser = createParser(reader, true);
+		CrossVParser parser = createTextParser(text);
 		AddContext context = parser.add();
 		return (Add) context.result;
 	}

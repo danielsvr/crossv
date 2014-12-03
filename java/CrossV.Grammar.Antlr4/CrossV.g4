@@ -135,8 +135,8 @@ warnif returns [Expression result]
 
 term returns [Expression result]
 :
-	IDENTIFIER
-	{$result = null;}
+	'null'
+	{$result = constant(null);}
 
 	| 'obj'
 	{$result = instance();}
@@ -144,8 +144,11 @@ term returns [Expression result]
 	| 'context'
 	{$result = context();}
 
+	| IDENTIFIER
+	{$result = null;}
+
 	| STRING_LITERAL
-	{$result = constant($STRING_LITERAL.text);}
+	{$result = constant($STRING_LITERAL.text.replaceAll("^\"|\"$", ""));}
 
 	| INTEGER_LITERAL
 	{$result = constant(Integer.parseInt($INTEGER_LITERAL.text));}

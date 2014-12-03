@@ -9,6 +9,7 @@ import static org.crossv.primitives.ClassDescriptor.TVoid;
 
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.antlr.v4.runtime.CommonToken;
@@ -123,6 +124,11 @@ public abstract class Expression {
 
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
+	}
+
+	protected static CrossVParser createTextParser(String text) {
+		Reader reader = new StringReader(text);
+		return createParser(reader, true);
 	}
 
 	protected static CrossVParser createParser(Reader reader) {

@@ -28,6 +28,7 @@ public final class Expressions {
 	}
 
 	public static Expression cast(String className, Expression value) {
+		// TODO push the active code closer to evaluation
 		Class<?> clazz = ClassDescriptor.forName(className);
 		return new Cast(clazz, value);
 	}
@@ -102,6 +103,7 @@ public final class Expressions {
 	}
 
 	public static Expression instanceOf(Expression left, String className) {
+		// TODO push the active code closer to evaluation
 		Class<?> clazz = ClassDescriptor.forName(className);
 		return instanceOf(left, clazz);
 	}

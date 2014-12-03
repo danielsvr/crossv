@@ -7,6 +7,8 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.ConditionalTernary;
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.helpers.TestObjectFactory;
@@ -243,6 +245,34 @@ public class ConditionalExpressionTests {
 	public void createConditionalExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = conditional(true, 2, 3);
 		assertThat(e.toString(), is("true ? 2 : 3"));
+	}
+
+	@Test
+	public void parseConditionalExpression_TestTrue2IfTrue3IfFalse_TestConstantIsTrue() {
+		ConditionalTernary e = ConditionalTernary.parse("true ? 2 : 3");
+		Constant constant = (Constant) e.getTest();
+		assertThat(constant.getValue(), is(equalTo(true)));
+	}
+
+	@Test
+	public void parseConditionalExpression_TestTrue2IfTrue3IfFalse_IfTrueConstantIs2() {
+		ConditionalTernary e = ConditionalTernary.parse("true ? 2 : 3");
+		Constant constant = (Constant) e.getIfTrue();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void parseConditionalExpression_TestTrue2IfTrue3IfFalse_IfFalseConstantIs3() {
+		ConditionalTernary e = ConditionalTernary.parse("true ? 2 : 3");
+		Constant constant = (Constant) e.getIfFalse();
+		assertThat(constant.getValue(), is(equalTo(3)));
+	}
+
+	@Test
+	public void evaluatingAParsedConditionalExpression_TestTrue2IfTrue3IfFalse_Retuns2()
+			throws Exception {
+		Expression e = ConditionalTernary.parse("true ? 2 : 3");
+		assertThat(e.evaluate(), is(equalTo(2)));
 	}
 
 	@Test

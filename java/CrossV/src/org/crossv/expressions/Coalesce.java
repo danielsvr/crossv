@@ -3,6 +3,8 @@ package org.crossv.expressions;
 import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.expressions.Expressions.notEqual;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.ExpressionContext;
 import org.crossv.primitives.ConvertibleTo;
 
 public class Coalesce extends BinaryExpression implements
@@ -18,12 +20,13 @@ public class Coalesce extends BinaryExpression implements
 	}
 
 	private void verifyOperands() {
-		//@formatter:off
+		// @formatter:off
 		if (left.returnsPrimitiveType()
-			|| right.returnsPrimitiveType()
-			|| (!left.isAssignableTo(rightClass) && !right.isAssignableTo(leftClass)))
+				|| right.returnsPrimitiveType()
+				|| (!left.isAssignableTo(rightClass) && !right
+						.isAssignableTo(leftClass)))
 			throw illegalOperand();
-		//@formatter:on
+		// @formatter:on
 	}
 
 	@Override
@@ -39,5 +42,11 @@ public class Coalesce extends BinaryExpression implements
 	@Override
 	public ConditionalTernary convert() {
 		return innerExpression;
+	}
+
+	public static Coalesce parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		ExpressionContext context = parser.expression();
+		return (Coalesce) context.result;
 	}
 }

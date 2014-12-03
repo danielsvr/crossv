@@ -1,8 +1,5 @@
 package org.crossv.expressions;
 
-import java.io.Reader;
-import java.io.StringReader;
-
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
 import org.crossv.parsing.grammars.antlr4.CrossVParser.CastContext;
 
@@ -25,8 +22,7 @@ public class Cast extends UnaryExpression {
 	}
 
 	public static Cast parse(String text) {
-		Reader reader = new StringReader(text);
-		CrossVParser parser = createParser(reader, true);
+		CrossVParser parser = createTextParser(text);
 		CastContext context = parser.cast();
 		return (Cast) context.result;
 	}

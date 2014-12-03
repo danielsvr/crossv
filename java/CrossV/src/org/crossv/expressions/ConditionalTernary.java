@@ -8,6 +8,8 @@ import static org.crossv.primitives.ClassDescriptor.CShort;
 import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
 import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.ExpressionContext;
 import org.crossv.primitives.ArgumentNullException;
 
 public class ConditionalTernary extends Expression {
@@ -94,5 +96,11 @@ public class ConditionalTernary extends Expression {
 
 	public Expression getIfFalse() {
 		return ifFalse;
+	}
+
+	public static ConditionalTernary parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		ExpressionContext context = parser.expression();
+		return (ConditionalTernary) context.result;
 	}
 }

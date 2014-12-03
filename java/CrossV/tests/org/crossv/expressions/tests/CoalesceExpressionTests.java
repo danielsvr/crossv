@@ -7,6 +7,8 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Coalesce;
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Rat;
@@ -59,8 +61,37 @@ public class CoalesceExpressionTests {
 
 	@Test
 	public void createCoalesceExpression_callingToString_getsJavaLikeExpression() {
-		Expression e = coalesce("1", "2");
-		assertThat(e.toString(), is("\"1\" ?? \"2\""));
+		Expression e = coalesce("a", "b");
+		assertThat(e.toString(), is("\"a\" ?? \"b\""));
+	}
+
+	@Test
+	public void parseCoalesceExpression_AAndB_LeftConstantIsA() {
+		Coalesce e = Coalesce.parse("\"a\" ?? \"b\"");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo("a")));
+	}
+
+	@Test
+	public void parseCoalesceExpression_AAndB_RightConstantIsB() {
+		Coalesce e = Coalesce.parse("\"a\" ?? \"b\"");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo("b")));
+	}
+
+	@Test
+	public void evaluatingAParsedCoalesceExpression_AAndB_RetunsA()
+			throws Exception {
+		Expression e = Coalesce.parse("\"a\" ?? \"b\"");
+		assertThat(e.evaluate(), is(equalTo("a")));
+	}
+
+
+	@Test
+	public void evaluatingAParsedCoalesceExpression_NullAndAStringWithQuotationMarks_RetunsQuotationMarks()
+			throws Exception {
+		Expression e = Coalesce.parse("null ?? \"\\\"\\\"\\\"\\\"\"");
+		assertThat(e.evaluate(), is(equalTo("\\\"\\\"\\\"\\\"")));
 	}
 
 	@Test
