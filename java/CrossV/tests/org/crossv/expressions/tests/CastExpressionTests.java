@@ -8,6 +8,8 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Cast;
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.EvaluationException;
 import org.crossv.expressions.Expression;
 import org.crossv.tests.subjects.Mouse;
@@ -32,6 +34,35 @@ public class CastExpressionTests {
 			throws Exception {
 		Expression e = cast(String.class, context());
 		assertThat(e.toString(), is("(java.lang.String)context"));
+	}
+
+	@Test
+	public void parseCastExpression_123CastToLong_OperandConstantIs123() {
+		Cast e = Cast.parse("(java.lang.Long)123");
+		Constant constant = (Constant) e.getOperand();
+		assertThat(constant.getValue(), is(equalTo(123)));
+	}
+
+	@Test
+	public void parseCastExpression_123CastToLong_ClassIsLong() {
+		Cast e = Cast.parse("(java.lang.Long)123");
+		Class<?> clazz = e.getResultClass();
+		assertThat(clazz, is(equalTo(Long.class)));
+	}
+
+	@Test
+	public void evaluatingAParsedCastExpression_123CastToLong_Retuns123()
+			throws Exception {
+		Expression e = Cast.parse("(java.lang.Long)123");
+		assertThat(e.evaluate(), is(equalTo(123L)));
+	}
+
+	@Test
+	public void evaluatingAParsedCastExpression_123CastToLong_RetunsLongValue()
+			throws Exception {
+		Expression e = Cast.parse("(java.lang.Long)123");
+		Object result = e.evaluate();
+		assertThat(result.getClass(), is(assignableTo(Long.class)));
 	}
 
 	@Test
@@ -100,7 +131,7 @@ public class CastExpressionTests {
 		Expression e = cast(Double.class, constant(value));
 		assertThat(e.evaluate(), is(equalTo((double) value)));
 	}
-	
+
 	@Test
 	public void evaluateCastExpression_CharToNumberType_ReturnsDoubleValue()
 			throws Exception {
@@ -116,7 +147,7 @@ public class CastExpressionTests {
 		Expression e = cast(Double.TYPE, constant(value));
 		assertThat(e.evaluate(), is(equalTo((double) value)));
 	}
-	
+
 	@Test
 	public void evaluateCastExpression_NumberToChar_ReturnsCharValue()
 			throws Exception {

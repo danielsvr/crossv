@@ -171,7 +171,7 @@ cast returns [Expression result]
 
 		(
 			'.' otherId = IDENTIFIER
-			{clazz = $otherId.text;}
+			{clazz += "." + $otherId.text;}
 
 		)* ')'
 	)? term

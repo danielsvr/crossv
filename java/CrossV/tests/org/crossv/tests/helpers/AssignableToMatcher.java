@@ -1,5 +1,7 @@
 package org.crossv.tests.helpers;
 
+import static org.crossv.primitives.ClassDescriptor.transformToClassIfPrimitive;
+
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 
@@ -8,7 +10,7 @@ public class AssignableToMatcher extends BaseMatcher<Object> {
 	private Class<?> clazz;
 
 	public AssignableToMatcher(Class<?> clazz) {
-		this.clazz = clazz;
+		this.clazz = transformToClassIfPrimitive(clazz);
 	}
 
 	@Override

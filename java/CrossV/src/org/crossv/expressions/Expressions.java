@@ -7,6 +7,7 @@ import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 
+import org.crossv.primitives.ClassDescriptor;
 import org.crossv.primitives.Function;
 
 public final class Expressions {
@@ -27,12 +28,7 @@ public final class Expressions {
 	}
 
 	public static Expression cast(String className, Expression value) {
-		Class<?> clazz;
-		try {
-			clazz = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeEvaluationException(e);
-		}
+		Class<?> clazz = ClassDescriptor.forName(className);
 		return new Cast(clazz, value);
 	}
 
@@ -106,12 +102,7 @@ public final class Expressions {
 	}
 
 	public static Expression instanceOf(Expression left, String className) {
-		Class<?> clazz;
-		try {
-			clazz = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeEvaluationException(e);
-		}
+		Class<?> clazz = ClassDescriptor.forName(className);
 		return instanceOf(left, clazz);
 	}
 

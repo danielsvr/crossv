@@ -197,4 +197,12 @@ public class ClassDescriptor {
 			return primitiveClassesToTypes.get(clazz);
 		return clazz;
 	}
+
+	public static Class<?> forName(String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new ClassNotFoundAtRuntimeException(e);
+		}
+	}
 }

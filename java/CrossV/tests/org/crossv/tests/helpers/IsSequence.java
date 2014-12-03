@@ -16,8 +16,6 @@ public class IsSequence<E> extends TypeSafeMatcher<E> {
 
 	@Override
 	public void describeTo(Description arg0) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
