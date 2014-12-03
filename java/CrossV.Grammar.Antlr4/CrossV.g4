@@ -2,7 +2,10 @@ grammar CrossV;
 
 @header {
 package org.crossv.parsing.grammars.antlr4;
+
 import static org.crossv.expressions.Expressions.*;
+import static org.crossv.primitives.Numbers.toNumber;
+
 import org.crossv.expressions.*;
 }
 
@@ -150,14 +153,11 @@ term returns [Expression result]
 	| STRING_LITERAL
 	{$result = constant($STRING_LITERAL.text.replaceAll("^\"|\"$", ""));}
 
-	| INTEGER_LITERAL
-	{$result = constant(Integer.parseInt($INTEGER_LITERAL.text));}
+	| NUMBER_LITERAL
+	{$result = constant(toNumber($NUMBER_LITERAL.text));}
 
 	| BOOLEAN_LITERAL
 	{$result = constant(Boolean.parseBoolean($BOOLEAN_LITERAL.text));}
-
-	| FLOAT_LITERAL
-	{$result = constant(Double.parseDouble($FLOAT_LITERAL.text));}
 
 	| '(' expression ')'
 	{$result = $expression.result;}
@@ -378,15 +378,11 @@ ESC
 	'\\' [btnr"\\]
 ; // \b, \t, \n etc...
 
-INTEGER_LITERAL
+NUMBER_LITERAL
 :
-	DIGIT+
-;
-
-FLOAT_LITERAL
-:
-	DIGIT+ '.' DIGIT*
-	| '.' DIGIT+
+	DIGITS NUMBER_SUFFIX?
+	| DIGITS '.' DIGITS? NUMBER_SUFFIX?
+	| '.' DIGITS NUMBER_SUFFIX?
 ;
 
 BOOLEAN_LITERAL
@@ -407,11 +403,23 @@ IDENTIFIER
 ;
 
 fragment
+NUMBER_SUFFIX
+:
+	[lLfFdD]
+;
+
+fragment
 IDENTIFIER_LETTER
 :
 	'a' .. 'z'
 	| 'A' .. 'Z'
 	| '_'
+;
+
+fragment
+DIGITS
+:
+	DIGIT+
 ;
 
 fragment

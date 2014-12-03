@@ -202,6 +202,7 @@ public class ClassDescriptor {
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
+			// TODO auto-resolve short named types (int, boolean, string, ... etc) and some well established classes on first ClassNotFound
 			throw new ClassNotFoundAtRuntimeException(e);
 		}
 	}
