@@ -585,7 +585,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		eval(expression.getOperand());
 
 		Object opPop = stack.pop();
-		if (expression.isAssignableTo(CInteger)) {
+		if (expression.isAssignableToAny(CInteger, CShort, CByte)) {
 			int op = ((Number) opPop).intValue();
 			stack.push(-op);
 		} else if (expression.isAssignableTo(CLong)) {
@@ -819,19 +819,5 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		evaluators = new IterableExpressionEvaluators(objClass, contextClass,
 				evals, this);
 		stack.push(evaluators);
-	}
-
-	public void evaluateUnaryMinus(UnaryMinus expression) {
-		eval(expression.getOperand());
-		Number number = (Number) stack.pop();
-		if (expression.isAssignableToAny(CInteger, CShort, CByte))
-			stack.push(-number.intValue());
-		else if (expression.isAssignableTo(CLong))
-			stack.push(-number.longValue());
-		else if (expression.isAssignableTo(CFloat))
-			stack.push(-number.floatValue());
-		else { // CDouble
-			stack.push(-number.doubleValue());
-		}
 	}
 }

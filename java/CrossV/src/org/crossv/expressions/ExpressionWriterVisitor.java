@@ -191,9 +191,4 @@ class ExpressionWriterVisitor extends ExpressionVisitorAdapter {
 	public void visitWhen(When expression) {
 		printer.printWhen(expression);
 	}
-	
-	@Override
-	public void visitUnaryMinus(UnaryMinus expression) {
-		printer.printUnaryMinus(expression);
-	}
 }

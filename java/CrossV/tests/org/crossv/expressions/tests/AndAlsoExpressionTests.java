@@ -7,6 +7,8 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.AndAlso;
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.junit.Test;
@@ -38,6 +40,27 @@ public class AndAlsoExpressionTests {
 		boolean right = false;
 		Expression e = and(left, right);
 		assertThat(e.toString(), is("true && false"));
+	}
+
+	@Test
+	public void parseAndAlsoExpression_TrueAndFalse_LeftConstantIsTrue() {
+		AndAlso e = AndAlso.parse("true && false");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(true)));
+	}
+
+	@Test
+	public void parseAndAlsoExpression_TrueAndFalse_RightConstantIsFalse() {
+		AndAlso e = AndAlso.parse("true && false");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluatingAParsedAndAlsoExpression_TrueAndFalse_RetunsFalse()
+			throws Exception {
+		Expression e = AndAlso.parse("true && false");
+		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
 	@Test

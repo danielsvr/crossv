@@ -2,9 +2,7 @@ grammar CrossV;
 
 @header {
 package org.crossv.parsing.grammars.antlr4;
-
 import static org.crossv.expressions.Expressions.*;
-
 import org.crossv.expressions.*;
 }
 
@@ -12,15 +10,19 @@ options {
 	language = Java;
 }
 
-@parser::members {
-	boolean evalNot(boolean value){
-		return !value;
-	}
-}
-
-validations returns [Expression result]
+validations returns [Expression[] result]
 :
-	validation+ EOF
+{
+		List<Expression> validations = new ArrayList<Expression>();
+	}
+
+	(
+		validation
+		{validations.add($validation.result);}
+
+	)+ EOF
+	{$result = validations.toArray(new Expression[0]);}
+
 ;
 
 validation returns [Expression result]
@@ -41,14 +43,12 @@ validation returns [Expression result]
 		| secondLeft = contextInstanceOf '&&' secondRight = objInstanceOf
 		{scope = and($secondLeft.result, $secondRight.result);}
 
-	) '[' firstEvaluation = evaluation
-	{evaluations.add($firstEvaluation.result);}
-
+	) '['
 	(
-		',' otherEvaluation = evaluation
-		{evaluations.add($firstEvaluation.result);}
+		evaluation
+		{evaluations.add($evaluation.result);}
 
-	)* ']'
+	)+ ']'
 	{$result = when(scope, evaluations);}
 
 ;
@@ -80,7 +80,7 @@ contextInstanceOf returns [Expression result]
 		'.' other = IDENTIFIER
 		{className += "." + $other.text;}
 
-	)*
+	)+
 	{$result = instanceOf(context(), className);}
 
 ;
@@ -161,37 +161,74 @@ term returns [Expression result]
 
 ;
 
+cast returns [Expression result]
+:
+	{String clazz="";}
+
+	(
+		'(' firstId = IDENTIFIER
+		{clazz = $firstId.text;}
+
+		(
+			'.' otherId = IDENTIFIER
+			{clazz = $otherId.text;}
+
+		)* ')'
+	)? term
+	{
+		$result =  $term.result;		
+		if(!clazz.equals(""))
+			$result = Expressions.cast(clazz, $result);
+	}
+
+;
+
 negation returns [Expression result]
 :
-	{boolean not = true;}
+	{String op = "";}
 
 	(
 		'!'
-		{not = !not;}
+		{op = "not";}
 
-	)* term
+		| '~'
+		{op = "complement";}
+
+	)* cast
 	{
-		$result =  $term.result;		
-		if(not)
+		$result =  $cast.result;		
+		if(op.equals("not"))
 			$result = not($result);
+		else if (op.equals("complement"))
+			$result = complemented($result);
 	}
 
 ;
 
 unary returns [Expression result]
 :
-	{boolean positive = true;}
+{
+	boolean positive = true;
+	boolean apply = false;
+}
 
 	(
 		'+'
+		{apply = true;}
+
 		| '-'
-		{positive = !positive;}
+		{
+			positive = !positive;
+			apply = true;
+		}
 
 	)* negation
 	{
 		$result = $negation.result;
 		if(!positive)
-			$result = minus($result);
+			$result = negate($result);
+		else if(apply)
+			$result = plus($result);
 	}
 
 ;
@@ -229,65 +266,98 @@ add returns [Expression result]
 	)*
 ;
 
-relation returns [Expression result]
+shift returns [Expression result]
 :
 	left = add
 	{$result = $left.result;}
 
 	(
-		'==' right = add
+		'<<' right = add
+		{ $result = leftShift($result, $right.result);}
+
+		| '>>' right = add
+		{ $result = rightShift($result, $right.result);}
+
+	)*
+;
+
+relation returns [Expression result]
+:
+	left = shift
+	{$result = $left.result;}
+
+	(
+		'==' right = shift
 		{ $result = equal($result, $right.result);}
 
-		| '!=' right = add
+		| '!=' right = shift
 		{ $result = notEqual($result, $right.result);}
 
-		| '<' right = add
+		| '<' right = shift
 		{ $result = lessThan($result, $right.result);}
 
-		| '<=' right = add
+		| '>' right = shift
+		{ $result = greaterThan($result, $right.result);}
+
+		| '<=' right = shift
 		{ $result = lessThanOrEqual($result, $right.result);}
 
-		| '>=' right = add
+		| '>=' right = shift
 		{ $result = greaterThanOrEqual($result, $right.result);}
 
-		| '>' right = add
-		{ $result = greaterThan($result, $right.result);}
+		| 'instanceof' right = shift
+		{ $result = instanceOf($result, $right.result);}
+
+	)*
+;
+
+bitwise returns [Expression result]
+:
+	left = relation
+	{$result = $left.result;}
+
+	(
+		'&' right = relation
+		{ $result = bitwiseAnd($result, $right.result);}
+
+		| '|' right = relation
+		{ $result = bitwiseOr($result, $right.result);}
+
+		| '^' right = relation
+		{ $result = bitwiseXor($result, $right.result);}
+
+	)*
+;
+
+logical returns [Expression result]
+:
+	left = bitwise
+	{$result = $left.result;}
+
+	(
+		'&&' right = bitwise
+		{ $result = and($result, $right.result);}
+
+		| '||' right = bitwise
+		{ $result = or($result, $right.result);}
 
 	)*
 ;
 
 expression returns [Expression result]
 :
-	relation
-	(
-		(
-			'&&'
-			| '||'
-		) relation
-	)*
-;
+	logical
+	{$result = $logical.result;}
 
-IDENTIFIER
-:
-	IDENTIFIER_LETTER
-	(
-		IDENTIFIER_LETTER
-		| DIGIT
-	)*
-;
+	| test = expression '?' ifTrue = expression ':' ifFalse = expression
+	{ $result = conditional($test.result, $ifTrue.result, $ifFalse.result);}
 
-fragment
-IDENTIFIER_LETTER
-:
-	'a' .. 'z'
-	| 'A' .. 'Z'
-	| '_'
-;
+	| nullable = expression '??' ifTrue = expression
+	{ $result = coalesce($nullable.result, $ifTrue.result);}
 
-fragment
-DIGIT
-:
-	'0' .. '9'
+	// CALL
+	// MEMBER ACCESS
+
 ;
 
 STRING_LITERAL
@@ -322,6 +392,29 @@ BOOLEAN_LITERAL
 	| 'True'
 	| 'false'
 	| 'False'
+;
+
+IDENTIFIER
+:
+	IDENTIFIER_LETTER
+	(
+		IDENTIFIER_LETTER
+		| DIGIT
+	)*
+;
+
+fragment
+IDENTIFIER_LETTER
+:
+	'a' .. 'z'
+	| 'A' .. 'Z'
+	| '_'
+;
+
+fragment
+DIGIT
+:
+	'0' .. '9'
 ;
 
 WHITE_SPACE

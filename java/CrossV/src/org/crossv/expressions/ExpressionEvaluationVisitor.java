@@ -191,9 +191,4 @@ final class ExpressionEvaluationVisitor extends ExpressionVisitorAdapter {
 	public void visitWhen(When expression) {
 		evaluator.evaluateWhen(expression);
 	}
-	
-	@Override
-	public void visitUnaryMinus(UnaryMinus expression) {
-		evaluator.evaluateUnaryMinus(expression);
-	}
 }

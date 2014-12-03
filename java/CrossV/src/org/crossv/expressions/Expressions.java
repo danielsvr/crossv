@@ -26,6 +26,16 @@ public final class Expressions {
 		return new Cast(clazz, value);
 	}
 
+	public static Expression cast(String className, Expression value) {
+		Class<?> clazz;
+		try {
+			clazz = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeEvaluationException(e);
+		}
+		return new Cast(clazz, value);
+	}
+
 	public static Expression and(Expression left, Expression right) {
 		return new AndAlso(left, right);
 	}
@@ -274,34 +284,6 @@ public final class Expressions {
 
 	public static Expression plus(double instance) {
 		return plus(constant(instance));
-	}
-
-	public static Expression minus(Expression instance) {
-		return new UnaryMinus(instance);
-	}
-
-	public static Expression minus(byte instance) {
-		return minus(constant(instance));
-	}
-
-	public static Expression minus(short instance) {
-		return minus(constant(instance));
-	}
-
-	public static Expression minus(int instance) {
-		return minus(constant(instance));
-	}
-
-	public static Expression minus(long instance) {
-		return minus(constant(instance));
-	}
-
-	public static Expression minus(float instance) {
-		return minus(constant(instance));
-	}
-
-	public static Expression minus(double instance) {
-		return minus(constant(instance));
 	}
 
 	public static Expression not(Expression operand) {

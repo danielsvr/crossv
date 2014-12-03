@@ -184,9 +184,4 @@ public abstract class ExpressionVisitorAdapter implements ExpressionVisitor {
 	public void visitWhen(When expression) {
 		visit(expression);
 	}
-
-	@Override
-	public void visitUnaryMinus(UnaryMinus expression) {
-		visit(expression);
-	}
 }

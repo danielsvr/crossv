@@ -8,9 +8,22 @@ import static org.crossv.primitives.ClassDescriptor.CNumber;
 import static org.crossv.primitives.ClassDescriptor.TVoid;
 
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 
+import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.antlr.v4.runtime.UnbufferedTokenStream;
+import org.crossv.parsing.grammars.antlr4.CrossVLexer;
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+
 public abstract class Expression {
+
+	protected Expression() {
+	}
 
 	@Override
 	public final String toString() {
@@ -110,5 +123,20 @@ public abstract class Expression {
 
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
+	}
+
+	protected static CrossVParser createParser(Reader reader) {
+		return createParser(reader, false);
+	}
+
+	protected static CrossVParser createParser(Reader reader,
+			boolean useCommonTokenFactory) {
+		UnbufferedCharStream inputStream = new UnbufferedCharStream(reader);
+		Lexer lexer = new CrossVLexer(inputStream);
+		if (useCommonTokenFactory)
+			lexer.setTokenFactory(new CommonTokenFactory(true));
+		TokenStream tokenStream = new UnbufferedTokenStream<CommonToken>(lexer);
+		CrossVParser parser = new CrossVParser(tokenStream);
+		return parser;
 	}
 }

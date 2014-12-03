@@ -274,8 +274,4 @@ public class ExpressionWriter {
 		}
 		print("]");
 	}
-
-	public void printUnaryMinus(UnaryMinus expression) {
-		print("-", expression.getOperand());
-	}
 }

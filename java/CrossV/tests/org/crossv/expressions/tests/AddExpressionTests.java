@@ -6,6 +6,8 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Add;
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.ObjectToString;
@@ -49,6 +51,27 @@ public class AddExpressionTests {
 	public void createAddExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = add(1, 2);
 		assertThat(e.toString(), is("1 + 2"));
+	}
+
+	@Test
+	public void parseAddExpression_1Plus2_LeftConstantIs1() {
+		Add e = Add.parse("1 + 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseAddExpression_1Plus2_RightConstantIs2() {
+		Add e = Add.parse("1 + 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedAddExpression_1Plus2_Retuns3()
+			throws Exception {
+		Expression e = Add.parse("1 + 2");
+		assertThat(e.evaluate(), is(equalTo(3)));
 	}
 
 	@Test
