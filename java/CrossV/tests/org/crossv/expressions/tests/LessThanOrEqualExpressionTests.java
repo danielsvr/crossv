@@ -6,7 +6,9 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
+import org.crossv.expressions.LessThanOrEqual;
 import org.crossv.expressions.IllegalOperandException;
 import org.junit.Test;
 
@@ -30,6 +32,41 @@ public class LessThanOrEqualExpressionTests {
 	public void createLessThanOrEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = lessThanOrEqual(1, 2);
 		assertThat(e.toString(), is("1 <= 2"));
+	}
+
+	@Test
+	public void parseLessThanOrEqualExpression_2And1_LeftConstantIs2() {
+		LessThanOrEqual e = LessThanOrEqual.parse("2 <= 1");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void parseLessThanOrEqualExpression_2And1_RightConstantIs1() {
+		LessThanOrEqual e = LessThanOrEqual.parse("2 <= 1");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluatingAParsedLessThanOrEqualExpression_2And1_RetunsFalse()
+			throws Exception {
+		Expression e = LessThanOrEqual.parse("2 <= 1");
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluatingAParsedLessThanOrEqualExpression_1And2_RetunsTrue()
+			throws Exception {
+		Expression e = LessThanOrEqual.parse("1 <= 2");
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluatingAParsedLessThanOrEqualExpression_1And1_RetunsTrue()
+			throws Exception {
+		Expression e = LessThanOrEqual.parse("1 <= 1");
+		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test
@@ -75,7 +112,7 @@ public class LessThanOrEqualExpressionTests {
 	}
 
 	@Test
-	public void evaluateLessThanOrEqualExpression_IntLeftGreaterThanIntRight_ReturnsFalse()
+	public void evaluateLessThanOrEqualExpression_IntLeftLessThanIntRight_ReturnsFalse()
 			throws Exception {
 		Expression e = lessThanOrEqual(2, 1);
 		assertThat(e.evaluate(), is(equalTo(false)));
@@ -89,7 +126,7 @@ public class LessThanOrEqualExpressionTests {
 	}
 
 	@Test
-	public void evaluateLessThanOrEqualExpression_IntLeftGreaterThanFloatRight_ReturnsFalse()
+	public void evaluateLessThanOrEqualExpression_IntLeftLessThanFloatRight_ReturnsFalse()
 			throws Exception {
 		Expression e = lessThanOrEqual(2, 1f);
 		assertThat(e.evaluate(), is(equalTo(false)));
@@ -103,14 +140,14 @@ public class LessThanOrEqualExpressionTests {
 	}
 
 	@Test
-	public void evaluateLessThanOrEqualExpression_IntLeftGreaterThanDoubleRight_ReturnsFalse()
+	public void evaluateLessThanOrEqualExpression_IntLeftLessThanDoubleRight_ReturnsFalse()
 			throws Exception {
 		Expression e = lessThanOrEqual(2, 1d);
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
 	@Test
-	public void evaluateLessThanOrEqualExpression_IntLeftGreaterThanLongRight_ReturnsFalse()
+	public void evaluateLessThanOrEqualExpression_IntLeftLessThanLongRight_ReturnsFalse()
 			throws Exception {
 		Expression e = lessThanOrEqual(2, 1L);
 		assertThat(e.evaluate(), is(equalTo(false)));

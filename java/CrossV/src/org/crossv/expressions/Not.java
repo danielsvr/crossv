@@ -2,6 +2,9 @@ package org.crossv.expressions;
 
 import static org.crossv.primitives.ClassDescriptor.CBoolean;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.NegationContext;
+
 public class Not extends UnaryExpression {
 	public Not(Expression operand) {
 		super(operand);
@@ -21,5 +24,11 @@ public class Not extends UnaryExpression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitNot(this);
+	}
+
+	public static Not parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		NegationContext context = parser.negation();
+		return (Not) context.result;
 	}
 }

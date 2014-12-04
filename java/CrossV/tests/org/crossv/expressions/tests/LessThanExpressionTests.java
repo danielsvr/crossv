@@ -6,8 +6,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.LessThan;
 import org.junit.Test;
 
 public class LessThanExpressionTests {
@@ -30,6 +32,41 @@ public class LessThanExpressionTests {
 	public void createLessThanExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = lessThan(1, 2);
 		assertThat(e.toString(), is("1 < 2"));
+	}
+
+	@Test
+	public void parseLessThanExpression_2And1_LeftConstantIs2() {
+		LessThan e = LessThan.parse("2 < 1");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void parseLessThanExpression_2And1_RightConstantIs1() {
+		LessThan e = LessThan.parse("2 < 1");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluatingAParsedLessThanExpression_2And1_RetunsFalse()
+			throws Exception {
+		Expression e = LessThan.parse("2 < 1");
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluatingAParsedLessThanExpression_1And2_RetunsTrue()
+			throws Exception {
+		Expression e = LessThan.parse("1 < 2");
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluatingAParsedLessThanExpression_1And1_RetunsFalse()
+			throws Exception {
+		Expression e = LessThan.parse("1 < 1");
+		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
 	@Test

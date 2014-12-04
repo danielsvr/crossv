@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.CastContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.TermContext;
 
 public class Cast extends UnaryExpression {
 	private Class<?> clazz;
@@ -23,7 +23,7 @@ public class Cast extends UnaryExpression {
 
 	public static Cast parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		CastContext context = parser.cast();
+		TermContext context = parser.term();
 		return (Cast) context.result;
 	}
 }

@@ -6,8 +6,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Multiply;
 import org.junit.Test;
 
 public class MultiplyExpressionTests {
@@ -52,6 +54,27 @@ public class MultiplyExpressionTests {
 	public void createMultiplyExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = multiply(1, 2);
 		assertThat(e.toString(), is("1 * 2"));
+	}
+
+	@Test
+	public void parseMultiplyExpression_1Multiply2_LeftConstantIs1() {
+		Multiply e = Multiply.parse("1 * 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseMultiplyExpression_1Multiply2_RightConstantIs2() {
+		Multiply e = Multiply.parse("1 * 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedMultiplyExpression_1Multiply2_Retuns2()
+			throws Exception {
+		Expression e = Multiply.parse("1 * 2");
+		assertThat(e.evaluate(), is(equalTo(2)));
 	}
 
 	@Test(expected = IllegalOperandException.class)

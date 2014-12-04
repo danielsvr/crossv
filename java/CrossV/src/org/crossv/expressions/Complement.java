@@ -5,6 +5,8 @@ import static org.crossv.primitives.ClassDescriptor.CInteger;
 import static org.crossv.primitives.ClassDescriptor.CLong;
 import static org.crossv.primitives.ClassDescriptor.CShort;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.NegationContext;
 import org.crossv.primitives.ClassDescriptor;
 
 public class Complement extends UnaryExpression {
@@ -32,5 +34,11 @@ public class Complement extends UnaryExpression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitComplement(this);
+	}
+
+	public static Complement parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		NegationContext context = parser.negation();
+		return (Complement) context.result;
 	}
 }

@@ -5,7 +5,7 @@ package org.crossv.parsing.grammars.antlr4;
 
 import static org.crossv.expressions.Expressions.*;
 import static org.crossv.primitives.Numbers.toNumber;
-
+import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import org.crossv.expressions.*;
 }
 
@@ -147,8 +147,8 @@ term returns [Expression result]
 	| 'context'
 	{$result = context();}
 
-	| IDENTIFIER
-	{$result = null;}
+	//	| IDENTIFIER
+	//	{$result = null;}
 
 	| STRING_LITERAL
 	{$result = constant($STRING_LITERAL.text.replaceAll("^\"|\"$", ""));}
@@ -159,85 +159,174 @@ term returns [Expression result]
 	| BOOLEAN_LITERAL
 	{$result = constant(Boolean.parseBoolean($BOOLEAN_LITERAL.text));}
 
-	| '(' expression ')'
-	{$result = $expression.result;}
+	| arrayInitialization
+	{$result = constant($arrayInitialization.result);}
+
+	|
+	{String clazz="";}
+
+	'(' firstId = IDENTIFIER
+	{clazz = $firstId.text;}
+
+	(
+		'.' otherId = IDENTIFIER
+		{clazz += "." + $otherId.text;}
+
+	)* ')' toCast = term
+	{
+		$result =  $toCast.result;		
+		if(!clazz.equals(""))
+			$result = Expressions.cast(clazz, $result);
+	}
+
+	| '(' exp = expression ')'
+	{$result = $exp.result;}
 
 ;
 
-cast returns [Expression result]
+arrayInitialization returns [Object result]
 :
-	{String clazz="";}
+{
+		String clazz = "";
+		Integer length = null;
+		List<String> stringValues = new ArrayList<String>();
+		List<Number> numberValues = new ArrayList<Number>();
+		List<Boolean> boolValues = new ArrayList<Boolean>();
+	}
+
+	'new' firstId = IDENTIFIER
+	{clazz = $firstId.text;}
 
 	(
-		'(' firstId = IDENTIFIER
-		{clazz = $firstId.text;}
+		'.' otherId = IDENTIFIER
+		{clazz += '.' + $otherId.text;}
+
+	)* '['
+	(
+		length = NUMBER_LITERAL
+		{length = toNumber($length.text).intValue();}
+
+	)? ']' '{'
+	(
+		str1 = STRING_LITERAL
+		{stringValues.add($str1.text);}
 
 		(
-			'.' otherId = IDENTIFIER
-			{clazz += "." + $otherId.text;}
+			',' str2 = STRING_LITERAL
+			{stringValues.add($str2.text);}
 
-		)* ')'
-	)? term
+		)*
+		| no1 = NUMBER_LITERAL
+		{numberValues.add(toNumber($no1.text));}
+
+		(
+			',' no2 = NUMBER_LITERAL
+			{numberValues.add(toNumber($no2.text));}
+
+		)*
+		| bool1 = BOOLEAN_LITERAL
+		{boolValues.add(Boolean.parseBoolean($bool1.text));}
+
+		(
+			',' bool2 = BOOLEAN_LITERAL
+			{boolValues.add(Boolean.parseBoolean($bool2.text));}
+
+		)*
+	) '}'
 	{
-		$result =  $term.result;		
-		if(!clazz.equals(""))
-			$result = Expressions.cast(clazz, $result);
+		Class<?> componentType = null;
+		try {
+			Class<?> componentClass = Class.forName(clazz);
+			componentType = transformToTypeIfPrimitive(componentClass);
+		} catch(ClassNotFoundException e) {}
+		
+		if(componentType == null || (componentType != String.class &&
+			!componentType.isPrimitive()))
+			throw new InvalidArrayDeclarationException(this, "Only primitive types are supported for array declatations.");
+		
+		List<?> list = null;
+		if(!stringValues.isEmpty())
+			list = stringValues;
+		if(!numberValues.isEmpty())
+			list = numberValues;
+		if(!boolValues.isEmpty())
+			list = boolValues;
+		
+		if(length == null)
+			length = list.size();
+			
+		if(length.intValue() != list.size())
+			throw new InvalidArrayDeclarationException(this, "Declared length mismatch the number of declared elements.");
+		
+		$result = java.lang.reflect.Array.newInstance(componentType, length.intValue());
+		boolean getFloatValue = componentType.equals(java.lang.Float.TYPE);
+		for(int i = 0; i < length.intValue(); i++) {
+			Object value = list.get(i);
+			if(getFloatValue)
+				value = ((Number) value).floatValue();
+			java.lang.reflect.Array.set($result, i, value);
+		}
 	}
 
 ;
 
 negation returns [Expression result]
 :
-	{String op = "";}
+{
+		String op = "";
+		boolean apply = false;
+	}
 
 	(
 		'!'
-		{op = "not";}
+		{
+			op = "not";
+			apply = !apply;
+		}
 
 		| '~'
-		{op = "complement";}
+		{
+			op = "complement";
+			apply = !apply;
+		}
 
-	)* cast
+	)* term
 	{
-		$result =  $cast.result;		
-		if(op.equals("not"))
-			$result = not($result);
-		else if (op.equals("complement"))
-			$result = complemented($result);
+		$result =  $term.result;
+		if(apply) {
+			if(op.equals("not"))
+				$result = not($result);
+			else if (op.equals("complement"))
+				$result = complemented($result);
+		}
 	}
 
 ;
 
 unary returns [Expression result]
 :
-{
-	boolean positive = true;
-	boolean apply = false;
-}
+// TODO unify unary and negation
+	'+'+ plus = negation
+	{$result = plus($plus.result);}
+
+	|
+	{boolean applyNegative = false;}
 
 	(
-		'+'
-		{apply = true;}
+		'-'
+		{applyNegative = !applyNegative;}
 
-		| '-'
-		{
-			positive = !positive;
-			apply = true;
-		}
+	)+ minus = negation
+	{if(applyNegative) $result = negate($minus.result); else $result = $minus.result;}
 
-	)* negation
-	{
-		$result = $negation.result;
-		if(!positive)
-			$result = negate($result);
-		else if(apply)
-			$result = plus($result);
-	}
+	| negate = negation
+	{$result = $negate.result;}
 
 ;
 
 multiply returns [Expression result]
 :
+// TODO rename to multiplicity
 	left = unary
 	{$result = $left.result;}
 
@@ -256,6 +345,7 @@ multiply returns [Expression result]
 
 add returns [Expression result]
 :
+// TODO rename to additive
 	left = multiply
 	{$result = $left.result;}
 
@@ -308,8 +398,20 @@ relation returns [Expression result]
 		| '>=' right = shift
 		{ $result = greaterThanOrEqual($result, $right.result);}
 
-		| 'instanceof' right = shift
-		{ $result = instanceOf($result, $right.result);}
+		| 'instanceof'
+		{String clazz = "";}
+
+		(
+			firstId = IDENTIFIER
+			{clazz = $firstId.text;}
+
+			(
+				'.' secondId = IDENTIFIER
+				{clazz += "." +$secondId.text;}
+
+			)*
+		)
+		{ $result = instanceOf($result, clazz);}
 
 	)*
 ;

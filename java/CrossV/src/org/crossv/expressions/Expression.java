@@ -14,7 +14,13 @@ import java.io.StringWriter;
 
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.CommonTokenFactory;
+import org.antlr.v4.runtime.DefaultErrorStrategy;
+import org.antlr.v4.runtime.InputMismatchException;
 import org.antlr.v4.runtime.Lexer;
+import org.antlr.v4.runtime.NoViableAltException;
+import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
 import org.antlr.v4.runtime.UnbufferedTokenStream;
@@ -143,6 +149,33 @@ public abstract class Expression {
 			lexer.setTokenFactory(new CommonTokenFactory(true));
 		TokenStream tokenStream = new UnbufferedTokenStream<CommonToken>(lexer);
 		CrossVParser parser = new CrossVParser(tokenStream);
+		parser.removeErrorListeners();
+		parser.removeParseListeners();
+		parser.setErrorHandler(new ErrorStrategy());
 		return parser;
+	}
+
+	private static class ErrorStrategy extends DefaultErrorStrategy {
+		@Override
+		public void recover(Parser recognizer, RecognitionException e) {
+			throw new RuntimeException(e);
+		}
+
+		@Override
+		public Token recoverInline(Parser recognizer)
+				throws RecognitionException {
+			throw new RuntimeException(new InputMismatchException(recognizer));
+		}
+
+		@Override
+		public void sync(Parser recognizer) {
+		}
+
+		@Override
+		public void reportNoViableAlternative(Parser parser,
+				NoViableAltException e) throws RecognitionException {
+			String msg = e.getMessage();
+			parser.notifyErrorListeners(e.getOffendingToken(), msg, e);
+		}
 	}
 }

@@ -7,8 +7,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.NotEqual;
 import org.crossv.tests.subjects.Mouse;
 import org.crossv.tests.subjects.Rat;
 import org.crossv.tests.subjects.WhiteMouse;
@@ -44,6 +46,27 @@ public class NotEqualExpressionTests {
 	public void createNotEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = notEqual(1, 2);
 		assertThat(e.toString(), is("1 != 2"));
+	}
+
+	@Test
+	public void parseNotEqualExpression_1And2_LeftConstantIs1() {
+		NotEqual e = NotEqual.parse("1 != 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseNotEqualExpression_1And2_RightConstantIs2() {
+		NotEqual e = NotEqual.parse("1 != 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedNotEqualExpression_1And2_RetunsTrue()
+			throws Exception {
+		Expression e = NotEqual.parse("1 != 2");
+		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test

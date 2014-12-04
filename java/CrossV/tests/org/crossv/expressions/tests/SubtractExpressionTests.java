@@ -6,8 +6,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Subtract;
 import org.junit.Test;
 
 public class SubtractExpressionTests {
@@ -16,7 +18,7 @@ public class SubtractExpressionTests {
 	public void createSubtractExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
 		subtract(1, false);
 	}
-	
+
 	@Test
 	public void createSubtractExpression_NumberOperands_ReturnClassIsNumber() {
 		Class<?> expectedClass = Number.class;
@@ -30,6 +32,27 @@ public class SubtractExpressionTests {
 	public void createSubtractExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = subtract(1, 2);
 		assertThat(e.toString(), is("1 - 2"));
+	}
+
+	@Test
+	public void parseSubtractExpression_1Minus2_LeftConstantIs1() {
+		Subtract e = Subtract.parse("1 - 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseSubtractExpression_1Minus2_RightConstantIs2() {
+		Subtract e = Subtract.parse("1 - 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedSubtractExpression_1Minus2_RetunsMinus1()
+			throws Exception {
+		Expression e = Subtract.parse("1 - 2");
+		assertThat(e.evaluate(), is(equalTo(-1)));
 	}
 
 	@Test

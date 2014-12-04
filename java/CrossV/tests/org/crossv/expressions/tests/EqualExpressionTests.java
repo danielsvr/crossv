@@ -1,12 +1,14 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expressions.equal;
 import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.equal;
 import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
+import org.crossv.expressions.Equal;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
 import org.crossv.tests.subjects.Mouse;
@@ -44,6 +46,34 @@ public class EqualExpressionTests {
 	public void createEqualExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = equal(1, 2);
 		assertThat(e.toString(), is("1 == 2"));
+	}
+
+	@Test
+	public void parseEqualExpression_1And2_LeftConstantIs1() {
+		Equal e = Equal.parse("1 == 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseEqualExpression_1And2_RightConstantIs2() {
+		Equal e = Equal.parse("1 == 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedEqualExpression_1And2_RetunsFalse()
+			throws Exception {
+		Expression e = Equal.parse("1 == 2");
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluatingAParsedEqualExpression_TrueAndTrue_RetunsTrue()
+			throws Exception {
+		Expression e = Equal.parse("true == true");
+		assertThat(e.evaluate(), is(equalTo(true)));
 	}
 
 	@Test

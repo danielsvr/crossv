@@ -6,8 +6,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.LeftShift;
 import org.junit.Test;
 
 public class LeftShiftExpressionTests {
@@ -63,6 +65,27 @@ public class LeftShiftExpressionTests {
 	public void createLeftShiftExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = leftShift(1, 2);
 		assertThat(e.toString(), is("1 << 2"));
+	}
+
+	@Test
+	public void parseLeftShiftExpression_1And2_LeftConstantIs1() {
+		LeftShift e = LeftShift.parse("1 << 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseLeftShiftExpression_1And2_RightConstantIs2() {
+		LeftShift e = LeftShift.parse("1 << 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedLeftShiftExpression_1And2_Retuns4()
+			throws Exception {
+		Expression e = LeftShift.parse("1 << 2");
+		assertThat(e.evaluate(), is(equalTo(4)));
 	}
 
 	@Test

@@ -7,8 +7,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Xor;
 import org.junit.Test;
 
 public class XorExpressionTests {
@@ -59,6 +61,26 @@ public class XorExpressionTests {
 	public void createXorExpression_callingToString_getsJavaLikeExpression() {
 		Expression e = bitwiseXor(1, 2);
 		assertThat(e.toString(), is("1 ^ 2"));
+	}
+
+	@Test
+	public void parseXorExpression_1Xor2_LeftConstantIs1() {
+		Xor e = Xor.parse("1 ^ 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseXorExpression_1Xor2_RightConstantIs2() {
+		Xor e = Xor.parse("1 ^ 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedXorExpression_1Xor2_Retuns3() throws Exception {
+		Expression e = Xor.parse("1 ^ 2");
+		assertThat(e.evaluate(), is(equalTo(3)));
 	}
 
 	@Test

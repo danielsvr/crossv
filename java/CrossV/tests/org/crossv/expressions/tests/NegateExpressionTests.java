@@ -8,8 +8,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Negate;
 import org.junit.Test;
 
 public class NegateExpressionTests {
@@ -42,6 +44,33 @@ public class NegateExpressionTests {
 	public void createNegatedDoubleContextValue_callingToString_getsJavaLikeExpression() {
 		Expression e = negate(context(Double.class));
 		assertThat(e.toString(), is("-context"));
+	}
+
+	@Test
+	public void parseNegateExpression_Minus1_OperandIs1() {
+		Negate e = Negate.parse("-1");
+		Constant constant = (Constant) e.getOperand();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluateParsedNegatedExpression_Minus1_ReturnsMinus1()
+			throws Exception {
+		Expression e = Negate.parse("-1");
+		assertThat(e.evaluate(), is(equalTo(-1)));
+	}
+
+	@Test(expected = ClassCastException.class)
+	public void evaluateParsedNegatedExpression_2TimesMinus1_ThrowsCastException()
+			throws Exception {
+		Negate.parse("--1"); // UnaryPlus -- instead
+	}
+
+	@Test
+	public void evaluateParsedNegatedExpression_3TimesMinus1_ReturnsMinus1()
+			throws Exception {
+		Expression e = Negate.parse("---1");
+		assertThat(e.evaluate(), is(equalTo(-(-(-1)))));
 	}
 
 	@Test

@@ -2,6 +2,9 @@ package org.crossv.expressions;
 
 import static org.crossv.primitives.ClassDescriptor.CNumber;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.UnaryContext;
+
 public class UnaryPlus extends UnaryExpression {
 	public UnaryPlus(Expression operand) {
 		super(operand);
@@ -21,5 +24,11 @@ public class UnaryPlus extends UnaryExpression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitUnaryPlus(this);
+	}
+
+	public static UnaryPlus parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		UnaryContext context = parser.unary();
+		return (UnaryPlus) context.result;
 	}
 }

@@ -8,8 +8,10 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.UnaryPlus;
 import org.junit.Test;
 
 public class UnaryPlusExpressionTests {
@@ -42,6 +44,27 @@ public class UnaryPlusExpressionTests {
 	public void createPlusExpression_NegativeNumberAndCallingToString_getsJavaLikeExpression() {
 		Expression e = plus((int) -1);
 		assertThat(e.toString(), is("+(-1)"));
+	}
+
+	@Test
+	public void parseUnaryPlusExpression_Plus1_OperandIs1() {
+		UnaryPlus e = UnaryPlus.parse("+1");
+		Constant constant = (Constant) e.getOperand();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluateParsedUnaryPlusdExpression_Plus1_ReturnsMinus1()
+			throws Exception {
+		Expression e = UnaryPlus.parse("+1");
+		assertThat(e.evaluate(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluateParsedUnaryPlusdExpression_PlusPlus1_ReturnsMinus1()
+			throws Exception {
+		Expression e = UnaryPlus.parse("++1");
+		assertThat(e.evaluate(), is(equalTo(1)));
 	}
 
 	@Test

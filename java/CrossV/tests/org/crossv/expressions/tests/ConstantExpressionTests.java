@@ -48,6 +48,99 @@ public class ConstantExpressionTests {
 	}
 
 	@Test
+	public void parseConstantExpression_FloatArrayValue_TheComponentTypeIsFloatType() {
+		Constant e = Constant.parse("new java.lang.Float[] { 1.0, 1.0, 1.0 }");
+		Object constant = e.getValue();
+		assertThat(constant.getClass().isArray(), is(true));
+	}
+
+	@Test
+	public void parseConstantExpression_FloatArrayValue_TheValueIsArray() {
+		Constant e = Constant.parse("new java.lang.Float[] { 1.0, 1.0, 1.0 }");
+		Object constant = e.getValue();
+		Class<?> arrayComponentType = constant.getClass().getComponentType();
+		assertThat(arrayComponentType, is(equalTo(Float.TYPE)));
+	}
+
+	@Test
+	public void parseConstantExpression_IntArrayValue_TheValueIsArray() {
+		Constant e = Constant.parse("new java.lang.Integer[] { 1, 12, 3 }");
+		Object constant = e.getValue();
+		assertThat(constant.getClass().isArray(), is(true));
+	}
+
+	@Test
+	public void parseConstantExpression_IntArrayValue_TheComponentTypeIsIntType() {
+		Constant e = Constant.parse("new java.lang.Integer[] { 1, 12, 3 }");
+		Object constant = e.getValue();
+		Class<?> arrayComponentType = constant.getClass().getComponentType();
+		assertThat(arrayComponentType, is(equalTo(Integer.TYPE)));
+	}
+
+	@Test
+	public void parseConstantExpression_LongArrayValue_TheValueIsArray() {
+		Constant e = Constant.parse("new java.lang.Long[] { 1, 12, 3 }");
+		Object constant = e.getValue();
+		assertThat(constant.getClass().isArray(), is(true));
+	}
+
+	@Test
+	public void parseConstantExpression_LongArrayValue_TheComponentTypeIsLongType() {
+		Constant e = Constant.parse("new java.lang.Long[] { 1, 12, 3 }");
+		Object constant = e.getValue();
+		Class<?> arrayComponentType = constant.getClass().getComponentType();
+		assertThat(arrayComponentType, is(equalTo(Long.TYPE)));
+	}
+
+
+	@Test
+	public void parseConstantExpression_StringArrayValue_TheValueIsArray() {
+		Constant e = Constant.parse("new java.lang.String[] { \"1\", \"12\", \"3\" }");
+		Object constant = e.getValue();
+		assertThat(constant.getClass().isArray(), is(true));
+	}
+
+	@Test
+	public void parseConstantExpression_StringArrayValue_TheComponentTypeIsString() {
+		Constant e = Constant.parse("new java.lang.String[] { \"1\", \"12\", \"3\" }");
+		Object constant = e.getValue();
+		Class<?> arrayComponentType = constant.getClass().getComponentType();
+		assertThat(arrayComponentType, is(equalTo(String.class)));
+	}
+
+	@Test
+	public void parseConstantExpression_BooleanArrayValue_TheValueIsArray() {
+		Constant e = Constant.parse("new java.lang.Boolean[2] { true, False }");
+		Object constant = e.getValue();
+		assertThat(constant.getClass().isArray(), is(true));
+	}
+
+	@Test
+	public void parseConstantExpression_BooleanArrayValue_TheComponentTypeIsBooleanType() {
+		Constant e = Constant.parse("new java.lang.Boolean[2] { true, False }");
+		Object constant = e.getValue();
+		Class<?> arrayComponentType = constant.getClass().getComponentType();
+		assertThat(arrayComponentType, is(equalTo(Boolean.TYPE)));
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void parseConstantExpression_DeclareLongArrayWithWrongLength_TheValueIsArray() {
+		Constant e = Constant.parse("new java.lang.Long[2] { 1, 12, 3 }");
+		Object constant = e.getValue();
+		assertThat(constant.getClass().isArray(), is(true));
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void parseConstantExpression_DeclareStringArrayAndMixingPrimitiveValues_ThrowsException() {
+		Constant.parse("new java.lang.String[] { 1, \"12\", false }");
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void parseConstantExpression_DeclareObjectArrayAndMixingPrimitiveValues_ThrowsException() {
+		Constant.parse("new java.lang.Object[] { 1, \"12\", false }");
+	}
+
+	@Test
 	public void parseConstantExpression_NullValue_TheValueIsNull() {
 		Constant e = Constant.parse("null");
 		Object constant = e.getValue();

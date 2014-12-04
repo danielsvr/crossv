@@ -6,7 +6,9 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
+import org.crossv.expressions.GreaterThanOrEqual;
 import org.crossv.expressions.IllegalOperandException;
 import org.junit.Test;
 
@@ -31,7 +33,41 @@ public class GreaterThanOrEqualExpressionTests {
 		Expression e = greaterThanOrEqual(1, 2);
 		assertThat(e.toString(), is("1 >= 2"));
 	}
-	
+
+	@Test
+	public void parseGreaterThanOrEqualExpression_1And2_LeftConstantIs1() {
+		GreaterThanOrEqual e = GreaterThanOrEqual.parse("1 >= 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseGreaterThanOrEqualExpression_1And2_RightConstantIs2() {
+		GreaterThanOrEqual e = GreaterThanOrEqual.parse("1 >= 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedGreaterThanOrEqualExpression_1And2_RetunsFalse()
+			throws Exception {
+		Expression e = GreaterThanOrEqual.parse("1 >= 2");
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void evaluatingAParsedGreaterThanOrEqualExpression_2And1_RetunsTrue()
+			throws Exception {
+		Expression e = GreaterThanOrEqual.parse("2 >= 1");
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void evaluatingAParsedGreaterThanOrEqualExpression_1And1_RetunsTrue()
+			throws Exception {
+		Expression e = GreaterThanOrEqual.parse("1 >= 1");
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
 
 	@Test
 	public void evaluateGraterThanOrEqualExpression_LeftGreaterThatRight_ReturnsTrue()
@@ -96,7 +132,6 @@ public class GreaterThanOrEqualExpressionTests {
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
-
 	@Test
 	public void evaluateGraterThanOrEqualExpression_IntLeftEqualToDoubleRight_ReturnsTrue()
 			throws Exception {
@@ -110,7 +145,6 @@ public class GreaterThanOrEqualExpressionTests {
 		Expression e = greaterThanOrEqual(1, 2d);
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
-
 
 	@Test
 	public void evaluateGraterThanOrEqualExpression_IntLeftLessThanLongRight_ReturnsFalse()

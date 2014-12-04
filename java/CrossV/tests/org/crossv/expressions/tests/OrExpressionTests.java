@@ -7,24 +7,26 @@ import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Or;
 import org.junit.Test;
 
 public class OrExpressionTests {
 
 	@Test(expected = IllegalOperandException.class)
-	public void createOrExpression_IntAndBooleanOperands_ThrowsIllegalOperandException() {
+	public void createOrExpression_IntOrBooleanOperands_ThrowsIllegalOperandException() {
 		bitwiseOr(constant(false), 1);
 	}
 
 	@Test(expected = IllegalOperandException.class)
-	public void createOrExpression_ObjectAndBooleanOperands_ThrowsIllegalOperandException() {
+	public void createOrExpression_ObjectOrBooleanOperands_ThrowsIllegalOperandException() {
 		bitwiseOr((double) 1, constant(false));
 	}
 
 	@Test(expected = IllegalOperandException.class)
-	public void createOrExpression_ObjectAndIntegerOperands_ThrowsIllegalOperandException() {
+	public void createOrExpression_ObjectOrIntegerOperands_ThrowsIllegalOperandException() {
 		bitwiseOr((double) 1, (byte) 1);
 	}
 
@@ -38,7 +40,7 @@ public class OrExpressionTests {
 	}
 
 	@Test
-	public void createAndExpression_NumericOperandsPromotedToLong_ReturnClassIsLong() {
+	public void createOrExpression_NumericOperandsPromotedToLong_ReturnClassIsLong() {
 		Class<?> expectedClass = Long.class;
 		Object left = (byte) 1;
 		Object right = (long) 1;
@@ -47,7 +49,7 @@ public class OrExpressionTests {
 	}
 
 	@Test
-	public void createAndExpression_NumericOperandsPromotedToInt_ReturnClassIsInt() {
+	public void createOrExpression_NumericOperandsPromotedToInt_ReturnClassIsInt() {
 		Class<?> expectedClass = Integer.class;
 		Object left = (byte) 1;
 		Object right = (int) 1;
@@ -62,8 +64,27 @@ public class OrExpressionTests {
 	}
 
 	@Test
-	public void evaluateOrExpression_FalseAndTrue_ReturnsTrue()
-			throws Exception {
+	public void parseOrExpression_1Or2_LeftConstantIs1() {
+		Or e = Or.parse("1 | 2");
+		Constant constant = (Constant) e.getLeft();
+		assertThat(constant.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void parseOrExpression_1Or2_RightConstantIs2() {
+		Or e = Or.parse("1 | 2");
+		Constant constant = (Constant) e.getRight();
+		assertThat(constant.getValue(), is(equalTo(2)));
+	}
+
+	@Test
+	public void evaluatingAParsedOrExpression_1Or2_Retuns3() throws Exception {
+		Expression e = Or.parse("1 | 2");
+		assertThat(e.evaluate(), is(equalTo(3)));
+	}
+
+	@Test
+	public void evaluateOrExpression_FalseOrTrue_ReturnsTrue() throws Exception {
 		boolean left = false;
 		boolean right = true;
 		Expression e = bitwiseOr(left, right);
@@ -71,7 +92,7 @@ public class OrExpressionTests {
 	}
 
 	@Test
-	public void evaluateOrExpression_FalseAndFalse_ReturnsFalse()
+	public void evaluateOrExpression_FalseOrFalse_ReturnsFalse()
 			throws Exception {
 		boolean left = false;
 		boolean right = false;
@@ -80,7 +101,7 @@ public class OrExpressionTests {
 	}
 
 	@Test
-	public void evaluateOrExpression_TrueAndTrue_ReturnsTrue() throws Exception {
+	public void evaluateOrExpression_TrueOrTrue_ReturnsTrue() throws Exception {
 		boolean left = true;
 		boolean right = true;
 		Expression e = bitwiseOr(left, right);
