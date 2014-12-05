@@ -504,7 +504,8 @@ anyExpressions returns [Expression result]
 	)
 	{$result = call($inst.result, $method.text, params); }
 
-	// MEMBER ACCESS
+	| inst = anyExpressions '.' member = IDENTIFIER
+	{$result = memberAccess($inst.result, $member.text); }
 
 ;
 

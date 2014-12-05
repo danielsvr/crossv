@@ -2,6 +2,8 @@ package org.crossv.expressions;
 
 import java.lang.reflect.AccessibleObject;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.AnyExpressionsContext;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
 import org.crossv.primitives.MemberDescriptor;
@@ -73,5 +75,11 @@ public class MemberAccess extends Expression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitMemberAccess(this);
+	}
+
+	public static MemberAccess parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		AnyExpressionsContext context = parser.anyExpressions();
+		return (MemberAccess) context.result;
 	}
 }

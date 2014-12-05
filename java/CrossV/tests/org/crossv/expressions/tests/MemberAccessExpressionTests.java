@@ -1,10 +1,11 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expressions.instance;
 import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.expressions.Expressions.context;
 import static org.crossv.expressions.Expressions.equal;
+import static org.crossv.expressions.Expressions.instance;
 import static org.crossv.expressions.Expressions.memberAccess;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
 import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.crossv.tests.helpers.Matchers.throwing;
 import static org.hamcrest.CoreMatchers.is;
@@ -14,6 +15,8 @@ import java.lang.reflect.AccessibleObject;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Instance;
+import org.crossv.expressions.MemberAccess;
 import org.crossv.primitives.Action;
 import org.crossv.tests.helpers.TestObjectFactory;
 import org.crossv.tests.subjects.Monkey;
@@ -70,7 +73,6 @@ public class MemberAccessExpressionTests {
 		assertThat(e.getResultClass(), is(equalTo(Object.class)));
 	}
 
-	// TODO create tests for parsing member access expression text
 	@Test
 	public void createMemberAccessGetNameForInstance_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {
@@ -105,6 +107,67 @@ public class MemberAccessExpressionTests {
 			throws Exception {
 		Expression e = equal(memberAccess(context(), "name"), "name");
 		assertThat(e.toString(), is("context.name == \"name\""));
+	}
+
+	@Test
+	public void parseMemberAccessExpression_NameOfAInstance_InstnaceIsInstance()
+			throws Exception {
+		MemberAccess e = MemberAccess.parse("obj.name");
+		Expression context = e.getInstance();
+		assertThat(context.getClass(), is(assignableTo(Instance.class)));
+	}
+
+	@Test
+	public void parseMemberAccessExpression_NameOfAContext_MemberNameIsName()
+			throws Exception {
+		MemberAccess e = MemberAccess.parse("obj.name");
+		String name = e.getMember().getName();
+		assertThat(name, is("name"));
+	}
+
+	@Test
+	public void evaluateParsedMemberAccessExpression_NameOfMonkeyInstance_ReturnsValueOfGetName()
+			throws Exception {
+		Expression e = MemberAccess.parse("obj.name");
+		Monkey obj = new Monkey();
+		obj.setName("monkey name");
+		Object value = e.evaluate(obj);
+		assertThat(value, is(equalTo(obj.getName())));
+	}
+
+	@Test
+	public void evaluateParsedMemberAccessExpression_ClassOfNameOfMonkeyInstance_ReturnsStringClass()
+			throws Exception {
+		Expression e = MemberAccess.parse("obj.name.class"
+		/* same as "obj.getName().getClass()" */);
+
+		// getting the platform specific class/type/etc will be a strongly
+		// unrecommended practice.
+
+		Monkey obj = new Monkey();
+		obj.setName("monkey name");
+		Object value = e.evaluate(obj);
+		assertThat(value, is(equalTo(String.class)));
+	}
+
+	@Test
+	public void evaluateParsedMemberAccessExpression_NicknameOfMonkeyInstance_ReturnsValueOfNickname()
+			throws Exception {
+		Expression e = MemberAccess.parse("obj.nickname");
+		Monkey obj = new Monkey();
+		obj.nickname = "monkey nickname";
+		Object value = e.evaluate(obj);
+		assertThat(value, is(equalTo(obj.nickname)));
+	}
+
+	@Test
+	public void evaluateParsedMemberAccessExpression_GetNameOfMonkeyInstance_ReturnsValueOfGetName()
+			throws Exception {
+		Expression e = MemberAccess.parse("obj.getName");
+		Monkey obj = new Monkey();
+		obj.setName("monkey nickname");
+		Object value = e.evaluate(obj);
+		assertThat(value, is(equalTo(obj.getName())));
 	}
 
 	@Test
