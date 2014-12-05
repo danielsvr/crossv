@@ -32,6 +32,8 @@ public abstract class Expression {
 	protected Expression() {
 	}
 
+	//public final void parse(String bla) {}
+	
 	@Override
 	public final String toString() {
 		StringWriter stringWriter = new StringWriter();

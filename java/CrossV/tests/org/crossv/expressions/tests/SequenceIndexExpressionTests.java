@@ -2,6 +2,7 @@ package org.crossv.expressions.tests;
 
 import static org.crossv.expressions.Expressions.sequenceIndex;
 import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.instance;
 import static org.crossv.primitives.Iterables.repeat;
 import static org.crossv.tests.helpers.Matchers.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -10,8 +11,11 @@ import static org.junit.Assert.assertThat;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 
+import org.crossv.expressions.Constant;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Instance;
+import org.crossv.expressions.SequenceIndex;
 import org.junit.Test;
 
 public class SequenceIndexExpressionTests {
@@ -94,6 +98,39 @@ public class SequenceIndexExpressionTests {
 
 		String stringExpression = "new java.lang.Integer[] { 1, 1, 1 }[1]";
 		assertThat(e.toString(), is(stringExpression));
+	}
+
+	@Test
+	public void sequenceIndex1ToString_OnInstance_ReturnsArrayIndexLikeExpression()
+			throws Exception {
+		Expression instance = instance();
+		Expression e = sequenceIndex(instance, 1);
+
+		assertThat(e.toString(), is("obj[1]"));
+	}
+
+	@Test
+	public void parseSequenceIndexExpression_Index1OnInstance_SequenceIsInstance()
+			throws Exception {
+		SequenceIndex sqIdx = SequenceIndex.parse("obj[1]");
+		Expression sq = sqIdx.getSequence();
+		assertThat(sq.getClass(), is(assignableTo(Instance.class)));
+	}
+
+	@Test
+	public void parseSequenceIndexExpression_Index1OnInstance_IndexConstantIs1()
+			throws Exception {
+		SequenceIndex sqIdx = SequenceIndex.parse("obj[1]");
+		Constant idx = (Constant) sqIdx.getIndex();
+		assertThat(idx.getValue(), is(equalTo(1)));
+	}
+
+	@Test
+	public void evaluateParsedSequenceIndexExpression_Index1On3ElementArrayInstance_ReturnsElementArIdex1()
+			throws Exception {
+		Expression sqIdx = SequenceIndex.parse("obj[1]");
+		Object value = sqIdx.evaluate(new int[] { 1, 2, 3 });
+		assertThat(value, is(equalTo(2)));
 	}
 
 	@Test

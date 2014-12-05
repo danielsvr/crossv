@@ -8,6 +8,8 @@ import static org.crossv.primitives.ClassDescriptor.CObject;
 import static org.crossv.primitives.ClassDescriptor.CString;
 import static org.crossv.primitives.ClassDescriptor.transformToClassIfPrimitive;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.AnyExpressionsContext;
 import org.crossv.primitives.ArgumentNullException;
 
 public class SequenceIndex extends Expression {
@@ -46,6 +48,8 @@ public class SequenceIndex extends Expression {
 	}
 
 	private void verifySequence() {
+		if (sequence instanceof Instance || sequence instanceof Context)
+			return;
 		if (!sequence.isArray() && !isSequenceAnIndexableClass())
 			throw illegalOperand();
 	}
@@ -70,5 +74,11 @@ public class SequenceIndex extends Expression {
 	@Override
 	public void accept(ExpressionVisitor visitor) {
 		visitor.visitSequenceIndex(this);
+	}
+
+	public static SequenceIndex parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		AnyExpressionsContext context = parser.anyExpressions();
+		return (SequenceIndex) context.result;
 	}
 }

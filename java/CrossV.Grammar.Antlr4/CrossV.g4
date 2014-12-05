@@ -33,6 +33,7 @@ import static org.crossv.expressions.Expressions.notEqual;
 import static org.crossv.expressions.Expressions.or;
 import static org.crossv.expressions.Expressions.plus;
 import static org.crossv.expressions.Expressions.rightShift;
+import static org.crossv.expressions.Expressions.sequenceIndex;
 import static org.crossv.expressions.Expressions.subtract;
 import static org.crossv.expressions.Expressions.validIf;
 import static org.crossv.expressions.Expressions.warnIf;
@@ -487,6 +488,9 @@ anyExpressions returns [Expression result]
 
 	| nullable = anyExpressions '??' ifTrue = anyExpressions
 	{ $result = coalesce($nullable.result, $ifTrue.result);}
+
+	| sequence = anyExpressions '[' index = anyExpressions ']'
+	{ $result = sequenceIndex($sequence.result, $index.result);}
 
 	| inst = anyExpressions '.' method = IDENTIFIER
 	{List<Expression> params = new ArrayList<Expression>();}

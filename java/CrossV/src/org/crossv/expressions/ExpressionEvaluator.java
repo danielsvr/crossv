@@ -683,27 +683,29 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		Expression index = expression.getIndex();
 		if (!sequence.isArray()
 				&& !sequence
-						.isAssignableToAny(CString, CIterable, CEnumeration))
+						.isAssignableToAny(CString, CIterable, CEnumeration)
+				&& !sequence.isKnownOnlyAtRuntime())
 			throw new ArgumentException("expression", "Invalid operand type!");
 
-		eval(sequence);
 		eval(index);
-
 		int indexValue = (Integer) stack.pop();
+
+		eval(sequence);
 		Object values = stack.pop();
 
-		if (sequence.isAssignableTo(CEnumeration)) {
+		if (values instanceof Enumeration) {
 			Enumeration<?> iterable = (Enumeration<?>) values;
 			stack.push(elementAt(iterable, indexValue));
-		} else if (sequence.isAssignableTo(CString)) {
+		} else if (values instanceof String) {
 			String string = (String) values;
 			stack.push(string.charAt(indexValue));
-		} else if (sequence.isAssignableTo(CIterable)) {
+		} else if (values instanceof Iterable) {
 			Iterable<?> iterable = (Iterable<?>) values;
 			stack.push(elementAt(iterable, indexValue));
-		} else { // sequence.isArray
+		} else if (values.getClass().isArray()) {
 			stack.push(Array.get(values, indexValue));
-		}
+		} else
+			throw new ArgumentException("expression", "Invalid operand type!");
 	}
 
 	public void evaluateMemberAccess(MemberAccess expression) {
