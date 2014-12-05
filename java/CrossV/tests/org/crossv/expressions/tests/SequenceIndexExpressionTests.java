@@ -134,6 +134,15 @@ public class SequenceIndexExpressionTests {
 	}
 
 	@Test
+	public void evaluateParsedSequenceIndexExpression_Index1On3ElementArray_ReturnsElementArIdex1()
+			throws Exception {
+		Expression sqIdx = SequenceIndex
+				.parse("new java.lang.String[] { \"1\", \"@ one\", \"1\" }[1]");
+		Object value = sqIdx.evaluate();
+		assertThat(value, is(equalTo("@ one")));
+	}
+
+	@Test
 	public void sequenceIndex1ToString_With3CharString_ReturnsStringLikeExpression()
 			throws Exception {
 		String instance = "123";

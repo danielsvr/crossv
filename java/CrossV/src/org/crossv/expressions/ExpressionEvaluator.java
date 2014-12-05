@@ -659,33 +659,35 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 	public void evaluateSequenceLength(SequenceLength expression) {
 		eval(expression.getOperand());
 		Expression operand = expression.getOperand();
-		if (!operand.isArray()
+		if (!operand.isKnownOnlyAtRuntime() && !operand.isArray()
 				&& !operand.isAssignableToAny(CString, CIterable, CEnumeration))
-			throw new ArgumentException("expression", "Invalid operand type!");
+			throw new RuntimeEvaluationException("Invalid operand type!");
 
 		Object value = stack.pop();
-		if (operand.isAssignableTo(CEnumeration)) {
+		if (value instanceof Enumeration) {
 			Enumeration<?> enumeration = (Enumeration<?>) value;
 			stack.push(count(enumeration));
-		} else if (operand.isAssignableTo(CString)) {
+		} else if (value instanceof String) {
 			String string = (String) value;
 			stack.push(string.length());
-		} else if (operand.isAssignableTo(CIterable)) {
+		} else if (value instanceof Iterable) {
 			Iterable<?> iterable = (Iterable<?>) value;
 			stack.push(count(iterable));
-		} else {// operand.isArray
+		} else if (value.getClass().isArray()) {
 			stack.push(Array.getLength(value));
+		} else {
+			throw new RuntimeEvaluationException("Invalid operand type!");
 		}
 	}
 
 	public void evaluateSequenceIndex(SequenceIndex expression) {
 		Expression sequence = expression.getSequence();
 		Expression index = expression.getIndex();
-		if (!sequence.isArray()
+		if (!sequence.isKnownOnlyAtRuntime()
+				&& !sequence.isArray()
 				&& !sequence
-						.isAssignableToAny(CString, CIterable, CEnumeration)
-				&& !sequence.isKnownOnlyAtRuntime())
-			throw new ArgumentException("expression", "Invalid operand type!");
+						.isAssignableToAny(CString, CIterable, CEnumeration))
+			throw new RuntimeEvaluationException("Invalid operand type!");
 
 		eval(index);
 		int indexValue = (Integer) stack.pop();
@@ -705,7 +707,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 		} else if (values.getClass().isArray()) {
 			stack.push(Array.get(values, indexValue));
 		} else
-			throw new ArgumentException("expression", "Invalid operand type!");
+			throw new RuntimeEvaluationException("Invalid operand type!");
 	}
 
 	public void evaluateMemberAccess(MemberAccess expression) {

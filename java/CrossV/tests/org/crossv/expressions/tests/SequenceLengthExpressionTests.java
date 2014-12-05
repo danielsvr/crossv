@@ -1,9 +1,10 @@
 package org.crossv.expressions.tests;
 
-import static org.crossv.expressions.Expressions.sequenceLength;
 import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.sequenceLength;
 import static org.crossv.primitives.Iterables.repeat;
-import static org.crossv.tests.helpers.Matchers.*;
+import static org.crossv.tests.helpers.Matchers.assignableTo;
+import static org.crossv.tests.helpers.Matchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -12,6 +13,8 @@ import java.util.StringTokenizer;
 
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.IllegalOperandException;
+import org.crossv.expressions.Instance;
+import org.crossv.expressions.SequenceLength;
 import org.junit.Test;
 
 public class SequenceLengthExpressionTests {
@@ -70,6 +73,31 @@ public class SequenceLengthExpressionTests {
 		Expression e = sequenceLength(instance);
 
 		assertThat(e.evaluate(), is(equalTo(3)));
+	}
+
+	@Test
+	public void parseSequenceLengthExpression_OnInstance_OperandIsInstance()
+			throws Exception {
+		SequenceLength sqLen = SequenceLength.parse("obj.length");
+		Expression sq = sqLen.getOperand();
+		assertThat(sq.getClass(), is(assignableTo(Instance.class)));
+	}
+
+	@Test
+	public void evaluateParsedSequenceLengthExpression_On3ElementArrayInstance_Returns3()
+			throws Exception {
+		Expression sqLen = SequenceLength.parse("obj.length");
+		Object value = sqLen.evaluate(new int[] { 1, 2, 3 });
+		assertThat(value, is(equalTo(3)));
+	}
+
+	@Test
+	public void evaluateParsedSequenceLengthExpression_On3ElementArray_Returns3()
+			throws Exception {
+		Expression sqLen = SequenceLength
+				.parse("new java.lang.Integer[] { 1, 1, 1 }.length");
+		Object value = sqLen.evaluate();
+		assertThat(value, is(equalTo(3)));
 	}
 
 	@Test

@@ -34,6 +34,7 @@ import static org.crossv.expressions.Expressions.or;
 import static org.crossv.expressions.Expressions.plus;
 import static org.crossv.expressions.Expressions.rightShift;
 import static org.crossv.expressions.Expressions.sequenceIndex;
+import static org.crossv.expressions.Expressions.sequenceLength;
 import static org.crossv.expressions.Expressions.subtract;
 import static org.crossv.expressions.Expressions.validIf;
 import static org.crossv.expressions.Expressions.warnIf;
@@ -248,7 +249,7 @@ arrayInitialization returns [Object result]
 
 		(
 			',' str2 = STRING_LITERAL
-			{stringValues.add($str2.text);}
+			{stringValues.add($str2.text.replaceAll("^\"|\"$", ""));}
 
 		)*
 		| no1 = NUMBER_LITERAL
@@ -491,6 +492,9 @@ anyExpressions returns [Expression result]
 
 	| sequence = anyExpressions '[' index = anyExpressions ']'
 	{ $result = sequenceIndex($sequence.result, $index.result);}
+
+	| sequence = anyExpressions '.' 'length'
+	{ $result = sequenceLength($sequence.result);}
 
 	| inst = anyExpressions '.' method = IDENTIFIER
 	{List<Expression> params = new ArrayList<Expression>();}
