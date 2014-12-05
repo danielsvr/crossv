@@ -75,7 +75,6 @@ public class CallExpressionTests {
 		}, is(throwing(IllegalOperandException.class)));
 	}
 
-	// TODO create tests for parsing call expression text
 	@Test
 	public void createCallHashCodeExpressionForString_callingToString_getsJavaLikeExpression()
 			throws Exception {
@@ -112,6 +111,27 @@ public class CallExpressionTests {
 		Call e = Call.parse("\"abc\".equals(123)");
 		Constant instance = (Constant) single(e.getParameters());
 		assertThat(instance.getValue(), is(equalTo(123)));
+	}
+
+	@Test
+	public void executeParsedCallExpression_AbcStringCallEquals123_ReturnsFalse()
+			throws Exception {
+		Expression e = Call.parse("\"abc\".equals(123)");
+		assertThat(e.evaluate(), is(equalTo(false)));
+	}
+
+	@Test
+	public void executeParsedCallExpression_AbcStringCallEqualsAbc_ReturnsTrue()
+			throws Exception {
+		Expression e = Call.parse("\"abc\".equals(\"abc\")");
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
+	@Test
+	public void executeParsedCallExpression_AbcStringCallGetClass_ReturnsStringClass()
+			throws Exception {
+		Expression e = Call.parse("\"abc\".getClass()");
+		assertThat(e.evaluate(), is(equalTo(String.class)));
 	}
 
 	@Test

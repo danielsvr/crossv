@@ -488,19 +488,20 @@ anyExpressions returns [Expression result]
 	| nullable = anyExpressions '??' ifTrue = anyExpressions
 	{ $result = coalesce($nullable.result, $ifTrue.result);}
 
-	| inst = anyExpressions '.' method = IDENTIFIER '('
+	| inst = anyExpressions '.' method = IDENTIFIER
 	{List<Expression> params = new ArrayList<Expression>();}
 
 	(
-		fisrtParam = anyExpressions
+		'(' fisrtParam = anyExpressions
 		{params.add($fisrtParam.result);}
 
 		(
 			',' otherParam = anyExpressions
 			{params.add($otherParam.result);}
 
-		)*
-	)? ')'
+		)* ')'
+		| '()'
+	)
 	{$result = call($inst.result, $method.text, params); }
 
 	// MEMBER ACCESS
