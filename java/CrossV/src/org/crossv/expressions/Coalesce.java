@@ -4,7 +4,7 @@ import static org.crossv.expressions.Expressions.constant;
 import static org.crossv.expressions.Expressions.notEqual;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.ExpressionContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.AnyExpressionsContext;
 import org.crossv.primitives.ConvertibleTo;
 
 public class Coalesce extends BinaryExpression implements
@@ -46,7 +46,7 @@ public class Coalesce extends BinaryExpression implements
 
 	public static Coalesce parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		ExpressionContext context = parser.expression();
+		AnyExpressionsContext context = parser.anyExpressions();
 		return (Coalesce) context.result;
 	}
 }

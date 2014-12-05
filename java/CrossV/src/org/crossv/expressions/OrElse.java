@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.LogicalContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.LogicalOperationsContext;
 
 public class OrElse extends ConditionalBinaryExpression {
 	public OrElse(Expression left, Expression right) {
@@ -15,7 +15,7 @@ public class OrElse extends ConditionalBinaryExpression {
 
 	public static OrElse parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		LogicalContext context = parser.logical();
+		LogicalOperationsContext context = parser.logicalOperations();
 		return (OrElse) context.result;
 	}
 }

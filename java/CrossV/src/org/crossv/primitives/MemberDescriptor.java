@@ -1,6 +1,8 @@
 package org.crossv.primitives;
 
 import static java.text.MessageFormat.format;
+import static org.crossv.primitives.Iterables.empty;
+import static org.crossv.primitives.Iterables.toArray;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -41,12 +43,19 @@ public class MemberDescriptor {
 		return name;
 	}
 
-	public Object invoke(Object instance, Object... parameters)
+	public final Object invoke(Object instance) throws IllegalAccessException,
+			IllegalArgumentException, InvocationTargetException {
+		return invoke(instance, empty());
+	}
+
+	public Object invoke(Object instance, Iterable<Object> parameters)
 			throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException {
 		if (member instanceof Method) {
 			Method method = (Method) member;
-			return method.invoke(instance, parameters);
+
+			Object[] params = toArray(parameters, new Object[0]);
+			return method.invoke(instance, params);
 		} else if (member instanceof Field) {
 			Field field = (Field) member;
 			return field.get(instance);

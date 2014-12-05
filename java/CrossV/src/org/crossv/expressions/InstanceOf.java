@@ -4,7 +4,7 @@ import static org.crossv.primitives.ClassDescriptor.CBoolean;
 import static org.crossv.primitives.ClassDescriptor.CClass;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.RelationContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.RelationalOperationsContext;
 
 public class InstanceOf extends RelationalExpression {
 	public InstanceOf(Expression left, Expression right) {
@@ -29,7 +29,7 @@ public class InstanceOf extends RelationalExpression {
 
 	public static InstanceOf parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		RelationContext context = parser.relation();
+		RelationalOperationsContext context = parser.relationalOperations();
 		return (InstanceOf) context.result;
 	}
 

@@ -9,7 +9,7 @@ import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
 import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.ExpressionContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.AnyExpressionsContext;
 import org.crossv.primitives.ArgumentNullException;
 
 public class ConditionalTernary extends Expression {
@@ -100,7 +100,7 @@ public class ConditionalTernary extends Expression {
 
 	public static ConditionalTernary parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		ExpressionContext context = parser.expression();
+		AnyExpressionsContext context = parser.anyExpressions();
 		return (ConditionalTernary) context.result;
 	}
 }

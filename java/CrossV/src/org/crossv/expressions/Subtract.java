@@ -4,7 +4,7 @@ import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
 import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.AddContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.AdditiveOperationsContext;
 
 public class Subtract extends AdditiveExpression {
 	private Class<?> resultClass;
@@ -32,7 +32,7 @@ public class Subtract extends AdditiveExpression {
 
 	public static Subtract parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		AddContext context = parser.add();
+		AdditiveOperationsContext context = parser.additiveOperations();
 		return (Subtract) context.result;
 	}
 }

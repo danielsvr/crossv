@@ -19,7 +19,9 @@ import static org.crossv.primitives.Iterables.elementAt;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Stack;
 
 import org.crossv.primitives.ArgumentException;
@@ -423,11 +425,11 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 	public void evaluateCall(Call expression) {
 		eval(expression.getInstance());
 		Object instance = stack.pop();
-		Expression[] paramExpressions = expression.getParameters();
-		Object[] params = new Object[paramExpressions.length];
-		for (int i = 0; i < params.length; i++) {
-			eval(paramExpressions[i]);
-			params[i] = stack.pop();
+		Iterable<Expression> paramExpressions = expression.getParameters();
+		List<Object> params = new ArrayList<Object>();
+		for (Expression param : paramExpressions) {
+			eval(param);
+			params.add(stack.pop());
 		}
 		try {
 			MemberDescriptor member = expression.getMethod();

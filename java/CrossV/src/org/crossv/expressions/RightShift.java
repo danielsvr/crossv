@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.ShiftContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.ShiftOperationsContext;
 
 public class RightShift extends ShiftExpression {
 	public RightShift(Expression left, Expression right) {
@@ -15,7 +15,7 @@ public class RightShift extends ShiftExpression {
 
 	public static RightShift parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		ShiftContext context = parser.shift();
+		ShiftOperationsContext context = parser.shiftOperations();
 		return (RightShift) context.result;
 	}
 }

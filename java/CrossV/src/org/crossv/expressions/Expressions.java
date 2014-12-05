@@ -2,6 +2,7 @@ package org.crossv.expressions;
 
 import static org.crossv.primitives.Iterables.select;
 import static org.crossv.primitives.Iterables.toArray;
+import static org.crossv.primitives.Iterables.toIterable;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
@@ -209,7 +210,7 @@ public final class Expressions {
 
 	public static Expression call(Expression instance, String methodName,
 			Expression... parameters) {
-		return new Call(instance, methodName, parameters);
+		return new Call(instance, methodName, toIterable(parameters));
 	}
 
 	public static Expression call(Expression instance, String methodName,
@@ -220,6 +221,11 @@ public final class Expressions {
 
 	public static Expression call(Expression instance, Method method,
 			Expression... parameters) {
+		return new Call(instance, method, toIterable(parameters));
+	}
+
+	public static Expression call(Expression instance, Method method,
+			Iterable<Expression> parameters) {
 		return new Call(instance, method, parameters);
 	}
 

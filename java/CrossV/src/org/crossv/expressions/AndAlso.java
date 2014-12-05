@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.LogicalContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.LogicalOperationsContext;
 
 public class AndAlso extends ConditionalBinaryExpression {
 	public AndAlso(Expression left, Expression right) {
@@ -15,7 +15,7 @@ public class AndAlso extends ConditionalBinaryExpression {
 
 	public static AndAlso parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		LogicalContext context = parser.logical();
+		LogicalOperationsContext context = parser.logicalOperations();
 		return (AndAlso) context.result;
 	}
 }

@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.RelationContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.EqualityOperationsContext;
 
 public class Equal extends EqualityExpression {
 	public Equal(Expression left, Expression right) {
@@ -15,7 +15,7 @@ public class Equal extends EqualityExpression {
 
 	public static Equal parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		RelationContext context = parser.relation();
+		EqualityOperationsContext context = parser.equalityOperations();
 		return (Equal) context.result;
 	}
 }

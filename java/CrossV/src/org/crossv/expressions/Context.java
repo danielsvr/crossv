@@ -3,7 +3,7 @@ package org.crossv.expressions;
 import static org.crossv.primitives.ClassDescriptor.CObject;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.TermContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.TermsContext;
 
 public final class Context extends Expression {
 
@@ -34,7 +34,7 @@ public final class Context extends Expression {
 
 	public static Context parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		TermContext context = parser.term();
+		TermsContext context = parser.terms();
 		return (Context) context.result;
 	}
 }

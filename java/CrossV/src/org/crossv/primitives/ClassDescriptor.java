@@ -2,6 +2,7 @@ package org.crossv.primitives;
 
 import static java.text.MessageFormat.format;
 import static org.crossv.primitives.Strings.toPascalCase;
+import static org.crossv.primitives.Iterables.toArray;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
@@ -42,6 +43,12 @@ public class ClassDescriptor {
 
 		Method bestOverload = findBestOverload(method, paramTypes);
 		return execute(obj, bestOverload, parameters);
+	}
+
+	public Method findBestOverload(String method, Iterable<Class<?>> paramTypes)
+			throws NoSuchMethodException {
+		Class<?>[] paramTypesArray = toArray(paramTypes, new Class<?>[0]);
+		return findBestOverload(method, paramTypesArray);
 	}
 
 	public Method findBestOverload(String method, Class<?>[] paramTypes)
@@ -202,7 +209,8 @@ public class ClassDescriptor {
 		try {
 			return Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			// TODO auto-resolve short named types (int, boolean, string, ... etc) and some well established classes on first ClassNotFound
+			// TODO auto-resolve short named types (int, boolean, string, ...
+			// etc) and some well established classes on first ClassNotFound
 			throw new ClassNotFoundAtRuntimeException(e);
 		}
 	}

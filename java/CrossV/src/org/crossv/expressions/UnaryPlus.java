@@ -3,7 +3,7 @@ package org.crossv.expressions;
 import static org.crossv.primitives.ClassDescriptor.CNumber;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.UnaryContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.UnaryOperationsContext;
 
 public class UnaryPlus extends UnaryExpression {
 	public UnaryPlus(Expression operand) {
@@ -28,7 +28,7 @@ public class UnaryPlus extends UnaryExpression {
 
 	public static UnaryPlus parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		UnaryContext context = parser.unary();
+		UnaryOperationsContext context = parser.unaryOperations();
 		return (UnaryPlus) context.result;
 	}
 }

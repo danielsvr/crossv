@@ -15,7 +15,7 @@ public class RuntimeMethod extends MemberDescriptor {
 		this.instance = instance;
 		this.name = name;
 	}
-	
+
 	@Override
 	public boolean isMethod() {
 		return true;
@@ -39,12 +39,12 @@ public class RuntimeMethod extends MemberDescriptor {
 	public Expression getInstance() {
 		return instance;
 	}
-	
+
 	@Override
-	public Object invoke(Object instance, Object... parameters)
+	public Object invoke(Object instance, Iterable<Object> parameters)
 			throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException {
-		if(instance == null)
+		if (instance == null)
 			throw new NullPointerException();
 		Class<?> instanceClass = instance.getClass();
 		ClassDescriptor desctiptor;

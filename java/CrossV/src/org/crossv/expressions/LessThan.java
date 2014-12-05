@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.RelationContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.RelationalOperationsContext;
 
 public class LessThan extends NumericalComparisonExpression {
 	public LessThan(Expression left, Expression right) {
@@ -15,7 +15,7 @@ public class LessThan extends NumericalComparisonExpression {
 
 	public static LessThan parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		RelationContext context = parser.relation();
+		RelationalOperationsContext context = parser.relationalOperations();
 		return (LessThan) context.result;
 	}
 }

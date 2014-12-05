@@ -70,7 +70,7 @@ public class MemberAccessExpressionTests {
 		assertThat(e.getResultClass(), is(equalTo(Object.class)));
 	}
 
-	// TODO create tests for parsing call expression text
+	// TODO create tests for parsing member access expression text
 	@Test
 	public void createMemberAccessGetNameForInstance_callingToString_getsFieldAccessLikeExpression()
 			throws Exception {

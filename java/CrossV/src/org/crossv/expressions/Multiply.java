@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.MultiplyContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.MultiplicityOperationsContext;
 
 public class Multiply extends MultiplicityExpression {
 	public Multiply(Expression left, Expression right) {
@@ -15,7 +15,7 @@ public class Multiply extends MultiplicityExpression {
 
 	public static Multiply parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		MultiplyContext context = parser.multiply();
+		MultiplicityOperationsContext context = parser.multiplicityOperations();
 		return (Multiply) context.result;
 	}
 }

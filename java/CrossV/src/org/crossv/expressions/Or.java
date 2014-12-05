@@ -1,7 +1,7 @@
 package org.crossv.expressions;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.BitwiseContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.BitwiseOperationsContext;
 
 public class Or extends BitwiseExpression {
 	
@@ -16,7 +16,7 @@ public class Or extends BitwiseExpression {
 
 	public static Or parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		BitwiseContext context = parser.bitwise();
+		BitwiseOperationsContext context = parser.bitwiseOperations();
 		return (Or) context.result;
 	}
 }

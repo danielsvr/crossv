@@ -36,7 +36,7 @@ public class RuntimeMember extends MemberDescriptor {
 	}
 
 	@Override
-	public Object invoke(Object instance, Object... parameters)
+	public Object invoke(Object instance, Iterable<Object> parameters)
 			throws IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException {
 		ClassDescriptor desctiptor;

@@ -48,8 +48,8 @@ validation returns [Expression result]
 
 	) '['
 	(
-		evaluation
-		{evaluations.add($evaluation.result);}
+		evaluations
+		{evaluations.add($evaluations.result);}
 
 	)+ ']'
 	{$result = when(scope, evaluations);}
@@ -88,36 +88,17 @@ contextInstanceOf returns [Expression result]
 
 ;
 
-evaluation returns [Expression result]
+evaluations returns [Expression result]
 :
-	validif
-	{$result = $validif.result;}
+	validationEvaluations
+	{$result = $validationEvaluations.result;}
 
-	| warnif
-	{$result = $warnif.result;}
+	| warningEvaluations
+	{$result = $warningEvaluations.result;}
 
 ;
 
-validif returns [Expression result]
-:
-	{Expression scope = null;}
-
-	(
-		'obj' '.' memberName = IDENTIFIER
-		{scope = memberAccess(instance(), $memberName.text);}
-
-		| 'obj' '.' methodName = IDENTIFIER '()'
-		{scope = call(instance(), $methodName.text);}
-
-		| scopeText = STRING_LITERAL
-		{scope = constant($scopeText.text);}
-
-	) 'validif' expression 'else' message = STRING_LITERAL
-	{$result = validIf(scope, $expression.result, constant($message.text));}
-
-;
-
-warnif returns [Expression result]
+validationEvaluations returns [Expression result]
 :
 	{Expression scope = null;}
 
@@ -131,12 +112,31 @@ warnif returns [Expression result]
 		| scopeText = STRING_LITERAL
 		{scope = constant($scopeText.text);}
 
-	) 'warnif' expression 'then' message = STRING_LITERAL
-	{$result = warnIf(scope, $expression.result, constant($message.text));}
+	) 'validif' anyExpressions 'else' message = STRING_LITERAL
+	{$result = validIf(scope, $anyExpressions.result, constant($message.text));}
 
 ;
 
-term returns [Expression result]
+warningEvaluations returns [Expression result]
+:
+	{Expression scope = null;}
+
+	(
+		'obj' '.' memberName = IDENTIFIER
+		{scope = memberAccess(instance(), $memberName.text);}
+
+		| 'obj' '.' methodName = IDENTIFIER '()'
+		{scope = call(instance(), $methodName.text);}
+
+		| scopeText = STRING_LITERAL
+		{scope = constant($scopeText.text);}
+
+	) 'warnif' anyExpressions 'then' message = STRING_LITERAL
+	{$result = warnIf(scope, $anyExpressions.result, constant($message.text));}
+
+;
+
+terms returns [Expression result]
 :
 	'null'
 	{$result = constant(null);}
@@ -172,14 +172,14 @@ term returns [Expression result]
 		'.' otherId = IDENTIFIER
 		{clazz += "." + $otherId.text;}
 
-	)* ')' toCast = term
+	)* ')' toCast = terms
 	{
 		$result =  $toCast.result;		
 		if(!clazz.equals(""))
 			$result = Expressions.cast(clazz, $result);
 	}
 
-	| '(' exp = expression ')'
+	| '(' exp = anyExpressions ')'
 	{$result = $exp.result;}
 
 ;
@@ -270,43 +270,9 @@ arrayInitialization returns [Object result]
 
 ;
 
-negation returns [Expression result]
+unaryOperations returns [Expression result]
 :
-{
-		String op = "";
-		boolean apply = false;
-	}
-
-	(
-		'!'
-		{
-			op = "not";
-			apply = !apply;
-		}
-
-		| '~'
-		{
-			op = "complement";
-			apply = !apply;
-		}
-
-	)* term
-	{
-		$result =  $term.result;
-		if(apply) {
-			if(op.equals("not"))
-				$result = not($result);
-			else if (op.equals("complement"))
-				$result = complemented($result);
-		}
-	}
-
-;
-
-unary returns [Expression result]
-:
-// TODO unify unary and negation
-	'+'+ plus = negation
+	'+'+ plus = terms
 	{$result = plus($plus.result);}
 
 	|
@@ -316,86 +282,98 @@ unary returns [Expression result]
 		'-'
 		{applyNegative = !applyNegative;}
 
-	)+ minus = negation
+	)+ minus = terms
 	{if(applyNegative) $result = negate($minus.result); else $result = $minus.result;}
 
-	| negate = negation
+	|
+	{boolean applyComplement = false;}
+
+	(
+		'~'
+		{applyComplement = !applyComplement;}
+
+	)+ comp = terms
+	{if(applyComplement) $result = complemented($comp.result); else $result = $comp.result;}
+
+	|
+	{boolean applyNot = false;}
+
+	(
+		'!'
+		{applyNot = !applyNot;}
+
+	)+ not = terms
+	{if(applyNot) $result = not($not.result); else $result = $not.result;}
+
+	| negate = terms
 	{$result = $negate.result;}
 
 ;
 
-multiply returns [Expression result]
+multiplicityOperations returns [Expression result]
 :
-// TODO rename to multiplicity
-	left = unary
+	left = unaryOperations
 	{$result = $left.result;}
 
 	(
-		'*' right = unary
+		'*' right = unaryOperations
 		{ $result = Expressions.multiply($result, $right.result);}
 
-		| '/' right = unary
+		| '/' right = unaryOperations
 		{ $result = divide($result, $right.result);}
 
-		| '%' right = unary
+		| '%' right = unaryOperations
 		{ $result = modulo($result, $right.result);}
 
 	)*
 ;
 
-add returns [Expression result]
+additiveOperations returns [Expression result]
 :
-// TODO rename to additive
-	left = multiply
+	left = multiplicityOperations
 	{$result = $left.result;}
 
 	(
-		'+' right = multiply
+		'+' right = multiplicityOperations
 		{ $result = Expressions.add($result, $right.result);}
 
-		| '-' right = multiply
+		| '-' right = multiplicityOperations
 		{ $result = subtract($result, $right.result);}
 
 	)*
 ;
 
-shift returns [Expression result]
+shiftOperations returns [Expression result]
 :
-	left = add
+	left = additiveOperations
 	{$result = $left.result;}
 
 	(
-		'<<' right = add
+		'<<' right = additiveOperations
 		{ $result = leftShift($result, $right.result);}
 
-		| '>>' right = add
+		| '>>' right = additiveOperations
 		{ $result = rightShift($result, $right.result);}
 
 	)*
 ;
 
-relation returns [Expression result]
+relationalOperations returns [Expression result]
 :
-	left = shift
+	left = shiftOperations
 	{$result = $left.result;}
 
 	(
-		'==' right = shift
-		{ $result = equal($result, $right.result);}
-
-		| '!=' right = shift
-		{ $result = notEqual($result, $right.result);}
-
-		| '<' right = shift
+		'<' right = shiftOperations
 		{ $result = lessThan($result, $right.result);}
 
-		| '>' right = shift
+		| '>' right = shiftOperations
 		{ $result = greaterThan($result, $right.result);}
 
-		| '<=' right = shift
+		| '<=' right = shiftOperations
 		{ $result = lessThanOrEqual($result, $right.result);}
 
-		| '>=' right = shift
+		| '>=' right = shiftOperations
 		{ $result = greaterThanOrEqual($result, $right.result);}
 
 		| 'instanceof'
@@ -416,51 +394,81 @@ relation returns [Expression result]
 	)*
 ;
 
-bitwise returns [Expression result]
+equalityOperations returns [Expression result]
 :
-	left = relation
+	left = relationalOperations
 	{$result = $left.result;}
 
 	(
-		'&' right = relation
+		'==' right = relationalOperations
+		{ $result = equal($result, $right.result);}
+
+		| '!=' right = relationalOperations
+		{ $result = notEqual($result, $right.result);}
+
+	)*
+;
+
+bitwiseOperations returns [Expression result]
+:
+	left = equalityOperations
+	{$result = $left.result;}
+
+	(
+		'&' right = equalityOperations
 		{ $result = bitwiseAnd($result, $right.result);}
 
-		| '|' right = relation
+		| '|' right = equalityOperations
 		{ $result = bitwiseOr($result, $right.result);}
 
-		| '^' right = relation
+		| '^' right = equalityOperations
 		{ $result = bitwiseXor($result, $right.result);}
 
 	)*
 ;
 
-logical returns [Expression result]
+logicalOperations returns [Expression result]
 :
-	left = bitwise
+	left = bitwiseOperations
 	{$result = $left.result;}
 
 	(
-		'&&' right = bitwise
+		'&&' right = bitwiseOperations
 		{ $result = and($result, $right.result);}
 
-		| '||' right = bitwise
+		| '||' right = bitwiseOperations
 		{ $result = or($result, $right.result);}
 
 	)*
 ;
 
-expression returns [Expression result]
+anyExpressions returns [Expression result]
 :
-	logical
-	{$result = $logical.result;}
+	logicalOperations
+	{$result = $logicalOperations.result;}
 
-	| test = expression '?' ifTrue = expression ':' ifFalse = expression
+	| test = anyExpressions '?' ifTrue = anyExpressions ':' ifFalse =
+	anyExpressions
 	{ $result = conditional($test.result, $ifTrue.result, $ifFalse.result);}
 
-	| nullable = expression '??' ifTrue = expression
+	| nullable = anyExpressions '??' ifTrue = anyExpressions
 	{ $result = coalesce($nullable.result, $ifTrue.result);}
 
-	// CALL
+	|
+	//{List<Expression> params = new ArrayList<Expression>();}
+	inst = anyExpressions '.' method = IDENTIFIER '('
+	(
+		fisrtParam = anyExpressions
+		//{params.add($fisrtParam.result);}
+
+		(
+			',' otherParam = anyExpressions
+			//{params.add($otherParam.result);}
+
+		)*
+	)? ')'
+	//{$result = call($inst.result, $method.text, params); }
+
 	// MEMBER ACCESS
 
 ;

@@ -3,7 +3,7 @@ package org.crossv.expressions;
 import static org.crossv.primitives.ClassDescriptor.CNumber;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.UnaryContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.UnaryOperationsContext;
 
 public class Negate extends UnaryExpression {
 	public Negate(Expression operand) {
@@ -28,7 +28,7 @@ public class Negate extends UnaryExpression {
 
 	public static Negate parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		UnaryContext context = parser.unary();
+		UnaryOperationsContext context = parser.unaryOperations();
 		return (Negate) context.result;
 	}
 }

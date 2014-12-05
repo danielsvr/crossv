@@ -1,6 +1,8 @@
 package org.crossv.expressions;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
@@ -10,9 +12,10 @@ import org.crossv.primitives.RuntimeMethod;
 public class Call extends Expression {
 	private Expression instance;
 	private MemberDescriptor member;
-	private Expression[] parameters;
+	private Iterable<Expression> parameters;
 
-	public Call(Expression instance, String method, Expression... parameters) {
+	public Call(Expression instance, String method,
+			Iterable<Expression> parameters) {
 		MemberDescriptor member;
 		if (instance.isKnownOnlyAtRuntime()) {
 			member = new RuntimeMethod(instance, method);
@@ -24,12 +27,13 @@ public class Call extends Expression {
 		init(instance, member, parameters);
 	}
 
-	public Call(Expression instance, Method method, Expression... parameters) {
+	public Call(Expression instance, Method method,
+			Iterable<Expression> parameters) {
 		init(instance, new MemberDescriptor(method), parameters);
 	}
 
 	private void init(Expression instance, MemberDescriptor method,
-			Expression... parameters) {
+			Iterable<Expression> parameters) {
 		if (instance == null)
 			throw new ArgumentNullException("instance");
 
@@ -53,15 +57,15 @@ public class Call extends Expression {
 	}
 
 	private static Method findMethod(Expression instance, String method,
-			Expression[] parameters) {
+			Iterable<Expression> parameters) {
 		ClassDescriptor descriptor;
-		Class<?>[] paramTypes;
+		List<Class<?>> paramTypes;
 		Class<?> instanceClass = instance.getResultClass();
 		descriptor = new ClassDescriptor(instanceClass);
 
-		paramTypes = new Class<?>[parameters.length];
-		for (int i = 0; i < parameters.length; i++)
-			paramTypes[i] = parameters[i].getResultClass();
+		paramTypes = new ArrayList<Class<?>>();
+		for (Expression param : parameters)
+			paramTypes.add(param.getResultClass());
 
 		try {
 			return descriptor.findBestOverload(method, paramTypes);
@@ -78,7 +82,7 @@ public class Call extends Expression {
 		return member;
 	}
 
-	public Expression[] getParameters() {
+	public Iterable<Expression> getParameters() {
 		return parameters;
 	}
 

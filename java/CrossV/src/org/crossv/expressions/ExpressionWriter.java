@@ -191,7 +191,7 @@ public class ExpressionWriter {
 		print(expression.getInstance());
 		print("." + expression.getMethodName() + "(");
 		boolean anyParameter = false;
-		Expression[] parameters = expression.getParameters();
+		Iterable<Expression> parameters = expression.getParameters();
 		for (Expression parameter : parameters) {
 			if (anyParameter)
 				print(", ");
