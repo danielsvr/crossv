@@ -146,10 +146,10 @@ validationEvaluations returns [Expression result]
 		{scope = call(instance(), $methodName.text);}
 
 		| scopeText = STRING_LITERAL
-		{scope = constant($scopeText.text);}
+		{scope = constant($scopeText.text.replaceAll("^\"|\"$", ""));}
 
 	) 'validif' anyExpressions 'else' message = STRING_LITERAL
-	{$result = validIf(scope, $anyExpressions.result, constant($message.text));}
+	{$result = validIf(scope, $anyExpressions.result, constant($message.text.replaceAll("^\"|\"$", "")));}
 
 ;
 
@@ -165,10 +165,10 @@ warningEvaluations returns [Expression result]
 		{scope = call(instance(), $methodName.text);}
 
 		| scopeText = STRING_LITERAL
-		{scope = constant($scopeText.text);}
+		{scope = constant($scopeText.text.replaceAll("^\"|\"$", ""));}
 
 	) 'warnif' anyExpressions 'then' message = STRING_LITERAL
-	{$result = warnIf(scope, $anyExpressions.result, constant($message.text));}
+	{$result = warnIf(scope, $anyExpressions.result, constant($message.text.replaceAll("^\"|\"$", "")));}
 
 ;
 
