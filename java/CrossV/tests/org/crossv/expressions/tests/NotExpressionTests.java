@@ -35,6 +35,13 @@ public class NotExpressionTests {
 		assertThat(e.evaluate(), is(equalTo(false)));
 	}
 
+	@Test
+	public void evaluateParsedNotExpression_TrueEqualsFalseValue_ReturnsTrue()
+			throws Exception {
+		Expression e = Not.parse("!(true == false)");
+		assertThat(e.evaluate(), is(equalTo(true)));
+	}
+
 	@Test(expected = ClassCastException.class)
 	public void evaluateParsedNotdExpression_2TimesTrue_ThrowsCastException()
 			throws Exception {

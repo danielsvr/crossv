@@ -28,6 +28,7 @@ import org.crossv.Evaluator;
 import org.crossv.Validation;
 import org.crossv.Validator;
 import org.crossv.expressions.Expression;
+import org.crossv.expressions.When;
 import org.crossv.primitives.Predicate;
 import org.crossv.tests.helpers.TrackEvaluation;
 import org.crossv.tests.subjects.AnyContext;
@@ -627,5 +628,147 @@ public class WhenExpressionTests {
 				is("when obj instanceof org.crossv.tests.subjects.Monkey ["
 						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\""
 						+ "]"));
+	}
+
+	@Test
+	public void evaluatingParsedWhenExpression_WithoutContextNicknameShouldNotNullAndWarnNoName_NewMonkyValidationFails()
+			throws Exception {
+		Expression e = When
+				.parse("when obj instanceof org.crossv.tests.subjects.Monkey ["
+						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\","
+						+ "obj.Name warnif obj.Name == null then \"name is not compiled\""
+						+ "]");
+
+		Iterable<Evaluator> evaluators = e.evaluate();
+
+		Validator validator = new Validator(evaluators);
+		Validation validation;
+		validation = validator.validate(Monkey.class, new Monkey());
+
+		assertThat(validation.isSuccessful(), is(false));
+	}
+
+	@Test
+	public void evaluatingParsedWhenExpression_AnyContextNicknameShouldNotNullAndWarnNoName_NewMonkyValidationFails()
+			throws Exception {
+		Expression e = When
+				.parse("when obj instanceof org.crossv.tests.subjects.Monkey "
+						+ "&& context instanceof org.crossv.tests.subjects.AnyContext ["
+						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\","
+						+ "obj.Name warnif obj.Name == null then \"name is not compiled\""
+						+ "]");
+
+		Iterable<Evaluator> evaluators = e.evaluate();
+
+		Validator validator = new Validator(evaluators);
+		Validation validation;
+		validation = validator.validate(Monkey.class, new Monkey(),
+				AnyContext.instance);
+
+		assertThat(validation.isSuccessful(), is(false));
+	}
+
+	@Test
+	public void evaluatingParsedWhenExpression_WithoutContextNicknameShouldNotNullAndWarnNoName_NewMonkyValidationContainsOneWarning()
+			throws Exception {
+		Expression e = When
+				.parse("when obj instanceof org.crossv.tests.subjects.Monkey ["
+						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\","
+						+ "obj.Name warnif obj.Name == null then \"name is not compiled\""
+						+ "]");
+
+		Iterable<Evaluator> evaluators = e.evaluate();
+
+		Validator validator = new Validator(evaluators);
+		Validation validation;
+		validation = validator.validate(Monkey.class, new Monkey());
+
+		Iterable<Evaluation> warns = where(validation.getResults(),
+				new Predicate<Evaluation>() {
+					@Override
+					public boolean eval(Evaluation value) {
+						return value instanceof EvaluationWarning;
+					}
+				});
+		assertThat(count(warns), is(1));
+	}
+
+	@Test
+	public void evaluatingParsedWhenExpression_AnyContextNicknameShouldNotNullAndWarnNoName_NewMonkyValidationContainsOneWarning()
+			throws Exception {
+		Expression e = When
+				.parse("when obj instanceof org.crossv.tests.subjects.Monkey "
+						+ "&& context instanceof org.crossv.tests.subjects.AnyContext ["
+						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\","
+						+ "obj.Name warnif obj.Name == null then \"name is not compiled\""
+						+ "]");
+
+		Iterable<Evaluator> evaluators = e.evaluate();
+
+		Validator validator = new Validator(evaluators);
+		Validation validation;
+		validation = validator.validate(Monkey.class, new Monkey(),
+				AnyContext.instance);
+
+		Iterable<Evaluation> warns = where(validation.getResults(),
+				new Predicate<Evaluation>() {
+					@Override
+					public boolean eval(Evaluation value) {
+						return value instanceof EvaluationWarning;
+					}
+				});
+		assertThat(count(warns), is(1));
+	}
+
+	@Test
+	public void evaluatingParsedWhenExpression_WithoutContextNicknameShouldNotNullAndWarnNoName_NewMonkyValidationContainsOneFault()
+			throws Exception {
+		Expression e = When
+				.parse("when obj instanceof org.crossv.tests.subjects.Monkey ["
+						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\","
+						+ "obj.Name warnif obj.Name == null then \"name is not compiled\""
+						+ "]");
+
+		Iterable<Evaluator> evaluators = e.evaluate();
+
+		Validator validator = new Validator(evaluators);
+		Validation validation;
+		validation = validator.validate(Monkey.class, new Monkey());
+
+		Iterable<Evaluation> faults = where(validation.getResults(),
+				new Predicate<Evaluation>() {
+					@Override
+					public boolean eval(Evaluation value) {
+						return value instanceof EvaluationFault;
+					}
+				});
+		assertThat(count(faults), is(1));
+	}
+
+	@Test
+	public void evaluatingParsedWhenExpression_AnyContextNicknameShouldNotNullAndWarnNoName_NewMonkyValidationContainsOneFault()
+			throws Exception {
+		Expression e = When
+				.parse("when obj instanceof org.crossv.tests.subjects.Monkey "
+						+ "&& context instanceof org.crossv.tests.subjects.AnyContext ["
+						+ "obj.nickname validif !(obj.nickname == null) else \"nickname should not be null\","
+						+ "obj.Name warnif obj.Name == null then \"name is not compiled\""
+						+ "]");
+
+		Iterable<Evaluator> evaluators = e.evaluate();
+
+		Validator validator = new Validator(evaluators);
+		Validation validation;
+		validation = validator.validate(Monkey.class, new Monkey(),
+				AnyContext.instance);
+
+		Iterable<Evaluation> faults = where(validation.getResults(),
+				new Predicate<Evaluation>() {
+					@Override
+					public boolean eval(Evaluation value) {
+						return value instanceof EvaluationFault;
+					}
+				});
+		assertThat(count(faults), is(1));
 	}
 }

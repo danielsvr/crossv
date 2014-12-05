@@ -82,12 +82,14 @@ validation returns [Expression result]
 		| secondLeft = contextInstanceOf '&&' secondRight = objInstanceOf
 		{scope = and($secondLeft.result, $secondRight.result);}
 
-	) '['
+	) '[' evaluations
+	{evaluations.add($evaluations.result);}
+
 	(
-		evaluations
+		',' evaluations
 		{evaluations.add($evaluations.result);}
 
-	)+ ']'
+	)* ']'
 	{$result = when(scope, evaluations);}
 
 ;
@@ -197,6 +199,37 @@ terms returns [Expression result]
 
 	| arrayInitialization
 	{$result = constant($arrayInitialization.result);}
+
+	| test = terms '?' if3True = anyExpressions ':' if3False = anyExpressions
+	{ $result = conditional($test.result, $if3True.result, $if3False.result);}
+
+	| nullable = terms '??' if2True = terms
+	{ $result = coalesce($nullable.result, $if2True.result);}
+
+	| sequence = terms '[' index = terms ']'
+	{ $result = sequenceIndex($sequence.result, $index.result);}
+
+	| sequence = terms '.' 'length'
+	{ $result = sequenceLength($sequence.result);}
+
+	| inst = terms '.' method = IDENTIFIER
+	{List<Expression> params = new ArrayList<Expression>();}
+
+	(
+		'(' fisrtParam = anyExpressions
+		{params.add($fisrtParam.result);}
+
+		(
+			',' otherParam = anyExpressions
+			{params.add($otherParam.result);}
+
+		)* ')'
+		| '()'
+	)
+	{$result = call($inst.result, $method.text, params); }
+
+	| inst = terms '.' member = IDENTIFIER
+	{$result = memberAccess($inst.result, $member.text); }
 
 	|
 	{String clazz="";}
@@ -482,38 +515,6 @@ anyExpressions returns [Expression result]
 :
 	logicalOperations
 	{$result = $logicalOperations.result;}
-
-	| test = anyExpressions '?' ifTrue = anyExpressions ':' ifFalse =
-	anyExpressions
-	{ $result = conditional($test.result, $ifTrue.result, $ifFalse.result);}
-
-	| nullable = anyExpressions '??' ifTrue = anyExpressions
-	{ $result = coalesce($nullable.result, $ifTrue.result);}
-
-	| sequence = anyExpressions '[' index = anyExpressions ']'
-	{ $result = sequenceIndex($sequence.result, $index.result);}
-
-	| sequence = anyExpressions '.' 'length'
-	{ $result = sequenceLength($sequence.result);}
-
-	| inst = anyExpressions '.' method = IDENTIFIER
-	{List<Expression> params = new ArrayList<Expression>();}
-
-	(
-		'(' fisrtParam = anyExpressions
-		{params.add($fisrtParam.result);}
-
-		(
-			',' otherParam = anyExpressions
-			{params.add($otherParam.result);}
-
-		)* ')'
-		| '()'
-	)
-	{$result = call($inst.result, $method.text, params); }
-
-	| inst = anyExpressions '.' member = IDENTIFIER
-	{$result = memberAccess($inst.result, $member.text); }
 
 ;
 
