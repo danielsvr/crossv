@@ -4,7 +4,7 @@ import static org.crossv.primitives.ClassDescriptor.CEvaluatorDescriptor;
 import static org.crossv.primitives.ClassDescriptor.CString;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
-import org.crossv.parsing.grammars.antlr4.CrossVParser.EvaluationsContext;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.ValidationEvaluationsContext;
 import org.crossv.primitives.ArgumentException;
 
 public class ValidIf extends Expression {
@@ -54,11 +54,10 @@ public class ValidIf extends Expression {
 	public Expression getIfFalse() {
 		return ifFalse;
 	}
-	
 
 	public static ValidIf parse(String text) {
 		CrossVParser parser = createTextParser(text);
-		EvaluationsContext context = parser.evaluations();
+		ValidationEvaluationsContext context = parser.validationEvaluations();
 		return (ValidIf) context.result;
 	}
 }

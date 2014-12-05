@@ -3,15 +3,17 @@ package org.crossv.expressions;
 import static org.crossv.primitives.ClassDescriptor.CEvaluatorDescriptor;
 import static org.crossv.primitives.ClassDescriptor.CString;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.WarningEvaluationsContext;
 import org.crossv.primitives.ArgumentException;
 
 public class WarnIf extends Expression {
 
 	private Expression scope;
 	private Expression test;
-	private Expression ifFalse;
+	private Expression ifTrue;
 
-	public WarnIf(Expression scope, Expression test, Expression ifFalse) {
+	public WarnIf(Expression scope, Expression test, Expression ifTrue) {
 		if (scope == null)
 			throw new ArgumentException("scope");
 
@@ -24,11 +26,11 @@ public class WarnIf extends Expression {
 
 		if (test == null)
 			throw new ArgumentException("test");
-		if (ifFalse == null)
+		if (ifTrue == null)
 			throw new ArgumentException("ifFalse");
 		this.scope = scope;
 		this.test = test;
-		this.ifFalse = ifFalse;
+		this.ifTrue = ifTrue;
 	}
 
 	@Override
@@ -49,7 +51,13 @@ public class WarnIf extends Expression {
 		return test;
 	}
 
-	public Expression getIfFalse() {
-		return ifFalse;
+	public Expression getIfTrue() {
+		return ifTrue;
+	}
+
+	public static WarnIf parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		WarningEvaluationsContext context = parser.warningEvaluations();
+		return (WarnIf) context.result;
 	}
 }

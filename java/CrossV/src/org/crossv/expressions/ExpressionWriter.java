@@ -258,7 +258,7 @@ public class ExpressionWriter {
 	protected void printWarnIf(WarnIf expression) {
 		Expression scope = expression.getScope();
 		Expression test = expression.getTest();
-		Expression ifFalse = expression.getIfFalse();
+		Expression ifFalse = expression.getIfTrue();
 		print(scope, " warnif ", test, " then ", ifFalse);
 	}
 

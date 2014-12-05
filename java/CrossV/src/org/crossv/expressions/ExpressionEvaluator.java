@@ -762,7 +762,7 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 	public void evaluateWarnIf(WarnIf expression) {
 		Expression scopeE = expression.getScope();
 		Expression test = expression.getTest();
-		Expression ifTrue = expression.getIfFalse();
+		Expression ifTrue = expression.getIfTrue();
 
 		String scopeText = null;
 		if (scopeE instanceof Constant && scopeE.isAssignableTo(CString)) {
