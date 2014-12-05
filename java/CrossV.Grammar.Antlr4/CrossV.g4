@@ -3,10 +3,44 @@ grammar CrossV;
 @header {
 package org.crossv.parsing.grammars.antlr4;
 
-import static org.crossv.expressions.Expressions.*;
-import static org.crossv.primitives.Numbers.toNumber;
+import static org.crossv.expressions.Expressions.add;
+import static org.crossv.expressions.Expressions.and;
+import static org.crossv.expressions.Expressions.bitwiseAnd;
+import static org.crossv.expressions.Expressions.bitwiseOr;
+import static org.crossv.expressions.Expressions.bitwiseXor;
+import static org.crossv.expressions.Expressions.call;
+import static org.crossv.expressions.Expressions.cast;
+import static org.crossv.expressions.Expressions.coalesce;
+import static org.crossv.expressions.Expressions.complemented;
+import static org.crossv.expressions.Expressions.conditional;
+import static org.crossv.expressions.Expressions.constant;
+import static org.crossv.expressions.Expressions.context;
+import static org.crossv.expressions.Expressions.divide;
+import static org.crossv.expressions.Expressions.equal;
+import static org.crossv.expressions.Expressions.greaterThan;
+import static org.crossv.expressions.Expressions.greaterThanOrEqual;
+import static org.crossv.expressions.Expressions.instance;
+import static org.crossv.expressions.Expressions.instanceOf;
+import static org.crossv.expressions.Expressions.leftShift;
+import static org.crossv.expressions.Expressions.lessThan;
+import static org.crossv.expressions.Expressions.lessThanOrEqual;
+import static org.crossv.expressions.Expressions.memberAccess;
+import static org.crossv.expressions.Expressions.modulo;
+import static org.crossv.expressions.Expressions.multiply;
+import static org.crossv.expressions.Expressions.negate;
+import static org.crossv.expressions.Expressions.not;
+import static org.crossv.expressions.Expressions.notEqual;
+import static org.crossv.expressions.Expressions.or;
+import static org.crossv.expressions.Expressions.plus;
+import static org.crossv.expressions.Expressions.rightShift;
+import static org.crossv.expressions.Expressions.subtract;
+import static org.crossv.expressions.Expressions.validIf;
+import static org.crossv.expressions.Expressions.warnIf;
+import static org.crossv.expressions.Expressions.when;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
-import org.crossv.expressions.*;
+import static org.crossv.primitives.Numbers.toNumber;
+
+import org.crossv.expressions.Expression;
 }
 
 options {
@@ -176,7 +210,7 @@ terms returns [Expression result]
 	{
 		$result =  $toCast.result;		
 		if(!clazz.equals(""))
-			$result = Expressions.cast(clazz, $result);
+			$result = cast(clazz, $result);
 	}
 
 	| '(' exp = anyExpressions ')'
@@ -317,7 +351,7 @@ multiplicityOperations returns [Expression result]
 
 	(
 		'*' right = unaryOperations
-		{ $result = Expressions.multiply($result, $right.result);}
+		{ $result = multiply($result, $right.result);}
 
 		| '/' right = unaryOperations
 		{ $result = divide($result, $right.result);}
@@ -335,7 +369,7 @@ additiveOperations returns [Expression result]
 
 	(
 		'+' right = multiplicityOperations
-		{ $result = Expressions.add($result, $right.result);}
+		{ $result = add($result, $right.result);}
 
 		| '-' right = multiplicityOperations
 		{ $result = subtract($result, $right.result);}
@@ -454,20 +488,20 @@ anyExpressions returns [Expression result]
 	| nullable = anyExpressions '??' ifTrue = anyExpressions
 	{ $result = coalesce($nullable.result, $ifTrue.result);}
 
-	|
-	//{List<Expression> params = new ArrayList<Expression>();}
-	inst = anyExpressions '.' method = IDENTIFIER '('
+	| inst = anyExpressions '.' method = IDENTIFIER '('
+	{List<Expression> params = new ArrayList<Expression>();}
+
 	(
 		fisrtParam = anyExpressions
-		//{params.add($fisrtParam.result);}
+		{params.add($fisrtParam.result);}
 
 		(
 			',' otherParam = anyExpressions
-			//{params.add($otherParam.result);}
+			{params.add($otherParam.result);}
 
 		)*
 	)? ')'
-	//{$result = call($inst.result, $method.text, params); }
+	{$result = call($inst.result, $method.text, params); }
 
 	// MEMBER ACCESS
 

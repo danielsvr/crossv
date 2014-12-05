@@ -129,15 +129,12 @@ public final class Iterables {
 	}
 
 	public static <E> E firstOrDefault(Iterable<E> iterable) {
-		if (iterable == null)
-			throw new ArgumentNullException("iterable");
-
-		Iterator<E> iterator = iterable.iterator();
-		if (iterator.hasNext()) {
-			E next = iterator.next();
-			return next;
-		}
-		return null;
+		return firstOrDefault(iterable, new Predicate<E>() {
+			@Override
+			public boolean eval(E value) {
+				return true;
+			}
+		});
 	}
 
 	public static <E> E firstOrDefault(Iterable<E> iterable,
@@ -154,6 +151,43 @@ public final class Iterables {
 				return next;
 		}
 		return null;
+	}
+
+	public static <E> E single(Iterable<E> iterable) {
+		return firstOrDefault(iterable, new Predicate<E>() {
+			@Override
+			public boolean eval(E value) {
+				return true;
+			}
+		});
+	}
+
+	public static <E> E single(Iterable<E> iterable, Predicate<E> predicate) {
+		if (iterable == null)
+			throw new ArgumentNullException("iterable");
+		if (predicate == null)
+			throw new ArgumentNullException("predicate");
+
+		Iterator<E> iterator = iterable.iterator();
+		E element = null;
+		boolean found = false;
+		while (iterator.hasNext()) {
+			E next = iterator.next();
+			if (predicate.eval(next)) {
+				if (found) {
+					String message = "There are more than one element.";
+					throw new IllegalStateException(message);
+				}
+				element = next;
+				found = true;
+			}
+		}
+		if (!found) {
+			String message = "There are no elements to iterate.";
+			throw new IllegalStateException(message);
+		}
+
+		return element;
 	}
 
 	public static <E, ER> Iterable<ER> select(Iterable<E> iterable,

@@ -1,6 +1,6 @@
 package org.crossv.expressions;
 
-import static org.crossv.primitives.Iterables.select;
+import static org.crossv.primitives.Iterables.empty;
 import static org.crossv.primitives.Iterables.toArray;
 import static org.crossv.primitives.Iterables.toIterable;
 
@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.util.Enumeration;
 
 import org.crossv.primitives.ClassDescriptor;
-import org.crossv.primitives.Function;
 
 public final class Expressions {
 
@@ -197,35 +196,41 @@ public final class Expressions {
 		return new Context(clazz);
 	}
 
-	public static Expression call(Object instance, String methodName,
-			Object... parameters) {
-		Expression[] params = convertObjectsToExpressions(parameters);
-		return call(constant(instance), methodName, params);
+	public static Expression call(Expression instance, String methodName) {
+		Iterable<Expression> parameters = empty();
+		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Object instance, String methodName,
-			Expression... parameters) {
-		return call(constant(instance), methodName, parameters);
+	public static Expression call(Expression instance, String methodName, Expression parameter1) {
+		Iterable<Expression> parameters = toIterable(parameter1);
+		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Expression instance, String methodName,
-			Expression... parameters) {
-		return new Call(instance, methodName, toIterable(parameters));
+	public static Expression call(Expression instance, String methodName, Expression parameter1, Expression parameter2) {
+		Iterable<Expression> parameters = toIterable(parameter1, parameter2);
+		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Expression instance, String methodName,
-			Object... parameters) {
-		Expression[] params = convertObjectsToExpressions(parameters);
-		return call(instance, methodName, params);
+	public static Expression call(Expression instance, String methodName, Iterable<Expression> parameters) {
+		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Expression instance, Method method,
-			Expression... parameters) {
-		return new Call(instance, method, toIterable(parameters));
+	public static Expression call(Expression instance, Method method) {
+		Iterable<Expression> parameters = empty();
+		return new Call(instance, method, parameters);
 	}
 
-	public static Expression call(Expression instance, Method method,
-			Iterable<Expression> parameters) {
+	public static Expression call(Expression instance, Method method, Expression parameter1) {
+		Iterable<Expression> parameters = toIterable(parameter1);
+		return new Call(instance, method, parameters);
+	}
+
+	public static Expression call(Expression instance, Method method, Expression parameter1, Expression parameter2) {
+		Iterable<Expression> parameters = toIterable(parameter1, parameter2);
+		return new Call(instance, method, parameters);
+	}
+
+	public static Expression call(Expression instance, Method method, Iterable<Expression> parameters) {
 		return new Call(instance, method, parameters);
 	}
 
@@ -630,14 +635,5 @@ public final class Expressions {
 
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
-	}
-
-	private static Expression[] convertObjectsToExpressions(Object[] parameters) {
-		return toArray(select(parameters, new Function<Object, Expression>() {
-			@Override
-			public Expression eval(Object value) {
-				return constant(value);
-			}
-		}), new Expression[1]);
 	}
 }

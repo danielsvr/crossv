@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.crossv.parsing.grammars.antlr4.CrossVParser;
+import org.crossv.parsing.grammars.antlr4.CrossVParser.AnyExpressionsContext;
 import org.crossv.primitives.ArgumentNullException;
 import org.crossv.primitives.ClassDescriptor;
 import org.crossv.primitives.MemberDescriptor;
@@ -98,5 +100,11 @@ public class Call extends Expression {
 
 	public String getMethodName() {
 		return member.getName();
+	}
+
+	public static Call parse(String text) {
+		CrossVParser parser = createTextParser(text);
+		AnyExpressionsContext context = parser.anyExpressions();
+		return (Call) context.result;
 	}
 }
