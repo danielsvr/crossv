@@ -1,9 +1,11 @@
 package org.crossv.primitives;
 
+import static org.crossv.primitives.Iterables.*;
 import static java.text.MessageFormat.format;
 import static org.crossv.primitives.ClassDescriptor.CObject;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.crossv.expressions.Expression;
 
@@ -46,15 +48,34 @@ public class RuntimeMethod extends MemberDescriptor {
 			InvocationTargetException {
 		if (instance == null)
 			throw new NullPointerException();
+		Object[] parametersArray = toArray(parameters, new Object[0]);
+		parameters = toIterable(parametersArray);
+
 		Class<?> instanceClass = instance.getClass();
 		ClassDescriptor desctiptor;
 		desctiptor = new ClassDescriptor(instanceClass);
-		MemberDescriptor member = desctiptor.findMember(name);
-		if (member == null || !member.isMethod()) {
+		Iterable<Class<?>> paramTypes;
+		paramTypes = select(parameters, new Function<Object, Class<?>>() {
+			@Override
+			public Class<?> eval(Object value) {
+				return value != null ? value.getClass() : Object.class;
+			}
+		});
+		Method member = null;
+		try {
+			member = desctiptor.findBestOverload(name, paramTypes);
+		} catch (NoSuchMethodException e) {
 			String message = "Cannot invoke \"{0}\" member.";
 			message = format(message, name);
-			throw new IllegalAccessException(message);
+			throw new InvocationTargetException(e, message);
 		}
-		return member.invoke(instance, parameters);
+
+		if (member == null) {
+			String message = "Cannot invoke \"{0}\" member.";
+			message = format(message, name);
+			throw new InvocationTargetException(
+					new NoSuchMethodException(name), message);
+		}
+		return member.invoke(instance, parametersArray);
 	}
 }

@@ -201,17 +201,20 @@ public final class Expressions {
 		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Expression instance, String methodName, Expression parameter1) {
+	public static Expression call(Expression instance, String methodName,
+			Expression parameter1) {
 		Iterable<Expression> parameters = toIterable(parameter1);
 		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Expression instance, String methodName, Expression parameter1, Expression parameter2) {
+	public static Expression call(Expression instance, String methodName,
+			Expression parameter1, Expression parameter2) {
 		Iterable<Expression> parameters = toIterable(parameter1, parameter2);
 		return new Call(instance, methodName, parameters);
 	}
 
-	public static Expression call(Expression instance, String methodName, Iterable<Expression> parameters) {
+	public static Expression call(Expression instance, String methodName,
+			Iterable<Expression> parameters) {
 		return new Call(instance, methodName, parameters);
 	}
 
@@ -220,17 +223,20 @@ public final class Expressions {
 		return new Call(instance, method, parameters);
 	}
 
-	public static Expression call(Expression instance, Method method, Expression parameter1) {
+	public static Expression call(Expression instance, Method method,
+			Expression parameter1) {
 		Iterable<Expression> parameters = toIterable(parameter1);
 		return new Call(instance, method, parameters);
 	}
 
-	public static Expression call(Expression instance, Method method, Expression parameter1, Expression parameter2) {
+	public static Expression call(Expression instance, Method method,
+			Expression parameter1, Expression parameter2) {
 		Iterable<Expression> parameters = toIterable(parameter1, parameter2);
 		return new Call(instance, method, parameters);
 	}
 
-	public static Expression call(Expression instance, Method method, Iterable<Expression> parameters) {
+	public static Expression call(Expression instance, Method method,
+			Iterable<Expression> parameters) {
 		return new Call(instance, method, parameters);
 	}
 
@@ -635,5 +641,9 @@ public final class Expressions {
 
 	protected static IllegalOperandException illegalOperand() {
 		return new IllegalOperandException();
+	}
+
+	public static Expression parse(String text) {
+		return When.parse(text);
 	}
 }

@@ -89,7 +89,7 @@ validation returns [Expression result]
 		',' evaluations
 		{evaluations.add($evaluations.result);}
 
-	)* ']'
+	)* ','? ']'
 	{$result = when(scope, evaluations);}
 
 ;

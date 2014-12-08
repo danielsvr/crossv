@@ -1,6 +1,8 @@
 package org.crossv;
 
 import static org.crossv.primitives.Iterables.any;
+import static org.crossv.primitives.Iterables.where;
+import static org.crossv.primitives.Iterables.cast;
 
 import org.crossv.primitives.Iterables;
 import org.crossv.primitives.Predicate;
@@ -36,10 +38,10 @@ public abstract class Evaluation {
 		return getClass().getSimpleName() + "<" + getMessage() + ">";
 	}
 
-	protected static EvaluationDetails createDetails(String message){
+	protected static EvaluationDetails createDetails(String message) {
 		return new EvaluationDetails(message);
 	}
-	
+
 	/**
 	 * Evaluates if the provided results contains any fault.
 	 * 
@@ -50,6 +52,16 @@ public abstract class Evaluation {
 	 */
 	public static boolean containsAnyFault(Iterable<Evaluation> results) {
 		return any(results, IsEvaluationFault.instance);
+	}
+
+	public static Iterable<EvaluationWarning> filterInWarnings(
+			Iterable<Evaluation> results) {
+		return cast(where(results, IsEvaluationWarning.instance));
+	}
+
+	public static Iterable<EvaluationFault> filterInFaults(
+			Iterable<Evaluation> results) {
+		return cast(where(results, IsEvaluationFault.instance));
 	}
 
 	private static class IsEvaluationFault implements Predicate<Evaluation> {
@@ -64,6 +76,18 @@ public abstract class Evaluation {
 		}
 	}
 
+	private static class IsEvaluationWarning implements Predicate<Evaluation> {
+		public static IsEvaluationWarning instance = new IsEvaluationWarning();
+
+		@Override
+		public boolean eval(Evaluation value) {
+			boolean isWarn;
+
+			isWarn = value instanceof EvaluationWarning;
+			return isWarn;
+		}
+	}
+
 	public static Iterable<Evaluation> success(String message) {
 		return Iterables
 				.<Evaluation> toIterable(new EvaluationSuccess(message));
@@ -73,10 +97,9 @@ public abstract class Evaluation {
 		return Iterables
 				.<Evaluation> toIterable(new EvaluationWarning(message));
 	}
-	
+
 	public static Iterable<Evaluation> warning(Throwable e) {
-		return Iterables
-				.<Evaluation> toIterable(new EvaluationWarning(e));
+		return Iterables.<Evaluation> toIterable(new EvaluationWarning(e));
 	}
 
 	public static Iterable<Evaluation> fault(String message) {
