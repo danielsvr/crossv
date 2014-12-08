@@ -29,11 +29,10 @@ public abstract class StrategicIterator extends IteratorAdapter<Evaluator>
 			throw new ArgumentNullException("evaluators");
 		mainIterator = evaluators;
 		evaluations = new ArrayList<Evaluation>();
-		iterationDepth = 1;
-		evaluationDepth = 1;
+		iterationDepth = 0;
+		evaluationDepth = 0;
 		currentBatchId = UUID.randomUUID();
 	}
-
 
 	@Override
 	public final Evaluator next() {

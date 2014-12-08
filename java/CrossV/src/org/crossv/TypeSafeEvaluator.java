@@ -18,6 +18,9 @@ public abstract class TypeSafeEvaluator<E, EContext> implements Evaluator {
 
 			if (obj != null)
 				actualObj = objClass.cast(obj);
+			// if (contextClass.equals(NoContext.class))
+			// actualContext = null;
+			// else
 			actualContext = contextClass.cast(context);
 
 			return evaluateInstance(actualObj, actualContext);

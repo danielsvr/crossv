@@ -13,6 +13,7 @@ import org.crossv.Validator;
 import org.crossv.expressions.Expression;
 import org.crossv.expressions.Expressions;
 import org.crossv.primitives.Predicate;
+import org.crossv.strategies.ValidationStrategy;
 import org.junit.Test;
 
 public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
@@ -36,6 +37,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"email@company.com", "secret password"));
@@ -48,6 +50,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"email@company.com", "secret password"));
@@ -63,6 +66,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"email@company.com", "secret password"));
@@ -85,6 +89,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"email@company.com", "secret password"));
@@ -107,6 +112,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"email@company.com", "s3cr3t PAssword!!"), new HelperContext());
@@ -119,6 +125,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"email@company.com", "s3cr3t PAssword!!"), new HelperContext());
@@ -134,6 +141,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"emailcompany.com", "secret"), new HelperContext());
@@ -146,6 +154,7 @@ public class WithEmailAndPasswordRequired_And_FirstLastNameOptionalButWarn {
 			throws Exception {
 		Iterable<Evaluator> evaluators = expressions.evaluate();
 		Validator validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		Validation validation = validator.validate(User.class, new User(
 				"emailcompany.com", "secret"), new HelperContext());

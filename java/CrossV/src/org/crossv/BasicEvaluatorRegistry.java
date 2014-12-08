@@ -175,9 +175,7 @@ public final class BasicEvaluatorRegistry implements EvaluatorProvider {
 
 				actualContextClass = actualContextClass.getSuperclass();
 			} while (actualContextClass != null);
-		else {
-			result = noContextEvaluatorsByEvaluatedClass.get(objClass);
-		}
+		addAllToList(result, noContextEvaluatorsByEvaluatedClass.get(objClass));
 
 		return emptyIfNull(result);
 	}

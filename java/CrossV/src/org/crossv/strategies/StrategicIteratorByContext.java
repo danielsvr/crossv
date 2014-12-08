@@ -51,7 +51,7 @@ public class StrategicIteratorByContext extends StrategicIterator {
 			}
 		}
 
-		if (remainsIterator == null)
+		if (remainsIterator == null || !remainsIterator.hasNext())
 			return null;
 		return remainsIterator.next();
 	}
@@ -68,10 +68,10 @@ public class StrategicIteratorByContext extends StrategicIterator {
 			remainsIterator = evaluators.iterator();
 	}
 
-	private List<EvaluatorProxy> getEvaluatorsByLevel(int i) {
-		List<EvaluatorProxy> evals = evaluatorsByLevel.get(i);
+	private List<EvaluatorProxy> getEvaluatorsByLevel(int level) {
+		List<EvaluatorProxy> evals = evaluatorsByLevel.get(level);
 		evals = evals != null ? evals : new ArrayList<EvaluatorProxy>();
-		evaluatorsByLevel.put(i, evals);
+		evaluatorsByLevel.put(level, evals);
 		return evals;
 	}
 }

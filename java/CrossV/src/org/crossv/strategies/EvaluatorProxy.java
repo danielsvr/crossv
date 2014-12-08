@@ -61,6 +61,8 @@ public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
 	public int getContextDepth() {
 		if (contextInheritanceDepth == null) {
 			Class<?> clazz = getContextClass();
+			if (clazz.equals(NoContext.class))
+				return 0;
 			int i = 0;
 			do {
 				clazz = clazz.getSuperclass();
@@ -89,5 +91,9 @@ public class EvaluatorProxy implements Evaluator, ObservableEvaluator {
 
 	public void shouldReturnEmptyResults() {
 		shouldReturnEmptyResults = true;
+	}
+
+	public Evaluator getRealEvaluator() {
+		return realEvaluator;
 	}
 }

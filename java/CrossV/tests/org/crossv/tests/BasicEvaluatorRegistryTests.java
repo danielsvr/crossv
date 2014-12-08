@@ -50,16 +50,13 @@ public class BasicEvaluatorRegistryTests {
 				.createMonkeyEvaluator(IndependentContext2.class);
 		registry.register(monkeyEvaluator4);
 
-		monkeyEvaluator5 = TestObjectFactory
-				.createMonkeyEvaluator();
+		monkeyEvaluator5 = TestObjectFactory.createMonkeyEvaluator();
 		registry.register(monkeyEvaluator5);
 
-		monkeyEvaluator6 = TestObjectFactory
-				.createMonkeyEvaluator();
+		monkeyEvaluator6 = TestObjectFactory.createMonkeyEvaluator();
 		registry.register(monkeyEvaluator6);
 
-		monkeyEvaluator7 = TestObjectFactory
-				.createMonkeyEvaluator();
+		monkeyEvaluator7 = TestObjectFactory.createMonkeyEvaluator();
 		registry.register(monkeyEvaluator7);
 
 		mouseEvaluator1 = TestObjectFactory
@@ -87,7 +84,7 @@ public class BasicEvaluatorRegistryTests {
 	@Test
 	public void getEvaluators_ForMonkeyAndExtendedConext_Returns2Evaluators() {
 		evaluators = registry.get(Monkey.class, new ExtendedContext1());
-		assertThat(evaluators, hasSize(2));
+		assertThat(evaluators, hasSize(2 + 3));
 	}
 
 	@Test
@@ -129,7 +126,7 @@ public class BasicEvaluatorRegistryTests {
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext1_Return1Evaluator() {
 		evaluators = registry.get(Monkey.class, new IndependentContext1());
-		assertThat(evaluators, hasSize(1));
+		assertThat(evaluators, hasSize(1 + 3));
 	}
 
 	@Test
@@ -171,7 +168,7 @@ public class BasicEvaluatorRegistryTests {
 	@Test
 	public void getEvaluators_ForMonkeyAndIndependentContext2_Return1Evaluator() {
 		evaluators = registry.get(Monkey.class, new IndependentContext2());
-		assertThat(evaluators, hasSize(1));
+		assertThat(evaluators, hasSize(1 + 3));
 	}
 
 	@Test
