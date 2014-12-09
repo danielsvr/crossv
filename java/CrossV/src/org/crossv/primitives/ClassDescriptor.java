@@ -123,6 +123,7 @@ public class ClassDescriptor {
 	public static final Class<Double> CDouble = Double.class;
 	public static final Class<Character> CCharacter = Character.class;
 	public static final Class<Object> CObject = Object.class;
+	public static final Class<RuntimeObject> CRuntimeObject = RuntimeObject.class;
 	public static final Class<Short> CShort = Short.class;
 	public static final Class<Byte> CByte = Byte.class;
 	public static final Class<Boolean> CBoolean = Boolean.class;

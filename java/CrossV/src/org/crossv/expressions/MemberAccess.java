@@ -1,5 +1,7 @@
 package org.crossv.expressions;
 
+import static org.crossv.primitives.ClassDescriptor.CRuntimeObject;
+
 import java.lang.reflect.AccessibleObject;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
@@ -54,7 +56,8 @@ public class MemberAccess extends Expression {
 			throw illegalOperand();
 
 		Class<?> instaceClass = instance.getResultClass();
-		if (!memberDeclaringClass.isAssignableFrom(instaceClass)
+		if (!(memberDeclaringClass.isAssignableFrom(CRuntimeObject) || memberDeclaringClass
+				.isAssignableFrom(instaceClass))
 				|| memberReturnClass.equals(Void.TYPE))
 			throw illegalOperand();
 	}

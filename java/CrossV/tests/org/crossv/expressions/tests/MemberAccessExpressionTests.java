@@ -70,7 +70,7 @@ public class MemberAccessExpressionTests {
 	public void createMemberAccessGetNameForInstance_ReturnClassIsObject()
 			throws Exception {
 		Expression e = memberAccess(instance(), "Name");
-		assertThat(e.getResultClass(), is(equalTo(Object.class)));
+		assertThat(e.getResultClass(), is(assignableTo(Object.class)));
 	}
 
 	@Test

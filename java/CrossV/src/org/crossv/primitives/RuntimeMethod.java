@@ -1,8 +1,10 @@
 package org.crossv.primitives;
 
-import static org.crossv.primitives.Iterables.*;
 import static java.text.MessageFormat.format;
-import static org.crossv.primitives.ClassDescriptor.CObject;
+import static org.crossv.primitives.ClassDescriptor.CRuntimeObject;
+import static org.crossv.primitives.Iterables.select;
+import static org.crossv.primitives.Iterables.toArray;
+import static org.crossv.primitives.Iterables.toIterable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,12 +32,12 @@ public class RuntimeMethod extends MemberDescriptor {
 
 	@Override
 	public Class<?> getDeclaringClass() {
-		return CObject;
+		return CRuntimeObject;
 	}
 
 	@Override
 	public Class<?> getMemberClass() {
-		return CObject;
+		return CRuntimeObject;
 	}
 
 	public Expression getInstance() {

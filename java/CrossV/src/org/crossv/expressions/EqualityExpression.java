@@ -1,6 +1,7 @@
 package org.crossv.expressions;
 
 import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CRuntimeObject;
 import static org.crossv.primitives.ClassDescriptor.canPromoteNumbers;
 
 public abstract class EqualityExpression extends BinaryExpression {
@@ -11,10 +12,12 @@ public abstract class EqualityExpression extends BinaryExpression {
 	}
 
 	private void verifyOperands() {
-		if (!canPromoteNumbers(leftClass, rightClass))
-			if (!left.isAssignableTo(right.getResultClass()))
-				if (!right.isAssignableTo(left.getResultClass()))
-					throw illegalOperand();
+		if (!left.isAssignableTo(CRuntimeObject)
+				&& !right.isAssignableTo(CRuntimeObject)
+				&& !canPromoteNumbers(leftClass, rightClass)
+				&& !left.isAssignableTo(right.getResultClass())
+				&& !right.isAssignableTo(left.getResultClass()))
+			throw illegalOperand();
 	}
 
 	@Override

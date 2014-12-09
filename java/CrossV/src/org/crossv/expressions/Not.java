@@ -1,6 +1,7 @@
 package org.crossv.expressions;
 
 import static org.crossv.primitives.ClassDescriptor.CBoolean;
+import static org.crossv.primitives.ClassDescriptor.CRuntimeObject;
 
 import org.crossv.parsing.grammars.antlr4.CrossVParser;
 import org.crossv.parsing.grammars.antlr4.CrossVParser.UnaryOperationsContext;
@@ -12,7 +13,8 @@ public class Not extends UnaryExpression {
 	}
 
 	private void verifyOperand() {
-		if (!operand.isAssignableTo(CBoolean))
+		if (!operand.isAssignableTo(CBoolean)
+				&& !operand.isAssignableTo(CRuntimeObject))
 			throw illegalOperand();
 	}
 
