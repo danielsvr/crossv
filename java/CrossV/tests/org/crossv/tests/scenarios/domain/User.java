@@ -1,4 +1,4 @@
-package org.crossv.tests.scenarios.users;
+package org.crossv.tests.scenarios.domain;
 
 public class User {
 
@@ -8,13 +8,10 @@ public class User {
 	private String lastName;
 
 	public User(String email, String password) {
-		super();
-		this.email = email;
-		this.password = password;
+		this(email, password, null, null);
 	}
 
 	public User(String email, String password, String firstName, String lastName) {
-		super();
 		this.email = email;
 		this.password = password;
 		this.firstName = firstName;
