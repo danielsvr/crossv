@@ -8,7 +8,6 @@ import org.crossv.parsing.grammars.antlr4.CrossVParser;
 import org.crossv.parsing.grammars.antlr4.CrossVParser.AdditiveOperationsContext;
 
 public class Add extends AdditiveExpression {
-	private Class<?> resultClass;
 
 	public Add(Expression left, Expression right) {
 		super(left, right);
@@ -26,11 +25,6 @@ public class Add extends AdditiveExpression {
 		if (!left.isAssignableTo(CString) && !right.isAssignableTo(CString)
 				&& !canPromoteNumbers(leftClass, rightClass))
 			throw illegalOperand();
-	}
-
-	@Override
-	public Class<?> getResultClass() {
-		return resultClass;
 	}
 
 	@Override

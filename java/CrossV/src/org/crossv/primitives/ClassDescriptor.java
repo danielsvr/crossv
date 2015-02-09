@@ -170,14 +170,19 @@ public class ClassDescriptor {
 
 	public static boolean canPerformNumericPromotion(Class<?> clazz) {
 		return CNumber.isAssignableFrom(clazz)
-				|| CCharacter.isAssignableFrom(clazz);
+				|| CCharacter.isAssignableFrom(clazz)
+				|| CRuntimeObject.isAssignableFrom(clazz);
 	}
 
 	public static Class<?> getNumericPromotion(Class<?> first, Class<?> second) {
-		if (!ClassDescriptor.canPerformNumericPromotion(first))
+		if (!canPerformNumericPromotion(first))
 			throw new ArgumentException("fisrt");
-		if (!ClassDescriptor.canPerformNumericPromotion(second))
+		if (!canPerformNumericPromotion(second))
 			throw new ArgumentException("second");
+		if (CRuntimeObject.isAssignableFrom(first)
+				|| CRuntimeObject.isAssignableFrom(second))
+			return CRuntimeObject;
+
 		Class<?> promotion = CInteger;
 
 		if (CDouble.isAssignableFrom(first) || CDouble.isAssignableFrom(second))

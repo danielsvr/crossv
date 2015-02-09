@@ -7,7 +7,6 @@ import org.crossv.parsing.grammars.antlr4.CrossVParser;
 import org.crossv.parsing.grammars.antlr4.CrossVParser.AdditiveOperationsContext;
 
 public class Subtract extends AdditiveExpression {
-	private Class<?> resultClass;
 
 	public Subtract(Expression left, Expression right) {
 		super(left, right);
@@ -18,11 +17,6 @@ public class Subtract extends AdditiveExpression {
 	private void verifyOperands() {
 		if (!canPromoteNumbers(leftClass, rightClass))
 			throw illegalOperand();
-	}
-
-	@Override
-	public Class<?> getResultClass() {
-		return resultClass;
 	}
 
 	@Override

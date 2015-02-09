@@ -2,7 +2,6 @@ package org.crossv.primitives;
 
 import sun.misc.FloatingDecimal;
 
-@SuppressWarnings("restriction")
 public final class Numbers {
 
 	public static Number toNumber(String text) {

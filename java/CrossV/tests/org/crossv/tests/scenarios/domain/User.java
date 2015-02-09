@@ -7,6 +7,14 @@ public class User {
 	private String firstName;
 	private String lastName;
 
+	public User(String email) {
+		this(email, null, null, null);
+	}
+
+	public User(String email, String firstName, String lastName) {
+		this(email, null, firstName, lastName);
+	}
+
 	public User(String email, String password) {
 		this(email, password, null, null);
 	}

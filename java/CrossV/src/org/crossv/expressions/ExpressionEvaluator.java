@@ -12,6 +12,7 @@ import static org.crossv.primitives.ClassDescriptor.CNumber;
 import static org.crossv.primitives.ClassDescriptor.CString;
 import static org.crossv.primitives.ClassDescriptor.CByte;
 import static org.crossv.primitives.ClassDescriptor.CShort;
+import static org.crossv.primitives.ClassDescriptor.CRuntimeObject;
 import static org.crossv.primitives.ClassDescriptor.getNumericPromotion;
 import static org.crossv.primitives.ClassDescriptor.transformToTypeIfPrimitive;
 import static org.crossv.primitives.Iterables.count;
@@ -125,6 +126,14 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
+		if (expression.isAssignableTo(CRuntimeObject)) {
+			Class<? extends Object> leftClass = leftPop.getClass();
+			Class<? extends Object> rightClass = rightPop.getClass();
+			
+			Class<?> numericPromotion = getNumericPromotion(leftClass, rightClass);
+			expression.setResultClass(numericPromotion);
+		} 
+		
 		if (expression.isAssignableTo(CInteger)) {
 			int left = ((Number) leftPop).intValue();
 			int right = ((Number) rightPop).intValue();
@@ -322,8 +331,8 @@ public abstract class ExpressionEvaluator implements ExpressionEvaluationScope {
 
 		Object rightPop = stack.pop();
 		Object leftPop = stack.pop();
-		Class<?> leftClass = expression.getLeft().getResultClass();
-		Class<?> rightClass = expression.getRight().getResultClass();
+		Class<?> leftClass = leftPop.getClass();
+		Class<?> rightClass = rightPop.getClass();
 		Class<?> promotion = getNumericPromotion(leftClass, rightClass);
 		if (CInteger.isAssignableFrom(promotion)) {
 			int left = ((Number) leftPop).intValue();
