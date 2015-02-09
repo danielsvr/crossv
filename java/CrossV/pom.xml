@@ -29,13 +29,6 @@
   </build>
   <name>CrossV</name>
   <description>cross site/platform validation framework</description>
-  <dependencies>
-  	<dependency>
-  		<groupId>org.antlr</groupId>
-  		<artifactId>antlr4-runtime</artifactId>
-  		<version>4.3</version>
-  	</dependency>
-  </dependencies>
   <organization>
   	<name>org</name>
   	<url>https://github.com/ogman/crossv</url>
@@ -43,4 +36,11 @@
   <properties>
   	<email>yochanan.miykael@gmail.com</email>
   </properties>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.antlr</groupId>
+  		<artifactId>antlr4-runtime</artifactId>
+  		<version>4.5</version>
+  	</dependency>
+  </dependencies>
 </project>

@@ -2,6 +2,7 @@ package org.crossv.primitives;
 
 import sun.misc.FloatingDecimal;
 
+@SuppressWarnings("restriction")
 public final class Numbers {
 
 	public static Number toNumber(String text) {
@@ -118,13 +119,11 @@ public final class Numbers {
 				return negative ? longResult : -longResult;
 		}
 
-		FloatingDecimal floatDecimal = FloatingDecimal
-				.readJavaFormatString(text);
 		if (tryToFloat)
-			return floatDecimal.floatValue();
+			return FloatingDecimal.parseFloat(text);
 
 		if (tryToDouble)
-			return floatDecimal.doubleValue();
+			return FloatingDecimal.parseDouble(text);
 
 		throw new NumberFormatException("Illegal token: " + text);
 	}

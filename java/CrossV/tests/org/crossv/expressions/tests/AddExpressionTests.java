@@ -55,9 +55,13 @@ public class AddExpressionTests {
 
 	@Test
 	public void parseAddExpression_1Plus2_LeftConstantIs1() {
-		Add e = Add.parse("1 + 2");
-		Constant constant = (Constant) e.getLeft();
-		assertThat(constant.getValue(), is(equalTo(1)));
+		try {
+			Add e = Add.parse("1 + 2");
+			Constant constant = (Constant) e.getLeft();
+			assertThat(constant.getValue(), is(equalTo(1)));
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
