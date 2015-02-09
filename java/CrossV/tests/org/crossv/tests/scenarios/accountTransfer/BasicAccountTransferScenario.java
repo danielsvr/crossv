@@ -33,13 +33,13 @@ public class BasicAccountTransferScenario {
 		+ "]\n"
 		+ "\n"
 		+ "when obj instanceof org.crossv.tests.scenarios.domain.Account "
-		+ "		&& context instanceof org.crossv.tests.scenarios.accountTransfer.DebitContext ["
+		+ "		&& context instanceof org.crossv.tests.scenarios.accountTransfer.LimitlessDebitContext ["
 		+ "obj.Email warnif obj.Balance - context.Debit < 0.00001d then \"The account goes into credit account type.\""
 		+ "]\n"
 		+ "\n"
 		+ "when obj instanceof org.crossv.tests.scenarios.domain.Account "
-		+ "		&& context instanceof org.crossv.tests.scenarios.accountTransfer.StoreContext ["
-		+ "obj.Email validif !context.containsNumber(obj.Number) else \"The account number must be unique.\","
+		+ "		&& context instanceof org.crossv.tests.scenarios.accountTransfer.DebitContext ["
+		+ "obj.Email validif obj.Balance - context.Debit > context.BalanceTreshold else \"Insufficient funds.\""
 		+ "]\n"
 		);
 	// @formatter:on
@@ -124,7 +124,7 @@ public class BasicAccountTransferScenario {
 	}
 
 	@Test
-	public void beforeDebit100UnitFromAnValidAccountBalanceWith99UnitsAndDebitContextValidation()
+	public void beforeDebit100UnitFromAnValidAccountBalanceWith99UnitsAndLimitlessDebitContextValidation()
 			throws Exception {
 
 		Iterable<Evaluator> evaluators;
@@ -136,8 +136,8 @@ public class BasicAccountTransferScenario {
 		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
 
 		User owner = new User("email@company.com");
-		Account account = new Account("WRON_NUMBER", owner, 99d);
-		DebitContext context = new DebitContext();
+		Account account = new Account("US01BANK1234123412341234", owner, 99d);
+		LimitlessDebitContext context = new LimitlessDebitContext();
 		context.setDebit(100d);
 		validation = validator.validate(Account.class, account, context);
 
@@ -160,6 +160,49 @@ public class BasicAccountTransferScenario {
 		expectedWriter.println("Validation is successfull: true");
 		expectedWriter.println("Validation results [");
 		expectedWriter.println("EvaluationWarning: The account goes into credit account type.");
+		expectedWriter.println("]");
+		// @formatter:on
+		assertThat(actual.toString(), is(expected.toString()));
+	}
+
+	@Test
+	public void beforeDebit100UnitFromAnValidAccountBalanceWith99UnitsAndDebitContextValidation()
+			throws Exception {
+
+		Iterable<Evaluator> evaluators;
+		Validator validator;
+		Validation validation;
+
+		evaluators = expressions.evaluate();
+		validator = new Validator(evaluators);
+		validator.setStrategy(ValidationStrategy.BY_CONTEXT);
+
+		User owner = new User("email@company.com");
+		Account account = new Account("US01BANK1234123412341234", owner, 99d);
+		DebitContext context = new DebitContext();
+		context.setDebit(100d);
+		context.setBalanceTreshold(0.00001);
+		validation = validator.validate(Account.class, account, context);
+
+		StringWriter actual = new StringWriter();
+		PrintWriter actualWriter = new PrintWriter(actual);
+		actualWriter.println("Validation is successfull: "
+				+ validation.isSuccessful());
+		
+		actualWriter.println("Validation results [");
+		for (Evaluation evaluation : validation.getResults()) {
+			String className = evaluation.getClass().getSimpleName();
+			String message = evaluation.getMessage();
+			actualWriter.println(className + ": " + message);
+		}
+		actualWriter.println("]");
+
+		StringWriter expected = new StringWriter();
+		PrintWriter expectedWriter = new PrintWriter(expected);
+		// @formatter:off
+		expectedWriter.println("Validation is successfull: false");
+		expectedWriter.println("Validation results [");
+		expectedWriter.println("EvaluationFault: Insufficient funds.");
 		expectedWriter.println("]");
 		// @formatter:on
 		assertThat(actual.toString(), is(expected.toString()));

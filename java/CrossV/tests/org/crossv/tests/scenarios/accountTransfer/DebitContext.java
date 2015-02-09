@@ -1,7 +1,7 @@
 package org.crossv.tests.scenarios.accountTransfer;
 
-public class DebitContext {
-
+public class DebitContext extends BasicContext {
+	private double balanceTreshold;
 	private double debit;
 
 	public double getDebit() {
@@ -12,4 +12,11 @@ public class DebitContext {
 		this.debit = debit;
 	}
 
+	public double getBalanceTreshold() {
+		return balanceTreshold;
+	}
+
+	public void setBalanceTreshold(double balanceTreshold) {
+		this.balanceTreshold = balanceTreshold;
+	}
 }

@@ -16,10 +16,12 @@ import org.crossv.expressions.EvaluationDescriptor;
 public class ClassDescriptor {
 	private Method[] methods;
 	private Field[] fields;
+	private Class<?> clazz;
 
 	public ClassDescriptor(Class<?> clazz) {
 		if (clazz == null)
 			throw new ArgumentNullException("clazz");
+		this.clazz = clazz;
 		this.methods = clazz.getMethods();
 		this.fields = clazz.getFields();
 	}
