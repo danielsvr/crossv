@@ -16,14 +16,14 @@ import org.crossv.expressions.EvaluationDescriptor;
 public class ClassDescriptor {
 	private Method[] methods;
 	private Field[] fields;
-	private Class<?> clazz;
+	private Class<?> scopeClass;
 
-	public ClassDescriptor(Class<?> clazz) {
-		if (clazz == null)
+	public ClassDescriptor(Class<?> scopeClass) {
+		if (scopeClass == null)
 			throw new ArgumentNullException("clazz");
-		this.clazz = clazz;
-		this.methods = clazz.getMethods();
-		this.fields = clazz.getFields();
+		this.scopeClass = scopeClass;
+		this.methods = scopeClass.getMethods();
+		this.fields = scopeClass.getFields();
 	}
 
 	public Object execute(Object obj, Method method, Object... parameters)
@@ -102,6 +102,10 @@ public class ClassDescriptor {
 		return aproxMatch != null ? new MemberDescriptor(aproxMatch) : null;
 	}
 
+	public Class<?> getScopeClass() {
+		return scopeClass;
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public static final Class<Iterable> CIterable = Iterable.class;
 	@SuppressWarnings("rawtypes")
